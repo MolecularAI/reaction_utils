@@ -1,0 +1,22 @@
+trim_rxn_smiles:
+  in_column: ReactionSmiles
+  out_column: ReactionSmilesClean 
+remove_unsanitizable:
+  in_column: ReactionSmilesClean
+  out_column: ReactionSmilesClean
+reagents2reactants:
+  in_column: ReactionSmilesClean
+  out_column: ReactionSmilesClean
+remove_atom_mapping:
+  in_column: ReactionSmilesClean
+  out_column: ReactionSmilesClean
+reactantsize:
+  in_column: ReactionSmilesClean
+productsize:
+  in_column: ReactionSmilesClean
+query_dataframe1:
+  query: "ReactantSize>0"
+query_dataframe2:
+  query: "ProductSize>0"
+query_dataframe3:
+  query: "ReactantSize+ProductSize<200"

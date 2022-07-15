@@ -1,0 +1,10 @@
+remove_unsanitizable:
+  in_column: rsmi
+reagents2reactants:
+  in_column: RxnSanitizable
+  out_column: rsmi_clean
+count_components:
+  in_column: rsmi_clean
+drop_columns:
+  columns:
+    - RxnSanitizable

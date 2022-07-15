@@ -1,0 +1,45 @@
+[tool.poetry]
+name = "rxnutils"
+version = "1.0.0"
+description = "Utilities for working with reactions, reaction templates and template extraction"
+authors = ["Genheden, Samuel <samuel.genheden@astrazeneca.com>", "Kannas, Christos <christos.kannas@astrazeneca.com>"]
+license = "Apache 2.0"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pandas = "^1.0.0"
+xxhash = "^2.0.0"
+rdchiral = { git = "https://github.com/connorcoley/rdchiral.git" }
+timeout-decorator = "^0.5.0"
+PyYAML = "^5.4.1"
+swifter = "^1.0.9"
+metaflow = "^2.6.3"
+py7zr = "^0.18.7"
+Deprecated = "^1.2.13"
+Sphinx = "^5.0.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.2"
+pytest-datadir = "^1.3.1"
+pytest-mock = "^3.7.0"
+pytest-mccabe = "^2.0"
+pytest-black = "^0.3.12"
+pytest-cov = "^3.0.0"
+black = "^20.8b1"
+mypy = "^0.800"
+pre-commit = "^2.10.1"
+ipython = "^7.21.0"
+pylint = "^2.14.1"
+invoke = "^1.7.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+max-args = 6
+max-attributes = 15
+max-public-methods = 25
+min-public-methods = 0
+disable = "W1203, W0707, W1514, W0602, typecheck"
