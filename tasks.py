@@ -12,7 +12,7 @@ def run_tests(context):
     cmd = (
         "pytest --black --mccabe "
         "--cov rxnutils --cov-branch --cov-report html:coverage --cov-report xml "
-        "tests/"
+        "-vv tests/"
     )
     context.run(cmd)
 
