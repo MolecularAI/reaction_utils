@@ -95,18 +95,22 @@ def test_split_smiles(smiles, expected):
     [
         (
             "[C:7]-[C;H0:1]-[O:2]>>[C:7]-[C;H0:1].[O:2]",
-            "[C:7]-[C&H0:1]-[O:2]>>[C:7]-[C&H0:1].[O:2]",
+            ("[C:7]-[C&H0:1]-[O:2]>>[C:7]-[C&H0:1].[O:2]"),
         ),
         (
             "[Br:99][CH2:11][CH2:12][Br:100].[N:1]#[C:2][CH2:3][c:4]1[c:5]([Br:6])[cH:7][cH:8][cH:9][cH:10]1"
             ">>[N:1]#[C:2][C:3]1([c:4]2[c:5]([Br:6])[cH:7][cH:8][cH:9][cH:10]2)[CH2:11][CH2:12]1",
-            "Br[C&H2:11][C&H2:12]Br.[N:1]#[C:2][C&H2:3][c:4]1[c:5](-,:[Br:6])[c&H1:7][c&H1:8][c&H1:9][c&H1:10]1"
-            ">>[N:1]#[C:2][C:3]1(-,:[c:4]2[c:5](-,:[Br:6])[c&H1:7][c&H1:8][c&H1:9][c&H1:10]2)[C&H2:11][C&H2:12]1",
+            (
+                "Br[C&H2:11][C&H2:12]Br.[N:1]#[C:2][C&H2:3][c:4]1[c:5](-,:[Br:6])[c&H1:7][c&H1:8][c&H1:9][c&H1:10]1"
+                ">>[N:1]#[C:2][C:3]1(-,:[c:4]2[c:5](-,:[Br:6])[c&H1:7][c&H1:8][c&H1:9][c&H1:10]2)[C&H2:11][C&H2:12]1",
+                "Br[C&H2:11][C&H2:12]Br.[N:1]#[C:2][C&H2:3][c:4]1[c:5]([Br:6])[c&H1:7][c&H1:8][c&H1:9][c&H1:10]1"
+                ">>[N:1]#[C:2][C:3]1([c:4]2[c:5]([Br:6])[c&H1:7][c&H1:8][c&H1:9][c&H1:10]2)[C&H2:11][C&H2:12]1",
+            ),
         ),
     ],
 )
 def test_reassign_atom_numbers(template, expected):
-    assert reassign_rsmi_atom_mapping(template) == expected
+    assert reassign_rsmi_atom_mapping(template) in expected
 
 
 def test_special_groups():
