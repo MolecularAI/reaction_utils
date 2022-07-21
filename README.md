@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/github/license/MolecularAI/reaction_utils)](https://github.com/MolecularAI/reaction_utils/blob/master/LICENSE)
 [![Tests](https://github.com/MolecularAI/reaction_utils/workflows/tests/badge.svg)](https://github.com/MolecularAI/reaction_utils/actions?workflow=tests)
-[![codecov](https://codecov.io/gh/MolecularAI/reaction_utils/branch/master/graph/badge.svg)](https://codecov.io/gh/MolecularAI/reaction_utils)
+[![codecov](https://codecov.io/gh/MolecularAI/reaction_utils/branch/main/graph/badge.svg?token=MQE7BDM1N8)](https://codecov.io/gh/MolecularAI/reaction_utils)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
 Utilities to work with datasets of chemical reactions, reaction templates and template extraction
