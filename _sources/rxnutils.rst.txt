@@ -1,0 +1,20 @@
+rxnutils package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   rxnutils.chem
+   rxnutils.data
+   rxnutils.pipeline
+
+Module contents
+---------------
+
+.. automodule:: rxnutils
+   :members:
+   :undoc-members:
+   :show-inheritance:

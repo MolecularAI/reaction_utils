@@ -1,0 +1,18 @@
+rxnutils.data package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   rxnutils.data.uspto
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.data
+   :members:
+   :undoc-members:
+   :show-inheritance:
