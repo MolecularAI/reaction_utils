@@ -70,7 +70,7 @@ Let's see if the template generated above is capable of re-generating the expect
 .. code-block::
 
     smiles="CCS(=O)(=O)OCCBr"
-    reactant_list = rxn.retro_template(smiles)
+    reactant_list = rxn.retro_template.apply(smiles)
     reactant_list
     >> (('CCS(=O)(=O)Cl', 'OCCBr'),)
 
