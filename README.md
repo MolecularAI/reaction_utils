@@ -114,4 +114,4 @@ The software is licensed under the Apache 2.0 license (see LICENSE file), and is
 
 1. Thakkar A, Kogej T, Reymond J-L, et al (2019) Datasets and their influence on the development of computer assisted synthesis planning tools in the pharmaceutical domain. Chem Sci. https://doi.org/10.1039/C9SC04944D
 
-2. Kannas C, Genheden S (2022) rxnutils – A Cheminformatics Python Library for Manipulating Chemical Reaction Data.
+2. Kannas C, Thakkar A, Bjerrum E, Genheden S (2022) rxnutils – A Cheminformatics Python Library for Manipulating Chemical Reaction Data. ChemRxiv. https://doi.org/10.26434/chemrxiv-2022-wt440-v2
