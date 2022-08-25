@@ -11,11 +11,12 @@ Utilities to work with datasets of chemical reactions, reaction templates and te
 
 Before you begin, ensure you have met the following requirements:
 
-* Linux, Windows or macOS platforms are supported - as long as the dependencies are supported on these platforms.
+* Linux OS (or in principle Windows or macOS)
 
 * You have installed [anaconda](https://www.anaconda.com/) or [miniconda](https://docs.conda.io/en/latest/miniconda.html) with python 3.8
 
-The tool has been developed on a Linux platform.
+The tool has been developed and fully tested on a Linux platform, but it is only occassionally tested on Windows and macOS.
+If you find an issue on a Windows or macOS platform, we might be able to fix, but we might just disable that feature on those platforms.
 
 ## Installation
 

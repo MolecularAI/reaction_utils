@@ -7,11 +7,22 @@ import logging
 
 import requests
 
+PLATFORM2FOLDER = {
+    "linux": "linux",
+    "win32": "windows",
+}
+
+PLATFORM2EXTENSION = {"linux": "", "win32": ".exe"}
+
 CONFIG = {
     "download_folder": ".",
     "download_url": "http://www.inchi-trust.org/download/RInChI/RInChI-V1-00.zip",
 }
 PATH = os.path.dirname(__file__)
+
+
+class RInChIError(Exception):
+    """Exception raised by RInChI API"""
 
 
 def main() -> str:
@@ -21,6 +32,9 @@ def main() -> str:
     :return: Path of the folder containing the appropriate
              command line executable based on system type.
     """
+    if sys.platform not in PLATFORM2FOLDER:
+        raise RInChIError("RInChI software not supported on this platform")
+
     rinchi_url = CONFIG.get("download_url")
     rinchi_fn = rinchi_url.split("/")[-1]
     download_loc = CONFIG.get("download_folder")
@@ -44,27 +58,41 @@ def main() -> str:
             bin_path = [
                 x
                 for x in fileobj.namelist()
-                if x.endswith(f"bin/rinchi_cmdline/{sys.platform}/x86_64/")
+                if x.endswith(_exec_folder_ending(os_sep=False) + "/")
             ]
             logging.debug(bin_path)
             fileobj.extractall(download_loc)
         logging.info("Completed...")
         rinchi_cli_path = os.path.join(download_loc, bin_path[0])
         logging.info(f"RInChI CLI: {rinchi_cli_path}")
-        os.chmod(os.path.join(rinchi_cli_path, "rinchi_cmdline"), stat.S_IEXEC)
+        if sys.platform == "linux":
+            os.chmod(os.path.join(rinchi_cli_path, "rinchi_cmdline"), stat.S_IEXEC)
     else:
         logging.info(f"RInChI exists at: {rinchi_fn}")
         bin_path = [
             r
             for r, d, f in os.walk(download_loc)
-            if r.endswith(f"bin/rinchi_cmdline/{sys.platform}/x86_64")
+            if r.endswith(_exec_folder_ending(os_sep=True))
         ]
         logging.debug(bin_path)
         rinchi_cli_path = bin_path[0]
         logging.info(f"RInChI CLI: {rinchi_cli_path}")
-        os.chmod(os.path.join(rinchi_cli_path, "rinchi_cmdline"), stat.S_IEXEC)
+        if sys.platform == "linux":
+            os.chmod(
+                os.path.join(
+                    rinchi_cli_path, f"rinchi_cmdline{PLATFORM2EXTENSION[sys.platform]}"
+                ),
+                stat.S_IEXEC,
+            )
 
     return rinchi_cli_path
+
+
+def _exec_folder_ending(os_sep: bool) -> str:
+    sep = os.sep if os_sep else "/"
+    return sep.join(
+        ["bin", "rinchi_cmdline", f"{PLATFORM2FOLDER[sys.platform]}", "x86_64"]
+    )
 
 
 if __name__ == "__main__":
