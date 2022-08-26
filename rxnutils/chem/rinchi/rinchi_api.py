@@ -1,6 +1,7 @@
 """Module containing an API to the Reaction InChI program"""
 import logging
 import os
+import sys
 import subprocess
 import tempfile
 from collections import namedtuple
@@ -8,15 +9,12 @@ from collections import namedtuple
 from rdkit.Chem import AllChem
 
 from rxnutils.chem.rinchi import download_rinchi
+from rxnutils.chem.rinchi.download_rinchi import RInChIError, PLATFORM2FOLDER
 
 
 RInChIStructure = namedtuple(
     "RInChI", "rinchi rauxinfo long_rinchikey short_rinchikey web_rinchikey"
 )
-
-
-class RInChIError(Exception):
-    """Exception raised by RInChI API"""
 
 
 def generate_rinchi(reaction_smiles: str) -> RInChIStructure:
@@ -26,6 +24,9 @@ def generate_rinchi(reaction_smiles: str) -> RInChIStructure:
     :raises RInChIError: When there is an error with RInChI generation.
     :return: Namedtuple with the generated RInChI.
     """
+    if sys.platform not in PLATFORM2FOLDER:
+        raise RInChIError("RInChI software not supported on this platform")
+
     reaction = AllChem.ReactionFromSmarts(reaction_smiles)
     reaction.Initialize()
     nwarn, nerror, nreactants, nproducts, labels = AllChem.PreprocessReaction(reaction)

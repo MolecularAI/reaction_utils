@@ -1,8 +1,12 @@
 import os
+import sys
 
 import pytest
 
-from rxnutils.chem.rinchi.download_rinchi import main as download_rinchi
+from rxnutils.chem.rinchi.download_rinchi import (
+    main as download_rinchi,
+    PLATFORM2FOLDER,
+)
 from rxnutils.chem.rinchi.rinchi_api import generate_rinchi
 
 
@@ -11,6 +15,7 @@ def rinchi_download():
     download_rinchi()
 
 
+@pytest.mark.xfail(sys.platform not in PLATFORM2FOLDER, reason="Platform not supported")
 def test_download_rinchi(mocker, tmpdir):
     config = {
         "download_folder": str(tmpdir),
@@ -23,6 +28,7 @@ def test_download_rinchi(mocker, tmpdir):
     assert os.path.exists(tmpdir / "RInChI-V1-00.zip")
 
 
+@pytest.mark.xfail(sys.platform not in PLATFORM2FOLDER, reason="Platform not supported")
 def test_generate_rinchi(rinchi_download):
     rsmi = (
         "[ClH;D0;+0:1]>>"

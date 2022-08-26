@@ -2,7 +2,7 @@
 import hashlib
 from typing import List, Tuple, Optional
 
-import timeout_decorator
+import wrapt_timeout_decorator
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdchiral import template_extractor as extractor
@@ -237,7 +237,7 @@ class ChemicalReaction:
         return self.canonical_template, self.retro_template
 
     @staticmethod
-    @timeout_decorator.timeout(
+    @wrapt_timeout_decorator.timeout(
         30,
         use_signals=False,
         timeout_exception=ReactionException,
@@ -344,7 +344,6 @@ class ChemicalReaction:
         return all(
             mol is not None for mol in self.reactants + self.agents + self.products
         )
-
 
     def canonical_template_generate_outcome(self) -> bool:
         """Checks whether the canonical template produces"""

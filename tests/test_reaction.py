@@ -16,13 +16,13 @@ def load_templates(shared_datadir):
 def test_create_reaction():
     rxn1 = ChemicalReaction(
         "[CH3:1]I.[CH3:6][N:5]1[CH2:4][CH2:3][NH:2][CH2:31][CH2:16]1"
-        ">O.[Na+].[Na+]>"
+        ">O=C(O)O.[Na+].[Na+]>"
         "[CH3:1][N:2]1[CH2:3][CH2:4][N:5]([CH3:6])[CH2:16][CH2:31]1"
     )
 
     rxn2 = ChemicalReaction(
         "[CH3:1]I.[CH3:6][N:5]1[CH2:4][CH2:3][NH:2][CH2:31][CH2:16]1."
-        "[OH2:93].[Na+].[Na+]"
+        "[O:90]=[C:91]([OH:92])[OH:93].[Na+].[Na+]"
         ">>[CH3:1][N:2]1[CH2:3][CH2:4][N:5]([CH3:6])[CH2:16][CH2:31]1"
     )
 
@@ -33,8 +33,13 @@ def test_create_reaction():
         clean_smiles=False,
     )
 
-    assert rxn1.agents_smiles == "O.[Na+].[Na+]"
-    assert rxn2.agents_smiles == rxn1.agents_smiles
+    expected_agents = [
+        "OC(O)=O.[Na+].[Na+]",
+        "O=C(O)O.[Na+].[Na+]",
+        "O=C([OH])[OH].[Na+].[Na+]",
+    ]
+    assert rxn1.agents_smiles in expected_agents
+    assert rxn2.agents_smiles in expected_agents
     assert rxn3.agents_smiles == ""
 
     assert rxn2.reactants_smiles == rxn1.reactants_smiles
