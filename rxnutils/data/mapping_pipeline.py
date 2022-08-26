@@ -4,22 +4,24 @@ This needs to be run in an environment with rxnmapper installed
 """
 from pathlib import Path
 
-from metaflow import step
+from metaflow import step, Parameter
 
-from rxnutils.data.uspto.base_pipeline import UsptoBaseFlow
-from rxnutils.data.uspto.mapping import main as map_uspto
+from rxnutils.data.base_pipeline import DataBaseFlow
+from rxnutils.data.mapping import main as map_data
 
 
-class RxnMappingFlow(UsptoBaseFlow):
-    """Pipeline for atom-map USPTO data with rxnmapper"""
+class RxnMappingFlow(DataBaseFlow):
+    """Pipeline for atom-map USPTO or ORD data with rxnmapper"""
+
+    data_prefix = Parameter("data-prefix")
 
     @step
     def start(self):
         """Setup batches for mapping"""
         # pylint: disable=attribute-defined-outside-init
         self.partitions = self._create_batches(
-            Path(self.folder) / "uspto_data_cleaned.csv",
-            Path(self.folder) / "uspto_data_mapped.csv",
+            Path(self.folder) / f"{self.data_prefix}_data_cleaned.csv",
+            Path(self.folder) / f"{self.data_prefix}_data_mapped.csv",
         )
         self.next(self.do_mapping, foreach="partitions")
 
@@ -27,13 +29,16 @@ class RxnMappingFlow(UsptoBaseFlow):
     def do_mapping(self):
         """Perform atom-mapping of reactions"""
         idx, start, end = self.input
-        if idx > -1:
-            map_uspto(
+        output_filename = (
+            Path(self.folder) / f"{self.data_prefix}_data_mapped.csv.{idx}"
+        )
+        if idx > -1 and not output_filename.exists():
+            map_data(
                 [
                     "--input",
-                    str(Path(self.folder) / "uspto_data_cleaned.csv"),
+                    str(Path(self.folder) / f"{self.data_prefix}_data_cleaned.csv"),
                     "--output",
-                    str(Path(self.folder) / f"uspto_data_mapped.csv.{idx}"),
+                    str(output_filename),
                     "--batch",
                     str(start),
                     str(end),
@@ -46,15 +51,14 @@ class RxnMappingFlow(UsptoBaseFlow):
     @step
     def join_mapping(self, _):
         """Join batches from mapping"""
-        self._combine_batches(Path(self.folder) / "uspto_data_mapped.csv")
+        self._combine_batches(Path(self.folder) / f"{self.data_prefix}_data_mapped.csv")
         self.next(self.end)
 
     @step
     def end(self):
         """Final step, just print information"""
-        print(
-            f"Processed file is locate here: {Path(self.folder) / 'uspto_data_mapped.csv'}"
-        )
+        filename = Path(self.folder) / f"{self.data_prefix}_data_mapped.csv"
+        print(f"Processed file is locate here: {filename}")
 
 
 if __name__ == "__main__":
