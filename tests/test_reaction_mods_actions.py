@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 from rxnutils.pipeline.actions.reaction_props import CountComponents
 from rxnutils.pipeline.actions.reaction_mod import (
@@ -10,6 +11,7 @@ from rxnutils.pipeline.actions.reaction_mod import (
     RDKitRxnRoles,
     SplitReaction,
     RemoveUnchangedProducts,
+    CONTRIB_INSTALLED,
 )
 from rxnutils.pipeline.base import global_apply
 
@@ -141,6 +143,9 @@ def test_remove_unsanitizable(make_reaction_dataframe):
     assert df2["BadMolecules"].to_list() == ["C(C(CC)(O[Mg+2])C)C", ""]
 
 
+@pytest.mark.xfail(
+    not CONTRIB_INSTALLED, reason="RDKit Contrib folder is not installed"
+)
 def test_rdit_rxn_roles(make_reaction_dataframe):
     action1 = RDKitRxnRoles(in_column="rsmi")
     action2 = CountComponents(in_column="rsmi")
