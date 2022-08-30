@@ -18,14 +18,16 @@ from rxnutils.chem.utils import (
 )
 from rxnutils.pipeline.base import ReactionActionMixIn, action, global_apply
 
-# RDKit contrib is not default part of PYTHONPATH
-sys.path.append(RDConfig.RDContribDir)
-sys.path.append(
-    f"{RDConfig.RDContribDir}/RxnRoleAssignment"
-)  # to make Nadines code import "utils"
-# fmt: off
-from RxnRoleAssignment.identifyReactants import reassignReactionRoles  # pylint: disable=all # noqa
-# fmt: on
+CONTRIB_INSTALLED = os.path.exists(RDConfig.RDContribDir)
+if CONTRIB_INSTALLED:
+    # RDKit contrib is not default part of PYTHONPATH
+    sys.path.append(RDConfig.RDContribDir)
+    sys.path.append(
+        f"{RDConfig.RDContribDir}/RxnRoleAssignment"
+    )  # to make Nadines code import "utils"
+    # fmt: off
+    from RxnRoleAssignment.identifyReactants import reassignReactionRoles  # pylint: disable=all # noqa
+    # fmt: on
 
 rd_logger = RDLogger.logger()
 rd_logger.setLevel(RDLogger.CRITICAL)
@@ -365,6 +367,12 @@ class RDKitRxnRoles:
     pretty_name: ClassVar[str] = "rdkit_RxnRoleAssignment"
     in_column: str
     out_column: str = "RxnRoleAssigned"
+
+    def __post_init__(self):
+        if not CONTRIB_INSTALLED:
+            raise ImportError(
+                "This action cannot be used because the RDKit Contrib folder is not installed"
+            )
 
     def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
 
