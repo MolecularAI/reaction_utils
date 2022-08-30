@@ -81,7 +81,7 @@ def main(input_args: Optional[Sequence[str]] = None) -> None:
     mapped_data_df = pd.DataFrame(mapped_data)
 
     data = data.assign(
-        **{column: mapped_data[column] for column in mapped_data_df.columns}
+        **{column: mapped_data_df[column] for column in mapped_data_df.columns}
     )
     data.to_csv(args.output, sep="\t", index=False)
 

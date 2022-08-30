@@ -28,7 +28,7 @@ Third, clone the ord-data repository as detailed [here](https://github.com/Open-
 
 Finally you can run, 
 
-    python -m rxnutils.data.ord.preparation_pipeline run --nbatches 200  --max-workers 8 --max-num-splits 200 --ord_data ORD_DATA_REPOSITORY_FOLDER
+    python -m rxnutils.data.ord.preparation_pipeline run --nbatches 200  --max-workers 8 --max-num-splits 200 --ord-data ORD_DATA_REPOSITORY_FOLDER
 
 
 ## Atom-mapping
