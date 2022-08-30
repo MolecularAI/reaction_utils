@@ -1,7 +1,7 @@
 Open reaction database
 =======================
 
-``rxnutils`` contain two pipelines that together imports and prepares the reaction data from the Open reaction database so that it can be used on modelling.
+``rxnutils`` contain two pipelines that together imports and prepares the reaction data from the `Open reaction database <https://open-reaction-database.org/>`_ so that it can be used on modelling.
 
 It is a complete end-to-end pipeline that is designed to be transparent and reproducible.
 

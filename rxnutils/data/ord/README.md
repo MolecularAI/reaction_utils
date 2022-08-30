@@ -1,6 +1,6 @@
 # Open reaction database
 
-This sub-package contains tools to import, process and atom-map data from the Open reaction database
+This sub-package contains tools to import, process and atom-map data from the [Open reaction database](https://open-reaction-database.org/)
 
 It is divided into two parts:
 - Preparation
