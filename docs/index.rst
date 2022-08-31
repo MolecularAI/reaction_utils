@@ -19,5 +19,6 @@ Auto-generated API documentation is available, as well as guides for common task
     
     templates
     uspto
+    ord
     pipeline
     rxnutils

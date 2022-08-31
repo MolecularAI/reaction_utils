@@ -37,7 +37,7 @@ This needs to be installed and run in a new environment
 
 Then you can run a command like this
 
-    python -m rxnutils.data.uspto.mapping_pipeline run --nbatches 200  --max-workers 8 --max-num-splits 200
+    python -m rxnutils.data.mapping_pipeline run --data-prefix uspto --nbatches 200  --max-workers 8 --max-num-splits 200
 
 
 

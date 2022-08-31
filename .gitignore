@@ -141,6 +141,7 @@ dmypy.json
 coverage/
 
 Uspto/
+Ord/
 rxnutils/chem/rinchi/1.00 RInChI
 rxnutils/chem/rinchi/RInChI-V1-00.zip
 
