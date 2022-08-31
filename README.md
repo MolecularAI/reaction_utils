@@ -18,7 +18,18 @@ Before you begin, ensure you have met the following requirements:
 The tool has been developed and fully tested on a Linux platform, but it is only occassionally tested on Windows and macOS.
 If you find an issue on a Windows or macOS platform, we might be able to fix, but we might just disable that feature on those platforms.
 
+
 ## Installation
+
+### For users
+
+Setup your python environment and then run
+
+    pip install rxnutils
+
+Consult the documentation for further information.
+
+### For developers
 
 First clone the repository using Git.
 
@@ -29,12 +40,6 @@ Then execute the following commands in the root of the repository
     poetry install
 
 the `rxnutils` package is now installed in editable mode.
-
-
-Or you can install the package in your own environment that alread has `rdkit`
-
-    python -m pip install poetry
-    poetry install
 
 Lastly, make sure to install pre-commits that are run on every commit
 
@@ -48,8 +53,7 @@ The package is divided into (currently) three sub-packages:
 * `data` - routines for manipulating various reaction data sources
 * `pipeline` - routines for building and executing simple pipelines for modifying and analyzing reactions
 
-The full auto-generated API document is available here, and the documentation also provides a few examples 
-on common tasks.
+The full auto-generated API document is available [here](https://molecularai.github.io/reaction_utils/), and the documentation also provides a few examples on common tasks.
 
 ## Development
 
