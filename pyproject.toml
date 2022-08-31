@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "rxnutils"
-version = "1.0.0"
+version = "1.1.0"
 description = "Utilities for working with reactions, reaction templates and template extraction"
 authors = ["Genheden, Samuel <samuel.genheden@astrazeneca.com>", "Kannas, Christos <christos.kannas@astrazeneca.com>"]
 license = "Apache-2.0"
