@@ -25,7 +25,7 @@ If you find an issue on a Windows or macOS platform, we might be able to fix, bu
 
 Setup your python environment and then run
 
-    pip install rxnutils
+    pip install reaction-utils
 
 Consult the documentation for further information.
 

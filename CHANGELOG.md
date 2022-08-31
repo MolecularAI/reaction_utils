@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 1.1.1 - 2022-08-31
+
+### Trival changes
+
+- Change project name to reaction-utils
+- Change RDChiral dependency to pypi package
+
 ## Version 1.1.0 - 2022-08-31
 
 ### Features
