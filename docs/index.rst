@@ -21,7 +21,7 @@ For most users it is as simple as
 
 .. code-block::
 
-    pip install rxnutils
+    pip install reaction-utils
 
 
 `For developers`, first clone the repository using Git.

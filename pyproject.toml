@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "rxnutils"
-version = "1.1.0"
+name = "reaction_utils"
+version = "1.1.1"
 description = "Utilities for working with reactions, reaction templates and template extraction"
 authors = ["Genheden, Samuel <samuel.genheden@astrazeneca.com>", "Kannas, Christos <christos.kannas@astrazeneca.com>"]
 license = "Apache-2.0"
@@ -8,12 +8,15 @@ readme = "README.md"
 homepage = "https://github.com/MolecularAI/reaction_utils/"
 repository = "https://github.com/MolecularAI/reaction_utils/"
 documentation = "https://molecularai.github.io/reaction_utils/"
+packages = [
+    { include = "rxnutils" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
 pandas = "^1.0.0"
 xxhash = "^2.0.0"
-rdchiral = { git = "https://github.com/connorcoley/rdchiral.git" }
+rdchiral = "^1.1.0" 
 PyYAML = "^5.4.1"
 swifter = "^1.0.9"
 metaflow = "^2.6.3"
