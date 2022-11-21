@@ -2,6 +2,7 @@ import os
 import sys
 
 import pytest
+from requests.exceptions import HTTPError
 
 from rxnutils.chem.rinchi.download_rinchi import (
     main as download_rinchi,
@@ -16,6 +17,7 @@ def rinchi_download():
 
 
 @pytest.mark.xfail(sys.platform not in PLATFORM2FOLDER, reason="Platform not supported")
+@pytest.mark.xfail(raises=HTTPError)
 def test_download_rinchi(mocker, tmpdir):
     config = {
         "download_folder": str(tmpdir),
@@ -29,6 +31,7 @@ def test_download_rinchi(mocker, tmpdir):
 
 
 @pytest.mark.xfail(sys.platform not in PLATFORM2FOLDER, reason="Platform not supported")
+@pytest.mark.xfail(raises=HTTPError)
 def test_generate_rinchi(rinchi_download):
     rsmi = (
         "[ClH;D0;+0:1]>>"
