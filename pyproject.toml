@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "reaction_utils"
-version = "1.1.1"
+version = "1.2.0"
 description = "Utilities for working with reactions, reaction templates and template extraction"
 authors = ["Genheden, Samuel <samuel.genheden@astrazeneca.com>", "Kannas, Christos <christos.kannas@astrazeneca.com>"]
 license = "Apache-2.0"
@@ -33,7 +33,7 @@ pytest-mock = "^3.7.0"
 pytest-mccabe = "^2.0"
 pytest-black = "^0.3.12"
 pytest-cov = "^3.0.0"
-black = "^20.8b1"
+black = "^22.0.0"
 mypy = "^0.800"
 pre-commit = "^2.10.1"
 ipython = "^7.21.0"

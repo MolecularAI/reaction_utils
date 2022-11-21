@@ -245,3 +245,29 @@ def test_timedout_template_creation():
         ReactionException, match="Template generation failed with message: Timed out"
     ):
         rxn.generate_reaction_template()
+
+
+def test_ringbreaker_template_creation():
+    rsmi = (
+        "[Cl:2][C:4]#[CH:15].[N-:5]=[N+:6]=[CH:7][C:8](=[O:9])[O:10][CH3:11]>>"
+        "[Cl:2][c:4]1[n:5][nH:6][c:7]([C:8](=[O:9])[O:10][CH3:11])[cH:15]1"
+    )
+    rxn = ChemicalReaction(rsmi, clean_smiles=False)
+
+    _, retro_template = rxn.generate_reaction_template(
+        radius=0, expand_ring=True, expand_hetero=True
+    )
+    expected = (
+        "[Cl;H0;D1;+0:3]-[c;H0;D3;+0:2]1:[cH;D2;+0:1]:[c;H0;D3;+0:4]:[nH;D2;+0:5]:[n;H0;D2;+0:6]:1>>"
+        "[CH;D1;+0:1]#[C;H0;D2;+0:2]-[Cl;H0;D1;+0:3].[CH;D2;+0:4]=[N+;H0;D2:5]=[N-;H0;D1:6]"
+    )
+    assert retro_template.smarts == expected
+
+    _, retro_template = rxn.generate_reaction_template(
+        radius=0, expand_ring=True, expand_hetero=False
+    )
+    expected = (
+        "[c;H0;D3;+0:1]1:[cH;D2;+0:2]:[c;H0;D3;+0:3]:[nH;D2;+0:4]:[n;H0;D2;+0:5]:1"
+        ">>[C;H0;D2;+0:1]#[CH;D1;+0:2].[CH;D2;+0:3]=[N+;H0;D2:4]=[N-;H0;D1:5]"
+    )
+    assert retro_template.smarts == expected

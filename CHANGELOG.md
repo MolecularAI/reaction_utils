@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 1.2.0 - 2022-11-21
+
+### Features
+
+- Adding pipeline actions for identifying RingBreaker reactions
+- Adding support for extracting new type of RingBreaker templates
+
 ## Version 1.1.1 - 2022-08-31
 
 ### Trival changes
