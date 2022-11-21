@@ -1,6 +1,6 @@
 """Module containing a class to handle chemical reactions"""
 import hashlib
-from typing import List, Tuple, Optional
+from typing import List, Tuple, Optional, Dict, Any
 
 import wrapt_timeout_decorator
 from rdkit import Chem
@@ -136,7 +136,10 @@ class ChemicalReaction:
         return self._rinchi_data.short_rinchikey
 
     def generate_reaction_template(
-        self, radius: int = 1
+        self,
+        radius: int = 1,
+        expand_ring: bool = False,
+        expand_hetero: bool = False,
     ) -> Tuple[ReactionTemplate, ReactionTemplate]:
         """
         Extracts the forward(canonical) and retro reaction template with the specified radius.
@@ -148,6 +151,8 @@ class ChemicalReaction:
         :param radius: the radius refers to the number of atoms away from the reaction
                        centre to be extracted (the enivronment) i.e. radius = 1 (default)
                        returns the first neighbours around the reaction centre
+        :param expand_ring: if True will include all atoms in the same ring as the reaction centre in the template
+        :param expand_hetero: if True will extend the template with all bonded hetero atoms
         :returns: the canonical and retrosynthetic templates
         """
         if not self.sanitization_check():
@@ -207,12 +212,26 @@ class ChemicalReaction:
                 sorted(list(set(extra_reactant_fragment.split("."))))
             )
 
+        extra_atoms = {}
+        if expand_ring:
+            ring_atom_maps = self._product_unique_ring_atoms()
+            for reactant in self.reactants:
+                extra_atoms.update(
+                    {
+                        str(atom.GetAtomMapNum()): atom
+                        for atom in reactant.GetAtoms()
+                        if atom.GetAtomMapNum() in ring_atom_maps
+                    }
+                )
+
         try:
             # Generate canonical reaction template with rdChiral
             canonical_smarts = self._generate_rdchiral_template(
                 reactants=reactants,
                 products=products,
                 radius=radius,
+                extra_atoms=extra_atoms,
+                expand_hetero=expand_hetero,
             )
             # Canonical ReactionTemplate
             self._canonical_template = ReactionTemplate(canonical_smarts)
@@ -244,7 +263,11 @@ class ChemicalReaction:
         exception_message="Timed out",
     )
     def _generate_rdchiral_template(
-        reactants: List[Chem.Mol], products: List[Chem.Mol], radius: int = 1
+        reactants: List[Chem.Mol],
+        products: List[Chem.Mol],
+        radius: int = 1,
+        extra_atoms: Dict[str, Any] = None,
+        expand_hetero: bool = False,
     ) -> str:
         """Generate a reaction template with rdChiral.
 
@@ -256,9 +279,22 @@ class ChemicalReaction:
         :raises ReactionException: Template generation failed: Timed out
         :return: Canonical reaction template
         """
-        _, changed_atom_tags, err = extractor.get_changed_atoms(
+        changed_atoms, changed_atom_tags, err = extractor.get_changed_atoms(
             reactants=reactants, products=products
         )
+
+        if expand_hetero:
+            for atom in changed_atoms:
+                for atom2 in atom.GetNeighbors():
+                    if atom2.GetSymbol() not in ["C", "H"] and atom2.GetAtomMapNum():
+                        extra_atoms[str(atom2.GetAtomMapNum())] = atom2
+
+        old_tags = list(changed_atom_tags)
+        for atom_num, atom in extra_atoms.items():
+            if atom_num not in old_tags:
+                changed_atoms.append(atom)
+                changed_atom_tags.append(atom_num)
+
         if err:
             raise ReactionException(
                 "Template generation failed: could not obtained changed atoms"
@@ -519,6 +555,29 @@ class ChemicalReaction:
         :return: A single SMILES
         """
         return ".".join([f"({item})" if "." in item else item for item in list_])
+
+    def _product_unique_ring_atoms(self) -> List[int]:
+        def find_ring_atom_maps(mol):
+            ring_atoms_sets = []
+            for ring in mol.GetRingInfo().AtomRings():
+                ring_atoms_sets.append(
+                    tuple(
+                        sorted(mol.GetAtomWithIdx(idx).GetAtomMapNum() for idx in ring)
+                    )
+                )
+            return ring_atoms_sets
+
+        reactant_ring_atom_sets = []
+        for reactant in self.reactants:
+            reactant_ring_atom_sets.extend(find_ring_atom_maps(reactant))
+
+        product_ring_atom_sets = []
+        for product in self.products:
+            for set_ in find_ring_atom_maps(product):
+                if set_ not in reactant_ring_atom_sets:
+                    product_ring_atom_sets.append(set_)
+
+        return [idx for ring_atoms in product_ring_atom_sets for idx in ring_atoms]
 
     def _split_reaction(self) -> None:
         """

@@ -3,12 +3,14 @@ from __future__ import annotations
 
 import json
 from collections import defaultdict
-from typing import ClassVar, Tuple, List
+from typing import ClassVar, Tuple, List, Set
 
 from dataclasses import dataclass
 import pandas as pd
 from rdkit import RDLogger
 from rdkit import Chem
+from rdkit.Chem.rdMolDescriptors import CalcNumRings
+from rdkit.Chem import Descriptors
 
 from rxnutils.pipeline.base import action, global_apply, ReactionActionMixIn
 from rxnutils.chem.utils import (
@@ -120,6 +122,95 @@ class HasStereoInfo:
     def _row_action(self, row: pd.Series) -> str:
         smiles = row[self.in_column]
         return "@" in smiles
+
+
+@action
+@dataclass
+class HasUnmappedRadicalAtom:
+    """Action for flagging if reaction has any unmapped radical atoms"""
+
+    pretty_name: ClassVar[str] = "hasunmappedradicalatom"
+    in_column: str
+    out_column: str = "HasUnmappedRadicalAtom"
+
+    def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
+        smiles_col = global_apply(df, self._row_action, axis=1)
+        return df.assign(**{self.out_column: smiles_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (detect if there is an unmapped radical in the reaction SMILES)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        reactants, _, product = row["rsmi_processed"].split(">")
+
+        react_mol = Chem.MolFromSmiles(reactants)
+        if Descriptors.NumRadicalElectrons(react_mol) == 0:
+            return False
+
+        prod_mol = Chem.MolFromSmiles(product)
+        unmapped_product_atom_element = None
+        for atom in prod_mol.GetAtoms():
+            if atom.GetAtomMapNum() == 0:
+                unmapped_product_atom_element = atom.GetAtomicNum()
+                break
+
+        if unmapped_product_atom_element is None:
+            return False
+
+        has_radical = False
+        for atom in react_mol.GetAtoms():
+            if (
+                atom.GetAtomMapNum() == 0
+                and atom.GetNumRadicalElectrons() > 0
+                and atom.GetAtomicNum() == unmapped_product_atom_element
+            ):
+                has_radical = True
+                break
+        return has_radical
+
+
+@action
+@dataclass
+class HasUnsanitizableReactants:
+    """Action for flagging if reaction has any unsanitizable reactants"""
+
+    pretty_name: ClassVar[str] = "unsanitizablereactants"
+    rsmi_column: str
+    bad_columns: List[str]
+    out_column: str = "HasUnsanitizableReactants"
+
+    def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
+        smiles_col = global_apply(df, self._row_action, axis=1)
+        return df.assign(**{self.out_column: smiles_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (detect if there is unsanitizable reactants)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        unsanitize_atom_map_num = set()
+        for column in self.bad_columns:
+            if not isinstance(row[column], str):
+                continue
+            unsanitize_atom_map_num |= self._process_bad_column(row[column])
+
+        if not unsanitize_atom_map_num:
+            return False
+
+        _, _, product = row[self.rsmi_column].split(">")
+        prod_atom_map_num = set(atom_mapping_numbers(product))
+        return bool(prod_atom_map_num.intersection(unsanitize_atom_map_num))
+
+    @staticmethod
+    def _process_bad_column(smiles_list: str) -> Set[int]:
+        unsanitize_atom_map_num = set()
+        for smiles in smiles_list.split(","):
+            mol = Chem.MolFromSmiles(smiles, sanitize=False)
+            if not mol:
+                continue
+            unsanitize_atom_map_num |= {
+                atom.GetAtomMapNum() for atom in mol.GetAtoms() if atom.GetAtomMapNum()
+            }
+        return unsanitize_atom_map_num
 
 
 @action
@@ -307,6 +398,147 @@ class ReactantSize:
             reactant_atom_count = 0
 
         return reactant_atom_count
+
+
+@action
+@dataclass
+class RingNumberChange:
+    """
+    Action for calculating if reaction has change in number of rings
+
+    A positive number from this action implies that a ring was formed during the reaction
+    """
+
+    pretty_name: ClassVar[str] = "ringnumberchange"
+    in_column: str
+    out_column: str = "NRingChange"
+
+    def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
+        smiles_col = global_apply(df, self._row_action, axis=1)
+        return df.assign(**{self.out_column: smiles_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (ring change based on number of rings)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        reactants, _, products = row[self.in_column].split(">")
+        prod_mol = Chem.MolFromSmiles(products)
+
+        if not prod_mol:
+            return False
+
+        reactants_mols = [Chem.MolFromSmiles(smi) for smi in reactants.split(".")]
+        nrings_reactants = sum(CalcNumRings(mol) for mol in reactants_mols if mol)
+        nrings_product = CalcNumRings(prod_mol)
+        return nrings_product - nrings_reactants
+
+
+@action
+@dataclass
+class RingBondMade:
+    """Action for flagging if reaction has made a ring bond in the product"""
+
+    pretty_name: ClassVar[str] = "ringbondmade"
+    in_column: str
+    out_column: str = "RingBondMade"
+
+    def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
+        smiles_col = global_apply(df, self._row_action, axis=1)
+        return df.assign(**{self.out_column: smiles_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (ring change based on ring bond made)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        reactants, _, products = row[self.in_column].split(">")
+
+        prod_mol = Chem.MolFromSmiles(products)
+        if not prod_mol:
+            return False
+        ring_bonds = [
+            (bond.GetBeginAtom().GetAtomMapNum(), bond.GetEndAtom().GetAtomMapNum())
+            for bond in prod_mol.GetBonds()
+            if bond.IsInRing()
+        ]
+
+        for smiles in split_smiles_from_reaction(reactants):
+            reactant_mol = Chem.MolFromSmiles(smiles)
+            if not reactant_mol:
+                continue
+            r_mappings = self._mapping_to_index(reactant_mol)
+            for atom_map1, atom_map2 in ring_bonds:
+                if atom_map1 not in r_mappings and atom_map2 not in r_mappings:
+                    continue
+
+                # If not both of the atoms are in the same molecule the bond is new
+                if atom_map1 not in r_mappings and atom_map2 in r_mappings:
+                    return True
+                if atom_map2 not in r_mappings and atom_map1 in r_mappings:
+                    return True
+
+                atom_idx1 = r_mappings[atom_map1]
+                atom_idx2 = r_mappings[atom_map2]
+                bond = reactant_mol.GetBondBetweenAtoms(atom_idx1, atom_idx2)
+                if bond is None or not bond.IsInRing():
+                    return True
+        return False
+
+    @staticmethod
+    def _mapping_to_index(mol):
+        return {
+            atom.GetAtomMapNum(): atom.GetIdx()
+            for atom in mol.GetAtoms()
+            if atom.GetAtomMapNum()
+        }
+
+
+@action
+@dataclass
+class RingMadeSize:
+    """Action for computing the size of a newly formed ring"""
+
+    pretty_name: ClassVar[str] = "ringmadesize"
+    in_column: str
+    out_column: str = "RingMadeSize"
+
+    def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
+        smiles_col = global_apply(df, self._row_action, axis=1)
+        return df.assign(**{self.out_column: smiles_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (largest ring made)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        reactants, _, products = row[self.in_column].split(">")
+
+        prod_mol = Chem.MolFromSmiles(products)
+        if not prod_mol:
+            return None
+
+        reactant_rings = []
+        for smiles in split_smiles_from_reaction(reactants):
+            reactant_mol = Chem.MolFromSmiles(smiles)
+            if not reactant_mol:
+                continue
+
+            reactant_rings.extend(self._find_rings(reactant_mol))
+
+        largest_made_ring = 0
+        for ring in self._find_rings(prod_mol):
+            if ring not in reactant_rings:
+                largest_made_ring = max(largest_made_ring, len(ring))
+        return largest_made_ring
+
+    @staticmethod
+    def _find_rings(mol):
+        rings = []
+        for ring in mol.GetRingInfo().AtomRings():
+            ring_atoms = [mol.GetAtomWithIdx(idx).GetAtomMapNum() for idx in ring]
+            # Only consider at least partially atom-mapped rings
+            if set(ring_atoms) == {0}:
+                continue
+            rings.append(tuple(sorted(ring_atoms)))
+        return rings
 
 
 @action
