@@ -9,6 +9,7 @@ import rdchiral.template_extractor
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem.MolStandardize import rdMolStandardize
+from rdkit.Chem.SaltRemover import SaltRemover
 
 
 def get_special_groups(mol) -> List[Tuple[Tuple[int, ...], Tuple[int, ...]]]:
@@ -336,7 +337,7 @@ def has_atom_mapping(
 
 
 def remove_atom_mapping(
-    smiles: str, is_smarts: bool = False, sanitize: bool = True
+    smiles: str, is_smarts: bool = False, sanitize: bool = True, canonical=True
 ) -> str:
     """
     Returns a molecule without atom mapping
@@ -344,6 +345,7 @@ def remove_atom_mapping(
     :param smiles: the SMILES/SMARTS representing the molecule
     :param is_smarts: if True, will interpret the SMILES as a SMARTS
     :param sanitize: if True, will sanitize the molecule
+    :param canonical: if False, will not canonicalize (applies to SMILES)
     :return: the molecule without atom-mapping
     """
     if not smiles:
@@ -358,7 +360,7 @@ def remove_atom_mapping(
     # is_smarts=True: Chem.MolToSmarts
     # is_smarts=False: Chem.MolToSmiles
     to_func = {
-        False: Chem.MolToSmiles,
+        False: functools.partial(Chem.MolToSmiles, canonical=canonical),
         True: Chem.MolToSmarts,
     }
     mol = from_func[is_smarts](smiles)
@@ -368,6 +370,7 @@ def remove_atom_mapping(
 
     for atom in mol.GetAtoms():
         atom.SetAtomMapNum(0)
+
     return to_func[is_smarts](mol)
 
 
@@ -401,6 +404,35 @@ def neutralize_molecules(smiles_list: List[str]) -> List[str]:
         )
 
     return [Chem.MolToSmiles(mol) for mol in neutral_mols]
+
+
+def desalt_molecules(smiles_list: List[str], keep_something: bool = False) -> List[str]:
+    """
+    Remove salts from a set of molecules using RDKit routines
+
+    :param smiles_list: the molecules as SMILES
+    :param keep_something: if True will keep at least one salt
+    :return: the desalted molecules
+    """
+    remover = SaltRemover()  # use default saltremover
+    mols = [Chem.MolFromSmiles(smi) for smi in smiles_list]
+    desalted_mols = [
+        remover.StripMol(mol, dontRemoveEverything=keep_something)
+        for mol in mols
+        if mol
+    ]
+    if len(mols) > len(desalted_mols):
+        logging.warning(
+            f"No. of desalted molecules ({len(desalted_mols)}) are less than No. of input molecules ({len(mols)})."
+        )
+
+    smiles_list_new = [Chem.MolToSmiles(mol) for mol in desalted_mols]
+    smiles_list_new = [smi for smi in smiles_list_new if smi]
+    if len(smiles_list) > len(smiles_list_new):
+        logging.warning(
+            f"No. of desalted SMILES ({len(smiles_list_new)}) are less than No. of input SMILES ({len(smiles_list)})."
+        )
+    return smiles_list_new
 
 
 def same_molecule(mol1, mol2) -> bool:
@@ -501,6 +533,17 @@ def reassign_rsmi_atom_mapping(rsmi: str, as_smiles: bool = False) -> str:
     return updated_rsmi
 
 
+def join_smiles_from_reaction(smiles_list: List[str]) -> str:
+    """
+    Join a part of reaction SMILES, e.g. reactants and products into components.
+    Intra-molecular complexes are bracketed with parenthesis
+
+    :param smiles_list: the SMILES components
+    :return: the joined list
+    """
+    return ".".join([f"({item})" if "." in item else item for item in smiles_list])
+
+
 def split_smiles_from_reaction(smiles: str) -> List[str]:
     """
     Split a part of reaction SMILES, e.g. reactants or products
@@ -540,3 +583,73 @@ def split_smiles_from_reaction(smiles: str) -> List[str]:
         else:
             components.append(smiles[block_start:pos])
     return components
+
+
+def reaction_centres(rxn) -> Tuple[List[int], ...]:
+    """
+    Return reaction centre atoms, provided that the bonding partners
+    actually change when comparing the environment in the reactant and the product
+
+    inspired by code from Greg Landrum's tutorial
+    set up array to remove atoms from the reaction centers
+    by comparing the atom mapping in the reactant vs the products
+
+    Original implementation by Christoph Bauer
+
+    :param rxn: the initialized RDKit reaction
+    :return: tuple of reaction centre atoms, filtered by connectivity criterion
+    """
+    rxncenters = rxn.GetReactingAtoms(mappedAtomsOnly=True)
+
+    remove_array = []
+    nreactants = len(rxncenters)
+    for ridx, reacting in enumerate(rxncenters):
+        reactant = rxn.GetReactantTemplate(ridx)
+        for raidx in reacting:
+            ratm = reactant.GetAtomWithIdx(raidx)
+            mapnum = ratm.GetAtomMapNum()
+            numexplicitH_reactant = ratm.GetNumExplicitHs()
+            neighbours = ratm.GetNeighbors()
+            map_neighbours = sorted(
+                [neighbour_atom.GetAtomMapNum() for neighbour_atom in neighbours]
+            )
+            foundit = False
+            for product in rxn.GetProducts():
+                for patom in product.GetAtoms():
+                    if patom.GetAtomMapNum() == mapnum:
+                        neighbours_product = patom.GetNeighbors()
+                        numexplicitH_product = patom.GetNumExplicitHs()
+                        map_neighbours_product = sorted(
+                            [
+                                neighbour_atom.GetAtomMapNum()
+                                for neighbour_atom in neighbours_product
+                            ]
+                        )
+                        # criterion: check if the map numbers of neighbours are the same in the reactant and the product
+                        if map_neighbours == map_neighbours_product:
+                            if numexplicitH_reactant == numexplicitH_product:
+                                # if yes --> then the environment doesn't change, so set remove to True
+                                remove_array.append(True)
+                            else:
+                                remove_array.append(False)
+                        else:
+                            # False means that the environment does change, so set remove to False
+                            remove_array.append(False)
+                        foundit = True
+                        break
+                    if foundit:
+                        break
+
+    # actual removal of reaction centres by generating new tuple
+    rxncenters_filtered = []
+    counter = 0
+    for reactant_idx in range(nreactants):
+        reactantcenters = []
+        for index in rxncenters[reactant_idx]:
+            if not remove_array[counter]:
+                reactantcenters.append(index)
+            counter += 1
+        reactantcenters = tuple(reactantcenters)
+        rxncenters_filtered.append(reactantcenters)
+    rxncenters_filtered = tuple(rxncenters_filtered)
+    return rxncenters_filtered

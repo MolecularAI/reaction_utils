@@ -2,19 +2,25 @@
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 import tempfile
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from pathlib import Path
 from typing import ClassVar, List, Tuple
 
 import pandas as pd
 from rdkit import Chem, RDLogger
 from rdkit.Chem import RDConfig
+
 from rxnutils.chem.utils import (
     atom_mapping_numbers,
     neutralize_molecules,
     remove_atom_mapping,
+    desalt_molecules,
+    split_smiles_from_reaction,
+    join_smiles_from_reaction,
 )
 from rxnutils.pipeline.base import ReactionActionMixIn, action, global_apply
 
@@ -26,11 +32,45 @@ if CONTRIB_INSTALLED:
         f"{RDConfig.RDContribDir}/RxnRoleAssignment"
     )  # to make Nadines code import "utils"
     # fmt: off
-    from RxnRoleAssignment.identifyReactants import reassignReactionRoles  # pylint: disable=all # noqa
+    from RxnRoleAssignment.identifyReactants import \
+        reassignReactionRoles  # pylint: disable=all # noqa
+
     # fmt: on
 
 rd_logger = RDLogger.logger()
 rd_logger.setLevel(RDLogger.CRITICAL)
+
+
+@action
+@dataclass
+class DesaltMolecules(ReactionActionMixIn):
+    """Action for desalting molecules"""
+
+    pretty_name: ClassVar[str] = "desalt_molecules"
+    in_column: str
+    out_column: str = "RxnDesalted"
+    keep_something: bool = False
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        smiles_col = global_apply(data, self._apply_row, axis=1)
+        return data.assign(**{self.out_column: smiles_col})
+
+    def _apply_row(self, row: pd.Series) -> pd.Series:
+        reactants_list, reagents_list, products_list = self.split_lists(row)
+        reactants_list = desalt_molecules(
+            reactants_list, keep_something=self.keep_something
+        )
+        if reagents_list:
+            reagents_list = desalt_molecules(
+                reagents_list, keep_something=self.keep_something
+            )
+        products_list = desalt_molecules(
+            products_list, keep_something=self.keep_something
+        )
+        return self.join_lists(reactants_list, reagents_list, products_list)
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (desalt molecules using RDKit SaltRemover)"
 
 
 @action
@@ -222,6 +262,32 @@ class InvertStereo:
 
 @action
 @dataclass
+class IsotopeInfo:
+    """Action creating and modifying isotope information"""
+
+    pretty_name: ClassVar[str] = "isotope_info"
+    in_column: str
+    isotope_column: str = "Isotope"
+    out_column: str = "RxnSmilesWithoutIsotopes"
+    match_regex: str = (
+        r"\[(?P<mass>[0-9]+)(?P<symbol>[A-Za-z][a-z]*)(?P<spec>[^\]]+)*\]"
+    )
+    sub_regex: str = r"[\g<symbol>\g<spec>]"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        isotop_info = data[self.in_column].str.extract(self.match_regex)
+        isotop_col = isotop_info.mass + isotop_info.symbol
+        rsmi_col = data[self.in_column].str.replace(self.match_regex, self.sub_regex)
+        return data.assign(
+            **{self.isotope_column: isotop_col, self.out_column: rsmi_col}
+        )
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (extract and remove isotope information from reactions)"
+
+
+@action
+@dataclass
 class RemoveExtraAtomMapping(ReactionActionMixIn):
     """Action for removing extra atom mapping"""
 
@@ -383,6 +449,58 @@ class RDKitRxnRoles:
 
     def __str__(self) -> str:
         return f"{self.pretty_name} (reaction role assignment using RDKit contrib (Nadine and Greg's))"
+
+
+# fmt: off
+_MAP_SCRIPT = Path(__file__).parent.parent.parent / "data" / "mapping.py"
+# fmt: on
+
+
+@action
+@dataclass
+class RxnMapper:
+    """Action for mapping reactions with the RXNMapper tool"""
+
+    pretty_name: ClassVar[str] = "rxnmapper"
+    in_column: str
+    out_column: str = "RxnmapperRxnSmiles"
+    rxnmapper_command: str = "conda run -p ${RXNMAPPER_ENV_PATH} python " + str(
+        _MAP_SCRIPT
+    )
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        new_column = self._do_action(data[self.in_column])
+        return data.assign(**{self.out_column: new_column})
+
+    def _do_action(self, column: pd.Series) -> pd.Series:
+        input_handle, input_path = tempfile.mkstemp(suffix=".csv")
+        output_handle, output_path = tempfile.mkstemp(suffix=".csv")
+        column.to_csv(input_path, sep="\t", index=False)
+
+        cmd = self.rxnmapper_command
+        if "CONDA_PATH" in os.environ:
+            cmd = os.environ["CONDA_PATH"] + os.sep + cmd
+        arglist = cmd.split() + [
+            "--input",
+            input_path,
+            "--column",
+            self.in_column,
+            "--output",
+            output_path,
+        ]
+        _ = subprocess.check_output(arglist).decode("utf-8")
+
+        mapped_data = pd.read_csv(output_path, sep="\t")
+
+        os.remove(input_path)
+        os.remove(output_path)
+        os.close(input_handle)
+        os.close(output_handle)
+
+        return mapped_data["mapped_rxn"]
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (RFP by rxnfp)"
 
 
 @action

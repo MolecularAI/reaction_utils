@@ -35,7 +35,7 @@ def test_pipeline(shared_datadir, tmpdir):
     assert data["NMappedReactants"].to_list() == [2, 2]
     assert data["NReagents"].to_list() == [0, 0]
     assert data["NMappedReagents"].to_list() == [0, 0]
-    assert data["BadMolecules"].to_list()[0] == "C(C(CC)(O[Mg+2])C)C"
+    assert data["BadMolecules"].to_list()[0] == "C(C(CC)(O[Mg+2])C)CN(C)(C)(C)"
     assert data["BadMolecules"].isna()[1]
 
 
@@ -62,4 +62,4 @@ def test_pipeline_batched(shared_datadir, tmpdir):
     assert data["NMappedReactants"].to_list() == [2]
     assert data["NReagents"].to_list() == [0]
     assert data["NMappedReagents"].to_list() == [0]
-    assert data["BadMolecules"].to_list() == ["C(C(CC)(O[Mg+2])C)C"]
+    assert data["BadMolecules"].to_list() == ["C(C(CC)(O[Mg+2])C)CN(C)(C)(C)"]

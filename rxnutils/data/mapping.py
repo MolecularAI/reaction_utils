@@ -5,6 +5,8 @@ from typing import Optional, Sequence
 
 import pandas as pd
 
+from rxnutils.data.batch_utils import read_csv_batch
+
 try:
     from rxnmapper import RXNMapper  # pylint: disable=all
 except ImportError:
@@ -33,6 +35,11 @@ def main(input_args: Optional[Sequence[str]] = None) -> None:
         help="Line numbers to start and stop reading rows",
     )
     parser.add_argument(
+        "--column",
+        default="ReactionSmilesClean",
+        help="The column with the reaction SMILES",
+    )
+    parser.add_argument(
         "--mapper_batch_size",
         type=int,
         default=5,
@@ -40,25 +47,12 @@ def main(input_args: Optional[Sequence[str]] = None) -> None:
     )
     args = parser.parse_args(input_args)
 
-    if args.batch:
-        start, end = args.batch
-        data = pd.read_csv(
-            args.input,
-            sep="\t",
-            nrows=end - start,
-            skiprows=range(1, start),
-        )
-    else:
-        data = pd.read_csv(args.input, sep="\t")
+    data = read_csv_batch(args.input, sep="\t", index_col=False, batch=args.batch)
 
     rxn_mapper = RXNMapper()
     mapped_data = []
     for start in range(0, len(data), args.mapper_batch_size):
-        batch = (
-            data["ReactionSmilesClean"]
-            .iloc[start : start + args.mapper_batch_size]
-            .tolist()
-        )
+        batch = data[args.column].iloc[start : start + args.mapper_batch_size].tolist()
         fail_data = [
             {
                 "mapped_rxn": None,
