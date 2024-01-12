@@ -337,7 +337,7 @@ def has_atom_mapping(
 
 
 def remove_atom_mapping(
-    smiles: str, is_smarts: bool = False, sanitize: bool = True, canonical=True
+    smiles: str, is_smarts: bool = False, sanitize: bool = True, canonical: bool = True
 ) -> str:
     """
     Returns a molecule without atom mapping
@@ -585,7 +585,7 @@ def split_smiles_from_reaction(smiles: str) -> List[str]:
     return components
 
 
-def reaction_centres(rxn) -> Tuple[List[int], ...]:
+def reaction_centres(rxn: AllChem.ChemicalReaction) -> Tuple[List[int], ...]:
     """
     Return reaction centre atoms, provided that the bonding partners
     actually change when comparing the environment in the reactant and the product
