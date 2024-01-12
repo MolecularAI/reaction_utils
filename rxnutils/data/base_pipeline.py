@@ -7,17 +7,15 @@ from pathlib import Path
 import pandas as pd
 from metaflow import FlowSpec, Parameter
 
+from typing import List, Tuple
+
+from rxnutils.data.batch_utils import create_csv_batches, combine_csv_batches
+
 # This is hack to only import the validation_runner if rxnmapper is not installed
 try:
     import rxnmapper  # noqa
 except ImportError:
     from rxnutils.pipeline.runner import main as validation_runner
-
-
-def nlines(filename: str) -> int:
-    """Count and return the number of lines in a file"""
-    with open(filename, "rb") as fileobj:
-        return sum(1 for line in fileobj)
 
 
 class DataBaseFlow(FlowSpec):
@@ -26,38 +24,17 @@ class DataBaseFlow(FlowSpec):
     nbatches = Parameter("nbatches", type=int, required=True)
     folder = Parameter("folder", default=".")
 
-    def _combine_batches(self, filename):
-        if Path(filename).exists():
-            return
+    def _combine_batches(self, filename: str) -> None:
+        combine_csv_batches(filename, self.nbatches)
 
-        data = None
-        for idx in range(self.nbatches):
-            filename2 = f"{filename}.{idx}"
-            data_temp = pd.read_csv(filename2, sep="\t")
-            if data is None:
-                data = data_temp
-            else:
-                data = pd.concat([data, data_temp])
-            os.remove(filename2)
-        data.to_csv(filename, index=False, sep="\t")
-
-    def _create_batches(self, input_filename, output_filename):
-        if Path(output_filename).exists():
-            return [(-1, None, None)]
-
-        file_size = (
-            nlines(input_filename) - 1
-        )  # Header should not be counted for chunk size calculations
-        chunk_size = math.ceil(file_size / self.nbatches)
-        partition_limits = [
-            (
-                idx,
-                idx * chunk_size + 1,
-                (idx + 1) * chunk_size + 1,
-            )  # +1 to account for header
-            for idx in range(self.nbatches)
-        ]
-        return partition_limits
+    def _create_batches(
+        self, input_filename: str, output_filename: str
+    ) -> List[Tuple[int, int, int]]:
+        return create_csv_batches(
+            input_filename,
+            self.nbatches,
+            output_filename,
+        )
 
 
 class DataPreparationBaseFlow(DataBaseFlow):

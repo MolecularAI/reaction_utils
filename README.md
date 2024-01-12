@@ -106,6 +106,8 @@ Please use ``black`` package for formatting, and follow ``pep8`` style guide.
 
 * [@ckannas](https://github.com/ckannas)
 * [@SGenheden](https://www.github.com/SGenheden)
+* [@anniewesterlund](https://www.github.com/anniewesterlund) 
+* [@CBA087](https://www.github.com/CBA087) 
 * [@EBjerrum](https://www.github.com/EBjerrum)
 * [@A-Thakkar](https://www.github.com/A-Thakkar)
 

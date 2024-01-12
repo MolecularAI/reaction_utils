@@ -1,5 +1,6 @@
 import pytest
 from rdkit import Chem
+from rdkit.Chem import AllChem
 
 from rxnutils.chem.utils import (
     has_atom_mapping,
@@ -11,6 +12,7 @@ from rxnutils.chem.utils import (
     split_smiles_from_reaction,
     reassign_rsmi_atom_mapping,
     get_special_groups,
+    reaction_centres,
 )
 
 
@@ -118,3 +120,23 @@ def test_special_groups():
     # if this should make sense
     mol = Chem.MolFromSmiles("c1ccccc1B(O)O")
     assert get_special_groups(mol)[0][1] == (6, 7, 8)
+
+
+@pytest.mark.parametrize(
+    ("smiles", "expected"),
+    [
+        (
+            "[ClH:1].[cH:2]1[cH:3][cH:4][cH:5][cH:6][cH:7]1>>[Cl:1][c:2]1[cH:3][cH:4][cH:5][cH:6][cH:7]1",
+            ((0,), (0,)),
+        ),
+        (
+            "Br[CH2:9][CH2:10][CH2:11]Br.[CH3:1][CH2:2][O:3][C:4](=[O:5])[CH2:6][C:7]#[N:8]>>[CH3:1][CH2:2][O:3][C:4](=[O:5])[C:6]1([C:7]#[N:8])[CH2:9][CH2:10][CH2:11]1",
+            ((1, 3), (5,)),
+        ),
+    ],
+)
+def test_reaction_centers(smiles, expected):
+    rxn = AllChem.ReactionFromSmarts(smiles, useSmiles=True)
+    rxn.Initialize()
+
+    assert reaction_centres(rxn) == expected

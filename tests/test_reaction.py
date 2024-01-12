@@ -100,7 +100,7 @@ def test_nochangeness(rsmi, expected):
             True,
         ),
         (
-            "[CH3:1]I.[CH3:6][N:5]1[CH2:4][CH2:3][NH:2][CH2:31][CH2:16]1>C(C(CC)(O[Mg+2])C)C>"
+            "[CH3:1]I.[CH3:6][N:5]1[CH2:4][CH2:3][NH:2][CH2:31][CH2:16]1>C(C(CC)(O[Mg+2])CN(C)(C)(C))C>"
             "[CH3:1]I.[CH3:6][N:5]1[CH2:4][CH2:3][NH:2][CH2:31][CH2:16]1",
             False,
         ),

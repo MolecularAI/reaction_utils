@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## Version 1.3.0 - 2024-01-09
+
+### Features
+
+- Adding support for Condensed Graph of Reaction
+- Adding support for flagging stereocontrolled reactions
+- Adding routines for desalting reactions
+- Adding routines for identifying reaction centers
+- Adding several dataframe modifying actions
+- Adding several reaction modifying actions
+
+### Trival changes
+
+- Unifying routines to make and concatenate batches
+
 ## Version 1.2.0 - 2022-11-21
 
 ### Features

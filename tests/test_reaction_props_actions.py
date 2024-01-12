@@ -16,6 +16,16 @@ from rxnutils.pipeline.actions.reaction_props import (
     RingBondMade,
     RingMadeSize,
     RingNumberChange,
+    StereoMesoProduct,
+    StereoCentreChanges,
+    StereoCenterIsCreated,
+    StereoCenterIsRemoved,
+    StereoHasChiralReagent,
+    StereoCenterInReactantPotential,
+    StereoCenterOutsideReaction,
+    CgrCreated,
+    CgrNumberOfDynamicBonds,
+    MaxRingNumber,
 )
 from rxnutils.pipeline.actions.reaction_mod import RemoveUnsanitizable
 from rxnutils.pipeline.base import global_apply
@@ -108,7 +118,7 @@ def test_smiles_length(make_reaction_dataframe):
 
     df2 = action(df)
 
-    assert df2["SmilesLength"].to_list() == [434, 133]
+    assert df2["SmilesLength"].to_list() == [444, 133]
 
 
 def test_smiles_sanitizable(make_reaction_dataframe):
@@ -158,3 +168,76 @@ def test_ring_actions_no_rings(make_reaction_dataframe):
     assert df2["NRingChange"].to_list() == [0, 0]
     assert df2["RingBondMade"].to_list() == [False, False]
     assert df2["RingMadeSize"].to_list() == [0, 0]
+
+
+def test_meso_products(shared_datadir):
+    df = pd.read_csv(shared_datadir / "example_stereo_reactions.csv")
+    action = StereoMesoProduct(in_column="rsmi")
+
+    df2 = action(df)
+
+    assert df2["MesoProduct"].to_list() == [True, False, False, False, False]
+
+
+def test_stereo_changes(shared_datadir):
+    df = pd.read_csv(shared_datadir / "example_stereo_reactions.csv")
+    action1 = StereoCentreChanges(in_column="rsmi")
+    action2 = StereoCenterIsRemoved()
+    action3 = StereoCenterIsCreated()
+
+    df2 = action3(action2(action1(df)))
+
+    assert df2["HasStereoChanges"].to_list() == [True, True, True, True, True]
+    assert df2["StereoCentreCreated"].to_list() == [True, True, True, False, False]
+    assert df2["StereoCentreRemoved"].to_list() == [False, False, True, False, False]
+
+
+def test_potential_stereo(shared_datadir):
+    df = pd.read_csv(shared_datadir / "example_stereo_reactions.csv")
+    action = StereoCenterInReactantPotential(in_column="rsmi")
+
+    df2 = action(df)
+
+    assert df2["PotentialStereoCentre"].to_list() == [False, False, False, True, False]
+
+
+def test_chiral_reagent(shared_datadir):
+    df = pd.read_csv(shared_datadir / "example_stereo_reactions.csv")
+    action = StereoHasChiralReagent(in_column="rsmi")
+
+    df2 = action(df)
+
+    assert df2["HasChiralReagent"].to_list() == [False, False, False, False, True]
+
+
+def test_cgr_created(make_reaction_dataframe):
+    action1 = RemoveUnsanitizable(in_column="rsmi", out_column="rsmi")
+    action2 = CgrCreated(in_column="rsmi")
+    df = make_reaction_dataframe
+
+    df2 = action2(df)
+
+    assert df2["CGRCreated"].to_list() == [False, True]
+
+    df2 = action2(action1(df))
+
+    assert df2["CGRCreated"].to_list() == [True, True]
+
+
+def test_cgr_dynamic_bonds(make_reaction_dataframe):
+    action = CgrNumberOfDynamicBonds(in_column="rsmi")
+    df = make_reaction_dataframe
+
+    df2 = action(df)
+
+    assert pd.isna(df2["NDynamicBonds"].iloc[0])
+    assert df2["NDynamicBonds"].iloc[1] == 2
+
+
+def test_max_rings(make_reaction_dataframe):
+    action = MaxRingNumber(in_column="rsmi")
+    df = make_reaction_dataframe
+
+    df2 = action(df)
+
+    assert df2["MaxRings"].to_list() == [3, 0]
