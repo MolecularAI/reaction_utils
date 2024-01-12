@@ -1,10 +1,12 @@
 """Module containing actions that modify the dataframe in some way"""
 from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import ClassVar
 
 import pandas as pd
 from rdkit import RDLogger
+
 from rxnutils.pipeline.base import action
 
 rd_logger = RDLogger.logger()
@@ -51,6 +53,32 @@ class DropDuplicates:
 
 @action
 @dataclass
+class DropRows:
+    """Drops rows according to boolean in 'indicator_columns'.
+    True => Keep, False => Drop.
+
+    yaml example:
+
+    drop_rows:
+        indicator_columns:
+            - is_sanitizable
+            - is_sanitizable2
+    """
+
+    pretty_name: ClassVar[str] = "drop_rows"
+    indicator_columns: list[str]
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        for column in self.indicator_columns:
+            data = data.iloc[data[column].values]
+        return data
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (drop rows according to booleans specified in 'indicator_columns')"
+
+
+@action
+@dataclass
 class KeepColumns:
     """Drops columns not specified in 'columns'
 
@@ -75,6 +103,34 @@ class KeepColumns:
 
     def __str__(self) -> str:
         return f"{self.pretty_name} (keeps columns in specified list, drops the rest)"
+
+
+@action
+@dataclass
+class RenameColumns:
+    """Renames columns specified in 'in_columns' to the names specified in 'out_columns'
+
+    yaml example:
+
+    rename_columns:
+        in_columns:
+            - column1
+            - column2
+        out_columns:
+            - column1_renamed
+            - column2_renamed
+    """
+
+    pretty_name: ClassVar[str] = "rename_columns"
+    in_columns: list[str]
+    out_columns: list[str]
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        rename_mapper = dict(zip(self.in_columns, self.out_columns))
+        return data.rename(columns=rename_mapper)
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (renames the specified columns)"
 
 
 @action

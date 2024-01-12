@@ -10,8 +10,7 @@ import pandas as pd
 import swifter  # noqa #pylint: disable=unused-import
 from tqdm import tqdm
 
-from rxnutils.chem.utils import split_smiles_from_reaction
-
+from rxnutils.chem.utils import split_smiles_from_reaction, join_smiles_from_reaction
 
 ActionType = Callable[[pd.DataFrame], pd.DataFrame]
 
@@ -111,9 +110,9 @@ class ReactionActionMixIn:
         :return: the concatenated reaction SMILES
         """
         return self.join_smiles(
-            self._join_list(reactants_list),
-            self._join_list(reagents_list),
-            self._join_list(products_list),
+            join_smiles_from_reaction(reactants_list),
+            join_smiles_from_reaction(reagents_list),
+            join_smiles_from_reaction(products_list),
         )
 
     def join_smiles(self, reactants: str, reagents: str, products: str) -> str:
@@ -149,7 +148,3 @@ class ReactionActionMixIn:
         :return: the SMILES of the components
         """
         return row[self.in_column].split(">")
-
-    @staticmethod
-    def _join_list(list_: List[str]) -> str:
-        return ".".join([f"({item})" if "." in item else item for item in list_])

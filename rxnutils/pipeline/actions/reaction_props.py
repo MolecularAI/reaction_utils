@@ -2,22 +2,32 @@
 from __future__ import annotations
 
 import json
+import os
 from collections import defaultdict
-from typing import ClassVar, Tuple, List, Set
-
 from dataclasses import dataclass
-import pandas as pd
-from rdkit import RDLogger
-from rdkit import Chem
-from rdkit.Chem.rdMolDescriptors import CalcNumRings
-from rdkit.Chem import Descriptors
+from typing import ClassVar, List, Set, Tuple, Optional
 
-from rxnutils.pipeline.base import action, global_apply, ReactionActionMixIn
-from rxnutils.chem.utils import (
-    has_atom_mapping,
-    split_smiles_from_reaction,
-    atom_mapping_numbers,
+import pandas as pd
+from rdkit import Chem, RDLogger
+from rdkit.Chem import AllChem, Descriptors
+from rdkit.Chem.MolKey.InchiInfo import InchiInfo
+from rdkit.Chem.rdMolDescriptors import CalcNumRings
+from rdkit.Chem.rdmolops import FindPotentialStereo
+
+from rxnutils.pipeline.base import (
+    action,
+    global_apply,
+    ReactionActionMixIn,
 )
+from rxnutils.chem.utils import (
+    atom_mapping_numbers,
+    has_atom_mapping,
+    join_smiles_from_reaction,
+    reaction_centres,
+    split_smiles_from_reaction,
+)
+from rxnutils.chem.reaction import ChemicalReaction
+from rxnutils.chem.cgr import CondensedGraphReaction
 
 rd_logger = RDLogger.logger()
 rd_logger.setLevel(RDLogger.CRITICAL)
@@ -215,6 +225,56 @@ class HasUnsanitizableReactants:
 
 @action
 @dataclass
+class CgrCreated:
+    """Action for determining if a CGR can be created from the reaction smiles"""
+
+    in_column: str
+    pretty_name: ClassVar[str] = "cgr_created"
+    out_column: str = "CGRCreated"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        out_col = global_apply(data, self._create_cgr_column, axis=1)
+        return data.assign(**{self.out_column: out_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (flag if a CGR can be created for the reaction)"
+
+    def _create_cgr_column(self, row: pd.Series) -> bool:
+        rxn = ChemicalReaction(row[self.in_column], clean_smiles=False)
+        try:
+            _ = CondensedGraphReaction(rxn)
+        except Exception:
+            return False
+        return True
+
+
+@action
+@dataclass
+class CgrNumberOfDynamicBonds:
+    """Action for calculating the number of dynamic bonds"""
+
+    in_column: str
+    pretty_name: ClassVar[str] = "cgr_dynamic_bonds"
+    out_column: str = "NDynamicBonds"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        out_col = global_apply(data, self._process_row, axis=1)
+        return data.assign(**{self.out_column: out_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (number of dynamic bonds in the CGR)"
+
+    def _process_row(self, row: pd.Series) -> Optional[int]:
+        rxn = ChemicalReaction(row[self.in_column], clean_smiles=False)
+        try:
+            cgr = CondensedGraphReaction(rxn)
+        except Exception:
+            return None
+        return cgr.bonds_changed
+
+
+@action
+@dataclass
 class ProductAtomMappingStats:
     """Action for collecting statistics of product atom mapping"""
 
@@ -402,6 +462,40 @@ class ReactantSize:
 
 @action
 @dataclass
+class MaxRingNumber:
+    """
+    Action for calculating the maximum number of rings in either the product or reactant
+    For a reaction without reactants or products, it will return 0 to enable easy arithmetic comparison
+    """
+
+    pretty_name: ClassVar[str] = "maxrings"
+    in_column: str
+    out_column: str = "MaxRings"
+
+    def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
+        smiles_col = global_apply(df, self._row_action, axis=1)
+        return df.assign(**{self.out_column: smiles_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (maximum number of rings)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        reactants, _, products = row[self.in_column].split(">")
+
+        reactants_mols = [Chem.MolFromSmiles(smi) for smi in reactants.split(".")]
+        nrings_reactants = [CalcNumRings(mol) for mol in reactants_mols if mol]
+        max_rings_reactants = 0 if not nrings_reactants else max(nrings_reactants)
+
+        prod_mol = Chem.MolFromSmiles(products)
+        if not prod_mol:
+            return max_rings_reactants
+
+        nrings_product = CalcNumRings(prod_mol)
+        return max([nrings_product, max_rings_reactants])
+
+
+@action
+@dataclass
 class RingNumberChange:
     """
     Action for calculating if reaction has change in number of rings
@@ -579,6 +673,9 @@ class SmilesSanitizable:
 
     def _row_action(self, row: pd.Series) -> str:
         smiles = row[self.in_column]
+        if not smiles:
+            return False
+
         mol = Chem.MolFromSmiles(smiles)
         try:  # Extra check that the molecule can generate SMILES that are again parsable
             mol = Chem.MolFromSmiles(Chem.MolToSmiles(mol))
@@ -616,3 +713,283 @@ class StereoInvention:
         reactants, _, products = row[self.in_column].split(">")
 
         return self._has_stereo(products) and not self._has_stereo(reactants)
+
+
+@action
+@dataclass
+class StereoCentreChanges:
+    """
+    Action for checking if stereogenic centre in reaction center is changing
+    during the reaction
+
+    Will create two columns:
+        1. A boolean column indicating True or False if it has stereochanges
+        2. A description of the stereo information before and after the reaction
+    """
+
+    pretty_name: ClassVar[str] = "stereo_centre_changes"
+    in_column: str
+    out_column: str = "HasStereoChanges"
+    stereo_changes_column: str = "StereoChanges"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        new_df = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{col: new_df[col] for col in new_df.columns})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (check if stereochemistry changes in reaction)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        smiles = row[self.in_column]
+        rdkit_rxn = AllChem.ReactionFromSmarts(smiles, useSmiles=True)
+        rdkit_rxn.Initialize()
+        rxncenters = reaction_centres(rdkit_rxn)
+
+        reactants = rdkit_rxn.GetReactants()
+        reactants_chiral_flags = {}
+        for centers, reactant in zip(rxncenters, reactants):
+            for index in centers:
+                atom = reactant.GetAtomWithIdx(index)
+                reactants_chiral_flags[atom.GetAtomMapNum()] = str(atom.GetChiralTag())
+
+        product_chiral_flags = {}
+        for atom in rdkit_rxn.GetProducts()[0].GetAtoms():
+            if atom.GetAtomMapNum() in reactants_chiral_flags:
+                product_chiral_flags[atom.GetAtomMapNum()] = str(atom.GetChiralTag())
+
+        if reactants_chiral_flags == product_chiral_flags:
+            return pd.Series({self.out_column: False, self.stereo_changes_column: None})
+
+        output = {}
+        for atom_map, reactant_chirality in reactants_chiral_flags.items():
+            product_chirality = product_chiral_flags.get(atom_map, None)
+            if product_chirality != reactant_chirality:
+                output[atom_map] = (reactant_chirality, product_chirality)
+        return pd.Series(
+            {self.out_column: True, self.stereo_changes_column: json.dumps(output)}
+        )
+
+
+@action
+@dataclass
+class StereoHasChiralReagent:
+    """
+    Action for checking if reagent has stereo centres
+    """
+
+    pretty_name: ClassVar[str] = "stereo_chiral_reagent"
+    in_column: str
+    out_column: str = "HasChiralReagent"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        if len(data) == 0:
+            return data
+        out_col = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{self.out_column: out_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (check if reagent is chiral)"
+
+    def _row_action(self, row: pd.Series) -> bool:
+        smiles = row[self.in_column]
+        return "@" in smiles.split(">")[1]
+
+
+@action
+@dataclass
+class StereoCenterIsCreated:
+    """
+    Action for checking if stereo centre is created during reaction
+    """
+
+    pretty_name: ClassVar[str] = "stereo_centre_created"
+    in_column: str = "StereoChanges"
+    out_column: str = "StereoCentreCreated"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        if len(data) == 0:
+            return data
+        out_col = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{self.out_column: out_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (check if stereo centre is created)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        try:
+            chirality_changes = json.loads(row[self.in_column])
+        except TypeError:
+            return False
+        for reactant_chirality, _ in chirality_changes.values():
+            if reactant_chirality == "CHI_UNSPECIFIED":
+                return True
+        return False
+
+
+@action
+@dataclass
+class StereoCenterIsRemoved:
+    """
+    Action for checking if stereo centre is removed during reaction
+    """
+
+    pretty_name: ClassVar[str] = "stereo_centre_removed"
+    in_column: str = "StereoChanges"
+    out_column: str = "StereoCentreRemoved"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        if len(data) == 0:
+            return data
+        out_col = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{self.out_column: out_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (check if stereo centre is removed)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        try:
+            chirality_changes = json.loads(row[self.in_column])
+        except TypeError:
+            return False
+        for _, product_chirality in chirality_changes.values():
+            if product_chirality == "CHI_UNSPECIFIED":
+                return True
+        return False
+
+
+@action
+@dataclass
+class StereoCenterInReactantPotential:
+    """
+    Action for checking if there is a potential stereo centre in the reaction
+
+    Do not consider changes to bond stereochemistry
+    """
+
+    pretty_name: ClassVar[str] = "potential_stereo_center"
+    in_column: str
+    out_column: str = "PotentialStereoCentre"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        if len(data) == 0:
+            return data
+        out_col = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{self.out_column: out_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (check for existence of potential stereo centre)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        smiles = row[self.in_column]
+        rdkit_rxn = AllChem.ReactionFromSmarts(smiles, useSmiles=True)
+        rdkit_rxn.Initialize()
+        rxncenters = reaction_centres(rdkit_rxn)
+        reactants = rdkit_rxn.GetReactants()
+
+        atom_maps = set()
+        for centers, reactant0 in zip(rxncenters, reactants):
+            reactant = self._get_clean_mol_copy(reactant0)
+            stereo_info = FindPotentialStereo(reactant)
+            if any(
+                not str(info.type).startswith("Bond")
+                and info.centeredOn in centers
+                and str(reactant.GetAtomWithIdx(info.centeredOn).GetChiralTag())
+                == "CHI_UNSPECIFIED"
+                for info in stereo_info
+            ):
+                return True
+            for index in centers:
+                atom = reactant0.GetAtomWithIdx(index)
+                atom_maps.add(atom.GetAtomMapNum())
+
+        product0 = rdkit_rxn.GetProducts()[0]
+        product = self._get_clean_mol_copy(product0)
+        stereo_info = FindPotentialStereo(product)
+        if any(
+            not str(info.type).startswith("Bond")
+            and product0.GetAtomWithIdx(info.centeredOn).GetAtomMapNum() in atom_maps
+            and str(product.GetAtomWithIdx(info.centeredOn).GetChiralTag())
+            == "CHI_UNSPECIFIED"
+            for info in stereo_info
+        ):
+            return True
+
+        return False
+
+    @staticmethod
+    def _get_clean_mol_copy(mol0):
+        """
+        Return a copy of the molecule
+        that is sanitized and without atom-map numbers
+        """
+        mol = AllChem.rdchem.Mol(mol0)
+        for atom in mol.GetAtoms():
+            atom.SetAtomMapNum(0)
+        AllChem.SanitizeMol(mol)
+        return mol
+
+
+@action
+@dataclass
+class StereoCenterOutsideReaction:
+    """
+    Action for checking if there is a stereo centre outside the reaction centre
+    """
+
+    pretty_name: ClassVar[str] = "stereo_centre_outside"
+    in_column: str
+    out_column: str = "StereoOutside"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        if len(data) == 0:
+            return data
+        out_col = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{self.out_column: out_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (check for existence of chirality outside reaction centre)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        smiles = row[self.in_column]
+        rdkit_rxn = AllChem.ReactionFromSmarts(smiles, useSmiles=True)
+        rdkit_rxn.Initialize()
+        rxncenters = reaction_centres(rdkit_rxn)
+
+        reactants = rdkit_rxn.GetReactants()
+        for centers, reactant in zip(rxncenters, reactants):
+            for index, atom in enumerate(reactant.GetAtoms()):
+                if index in centers:
+                    continue
+                if str(atom.GetChiralTag()) != "CHI_UNSPECIFIED":
+                    return True
+        return False
+
+
+@action
+@dataclass
+class StereoMesoProduct:
+    """
+    Action for checking if the product is a meso compound
+    """
+
+    pretty_name: ClassVar[str] = "meso_product"
+    in_column: str
+    out_column: str = "MesoProduct"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        if len(data) == 0:
+            return data
+        out_col = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{self.out_column: out_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (check for existence of meso compound)"
+
+    def _row_action(self, row: pd.Series) -> str:
+        smiles = row[self.in_column]
+        rdkit_rxn = AllChem.ReactionFromSmarts(smiles, useSmiles=True)
+        rdkit_rxn.Initialize()
+        product_mol = rdkit_rxn.GetProducts()[0]
+        AllChem.SanitizeMol(product_mol)
+        info = InchiInfo(AllChem.MolToInchi(product_mol))
+        return info.get_sp3_stereo()["main"]["non-isotopic"][2]

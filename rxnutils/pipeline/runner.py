@@ -12,9 +12,10 @@ import rxnutils.pipeline.actions.reaction_props  # noqa
 import rxnutils.pipeline.actions.templates  # noqa
 import rxnutils.pipeline.actions.dataframe_mod  # noqa
 from rxnutils.pipeline.base import create_action, global_apply, list_actions
+from rxnutils.data.batch_utils import read_csv_batch
 
 
-def run_pipline(
+def run_pipeline(
     data: pd.DataFrame,
     pipeline: Dict[str, Any],
     filename: str,
@@ -58,7 +59,10 @@ def main(args: Optional[Sequence[str]] = None) -> None:
     )
     parser.add_argument("--max-workers", type=int, help="the maximum number of works")
     parser.add_argument(
-        "--batch", type=int, nargs=2, help="Line numbers to start and stop reading rows"
+        "--batch",
+        type=int,
+        nargs=2,
+        help="Line numbers to start and stop reading rows (1-indexed to always include the header, start:end).",
     )
     parser.add_argument("--no-intermediates", action="store_true", default=False)
     parser.add_argument("--list", action="store_true", default=False)
@@ -74,18 +78,9 @@ def main(args: Optional[Sequence[str]] = None) -> None:
     with open(args.pipeline, "r") as fileobj:
         pipeline = yaml.load(fileobj, Loader=yaml.SafeLoader)
 
-    if args.batch:
-        start, end = args.batch
-        data = pd.read_csv(
-            args.data,
-            sep="\t",
-            index_col=False,
-            nrows=end - start,
-            skiprows=range(1, start),
-        )
-    else:
-        data = pd.read_csv(args.data, sep="\t")
-    data = run_pipline(data, pipeline, args.output, not args.no_intermediates)
+    data = read_csv_batch(args.data, sep="\t", index_col=False, batch=args.batch)
+
+    data = run_pipeline(data, pipeline, args.output, not args.no_intermediates)
     data.to_csv(args.output, index=False, sep="\t")
 
 
