@@ -11,6 +11,7 @@ The package is divided into (currently) three sub-packages:
 * `chem` - chemistry routines like template extraction or reaction cleaning
 * `data` - routines for manipulating various reaction data sources
 * `pipeline` - routines for building and executing simple pipelines for modifying and analyzing reactions
+* `routes` - routines for handling synthesis routes
 
 Auto-generated API documentation is available, as well as guides for common tasks.  See the menu to the left.
 
@@ -60,4 +61,5 @@ Limitations
     uspto
     ord
     pipeline
+    routes
     rxnutils
