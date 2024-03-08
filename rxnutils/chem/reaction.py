@@ -135,6 +135,48 @@ class ChemicalReaction:
             self._build_rinchi_info()
         return self._rinchi_data.short_rinchikey
 
+    def generate_coreagent(self):
+        """Extract un-mapped product atoms as extra ractant fragments"""
+        if not self.has_partial_mapping():
+            return ""
+
+        extra_reactant_fragment = ""
+        for product in self.products:
+            # Get unmapped atoms
+            unmapped_ids = [
+                atom.GetIdx()
+                for atom in product.GetAtoms()
+                if not atom.HasProp("molAtomMapNumber")
+            ]
+            if len(unmapped_ids) > extractor.MAXIMUM_NUMBER_UNMAPPED_PRODUCT_ATOMS:
+                raise ReactionException(
+                    f"Template generation failed: too many unmapped atoms ({len(unmapped_ids)})"
+                )
+            # Define new atom symbols for fragment with atom maps, generalizing fully
+            atom_symbols = [f"[{atom.GetSymbol()}]" for atom in product.GetAtoms()]
+            # And bond symbols...
+            bond_symbols = ["~" for _ in product.GetBonds()]
+            if unmapped_ids:
+                extra_reactant_fragment += (
+                    AllChem.MolFragmentToSmiles(
+                        product,
+                        unmapped_ids,
+                        allHsExplicit=False,
+                        isomericSmiles=extractor.USE_STEREOCHEMISTRY,
+                        atomSymbols=atom_symbols,
+                        bondSymbols=bond_symbols,
+                    )
+                    + "."
+                )
+
+        if extra_reactant_fragment:
+            extra_reactant_fragment = extra_reactant_fragment[:-1]
+        # Consolidate repeated fragments (stoichometry)
+        extra_reactant_fragment = ".".join(
+            sorted(list(set(extra_reactant_fragment.split("."))))
+        )
+        return extra_reactant_fragment
+
     def generate_reaction_template(
         self,
         radius: int = 1,
@@ -163,53 +205,20 @@ class ChemicalReaction:
         reactants = self.reactants
         products = self.products
 
+        for product in products:
+            nunmapped = sum(
+                int(not atom.HasProp("molAtomMapNumber")) for atom in product.GetAtoms()
+            )
+            if nunmapped > extractor.MAXIMUM_NUMBER_UNMAPPED_PRODUCT_ATOMS:
+                raise ReactionException(
+                    f"Template generation failed: too many unmapped atoms ({nunmapped})"
+                )
+
         if self.no_change():
             raise ReactionException("Template generation failed: no change in reaction")
         if None in reactants + products:
             raise ReactionException(
                 "Template generation failed: None in reactants or products"
-            )
-
-        # Similar to has_partial mapping
-        are_unmapped_product_atoms = self.has_partial_mapping()
-        extra_reactant_fragment = ""
-
-        if are_unmapped_product_atoms:  # add fragment to template
-            for product in products:
-                # Get unmapped atoms
-                unmapped_ids = [
-                    atom.GetIdx()
-                    for atom in product.GetAtoms()
-                    if not atom.HasProp("molAtomMapNumber")
-                ]
-                if len(unmapped_ids) > extractor.MAXIMUM_NUMBER_UNMAPPED_PRODUCT_ATOMS:
-                    raise ReactionException(
-                        f"Template generation failed: too many unmapped atoms ({len(unmapped_ids)})"
-                    )
-                # Define new atom symbols for fragment with atom maps, generalizing fully
-                atom_symbols = [f"[{atom.GetSymbol()}]" for atom in product.GetAtoms()]
-                # And bond symbols...
-                bond_symbols = ["~" for _ in product.GetBonds()]
-                if unmapped_ids:
-                    extra_reactant_fragment += (
-                        AllChem.MolFragmentToSmiles(
-                            product,
-                            unmapped_ids,
-                            allHsExplicit=False,
-                            isomericSmiles=extractor.USE_STEREOCHEMISTRY,
-                            atomSymbols=atom_symbols,
-                            bondSymbols=bond_symbols,
-                        )
-                        + "."
-                    )
-            if extra_reactant_fragment:
-                extra_reactant_fragment = extra_reactant_fragment[:-1]
-                if extractor.VERBOSE:
-                    print(f"    extra reactant fragment: {extra_reactant_fragment}")
-
-            # Consolidate repeated fragments (stoichometry)
-            extra_reactant_fragment = ".".join(
-                sorted(list(set(extra_reactant_fragment.split("."))))
             )
 
         extra_atoms = {}
