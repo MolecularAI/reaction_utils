@@ -171,7 +171,7 @@ def reactions2route(
 
 def _transform_retrosynthesis_atom_mapping(tree_dict: Dict[str, Any]) -> None:
     """
-    Routes output from AiZynth has atom-mapping from the template-based model,
+    Routes output from AiZynth have atom-mapping from the template-based model,
     but it needs to be processed
     1. Remove atom-mapping from reactants not in product
     2. Reverse reaction SMILES

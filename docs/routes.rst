@@ -7,8 +7,8 @@ formats, and there are routines to score the different routes.
 Reading
 -------
 
-The simplest route format supported is a text file, where each reaction is written as a reaction SMILES on a line. 
-Routes are separated by comma
+The simplest route format supported is a text file, where each reaction is written as a reaction SMILES in a line. 
+Routes are separated by new-line
 
 For instance:
 
@@ -46,7 +46,7 @@ add atom-mapping and reaction classes to these routes with
 The last line of code also make sure that the second route shares mapping with the first route. 
 
 
-Othe readers are available
+Other readers are available
 
 * ``read_aizynthcli_dataframe`` - for reading routes from aizynthcli output dataframe
 * ``read_reactions_dataframe`` - for reading routes stored as reactions in a dataframe

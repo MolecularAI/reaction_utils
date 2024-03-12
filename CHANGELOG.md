@@ -4,12 +4,12 @@
 
 ### Features
 
-- Adding support reading and processing routes
+- Adding support for reading and processing routes
 - Extracting co-reactant for ChemicalReaction class
 
 ### Trivial changes
 
-- Making help for pipeline runner more simple
+- Making help for pipeline runner simpler
 
 ## Version 1.3.0 - 2024-01-09
 
