@@ -271,3 +271,23 @@ def test_ringbreaker_template_creation():
         ">>[C;H0;D2;+0:1]#[CH;D1;+0:2].[CH;D2;+0:3]=[N+;H0;D2:4]=[N-;H0;D1:5]"
     )
     assert retro_template.smarts == expected
+
+
+@pytest.mark.parametrize(
+    ("rsmi", "expected"),
+    [
+        (
+            "[CH:1]1=[CH:6][CH:5]=[CH:4][CH:3]=[CH:2]1>>ClC[C:1]1=[CH:6][CH:5]=[CH:4][CH:3]=[CH:2]1",
+            "[C]~[Cl]",
+        ),
+        (
+            "[CH3:1]I.[CH3:6][N:5]1[CH2:4][CH2:3][NH:2][CH2:31][CH2:16]1>"
+            ">[CH3:1][N:2]1[CH2:3][CH2:4][N:5]([CH3:6])[CH2:16][CH2:31]1",
+            "",
+        ),
+    ],
+)
+def test_coreagent(rsmi, expected):
+    rxn = ChemicalReaction(rsmi, clean_smiles=False)
+
+    assert rxn.generate_coreagent() == expected

@@ -66,11 +66,12 @@ def main(args: Optional[Sequence[str]] = None) -> None:
     )
     parser.add_argument("--no-intermediates", action="store_true", default=False)
     parser.add_argument("--list", action="store_true", default=False)
+    parser.add_argument("--short-list", action="store_true", default=False)
     args = parser.parse_args(args)
 
-    if args.list:
+    if args.list or args.short_list:
         print("The available actions are as follow:")
-        list_actions()
+        list_actions(short=args.short_list)
         return
 
     global_apply.max_workers = args.max_workers

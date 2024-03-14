@@ -52,6 +52,7 @@ The package is divided into (currently) three sub-packages:
 * `chem` - chemistry routines like template extraction or reaction cleaning
 * `data` - routines for manipulating various reaction data sources
 * `pipeline` - routines for building and executing simple pipelines for modifying and analyzing reactions
+* `routes` - routines for handling synthesis routes
 
 The full auto-generated API document is available [here](https://molecularai.github.io/reaction_utils/), and the documentation also provides a few examples on common tasks.
 

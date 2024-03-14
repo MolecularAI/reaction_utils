@@ -1,0 +1,3 @@
+smiles	NextMoveRxnSmiles	NMC	RxnmapperRxnSmiles
+Cl.c1ccccc1>>Clc1ccccc1	[cH:3]1[cH:2][cH:1][cH:6][cH:5][cH:4]1.Cl>>[cH:4]1[cH:3][cH:2][c:1]([cH:6][cH:5]1)Cl	10.1.2	[ClH:1].[cH:2]1[cH:3][cH:4][cH:5][cH:6][cH:7]1>>[Cl:1][c:2]1[cH:3][cH:4][cH:5][cH:6][cH:7]1
+CO.Clc1ccccc1>>COc1ccccc1	[CH3:1][OH:2].[cH:6]1[cH:5][cH:4][c:3]([cH:8][cH:7]1)Cl>>[CH3:1][O:2][c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1	1.7.11	Cl[c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1.[CH3:1][OH:2]>>[CH3:1][O:2][c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1

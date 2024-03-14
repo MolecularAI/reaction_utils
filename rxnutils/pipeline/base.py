@@ -38,7 +38,7 @@ def action(obj: ActionType) -> ActionType:
     return obj
 
 
-def list_actions() -> None:
+def list_actions(short: bool = False) -> None:
     """List all available actions in a nice table"""
     dict_ = defaultdict(list)
     for name, obj in _REGISTERED_ACTIONS.items():
@@ -52,8 +52,9 @@ def list_actions() -> None:
                 kwargs[field.name] = ""
             else:
                 optionals.append(f"{field.name} ({field.type})")
-        dict_["required arguments"].append(", ".join(requireds))
-        dict_["optional arguments"].append(", ".join(optionals))
+        if not short:
+            dict_["required arguments"].append(", ".join(requireds))
+            dict_["optional arguments"].append(", ".join(optionals))
         dict_["description"].append(str(obj(**kwargs)))
     print(pd.DataFrame(dict_).to_string(index=False, max_colwidth=100))
 
