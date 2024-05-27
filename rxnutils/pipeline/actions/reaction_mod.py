@@ -1,12 +1,12 @@
 """Module containing actions on reactions that modify the reaction in some way"""
+
 from __future__ import annotations
 
 import os
-import re
 import subprocess
 import sys
 import tempfile
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import ClassVar, List, Tuple
 
@@ -14,13 +14,13 @@ import pandas as pd
 from rdkit import Chem, RDLogger
 from rdkit.Chem import RDConfig
 
+from rxnutils.chem.disconnection_sites.atom_map_tagging import atom_map_tag_products
+from rxnutils.chem.disconnection_sites.tag_converting import convert_atom_map_tag
 from rxnutils.chem.utils import (
     atom_mapping_numbers,
     neutralize_molecules,
     remove_atom_mapping,
     desalt_molecules,
-    split_smiles_from_reaction,
-    join_smiles_from_reaction,
 )
 from rxnutils.pipeline.base import ReactionActionMixIn, action, global_apply
 
@@ -541,6 +541,64 @@ class SplitReaction(ReactionActionMixIn):
         return pd.Series(
             {"reactants": reactants, "reagents": reagents, "products": products}
         )
+
+
+@action
+@dataclass
+class AtomMapTagDisconnectionSite(ReactionActionMixIn):
+    """Action for tagging disconnection site in products with atom-map '[<atom>:1]'."""
+
+    pretty_name: ClassVar[str] = "atom_map_tag_disconnection_site"
+    in_column: str = "RxnSmilesClean"
+    out_column: str = "products_atom_map_tagged"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        smiles_col = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{self.out_column: smiles_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (tag disconnection sites in products with '[<atom>:1]')"
+
+    def _row_action(self, row: pd.Series) -> str:
+        return atom_map_tag_products(row[self.in_column])
+
+
+@action
+@dataclass
+class ConvertAtomMapDisconnectionTag(ReactionActionMixIn):
+    """Action for converting atom-map tagging to exclamation mark tagging.
+
+    yaml example:
+
+    convert_atom_map_disconnection_tag:
+        in_column_tagged: products_atom_map_tagged
+        in_column_untagged: products
+        out_column_tagged: products_tagged
+        out_column_reconstructed: products_reconstructed
+    """
+
+    pretty_name: ClassVar[str] = "convert_atom_map_disconnection_tag"
+    in_column: str = "products_atom_map_tagged"
+    out_column_tagged: str = "products_tagged"
+    out_column_reconstructed: str = "products_reconstructed"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        smiles_tagged_col = global_apply(data, self._row_action, axis=1)
+        smiles_reconstructed_col = smiles_tagged_col.str.replace("!", "")
+
+        return data.assign(
+            **{
+                self.out_column_tagged: smiles_tagged_col,
+                self.out_column_reconstructed: smiles_reconstructed_col,
+            }
+        )
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (convert disconnection tagging '[<atom>:1]' to '<atom>!')"
+
+    def _row_action(self, row: pd.Series) -> str:
+        product_tagged = convert_atom_map_tag(row[self.in_column])
+        return product_tagged
 
 
 @action

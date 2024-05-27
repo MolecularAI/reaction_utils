@@ -2,6 +2,7 @@ import copy
 
 import pytest
 import pandas as pd
+from rdkit import Chem
 
 from rxnutils.routes.base import SynthesisRoute
 
@@ -69,6 +70,48 @@ def test_remap(synthesis_route, setup_mapper):
     route1.remap(route2)
 
     assert route1.atom_mapped_reaction_smiles() != old_reaction_smiles
+
+
+def test_remap_ref_smiles(synthesis_route, setup_mapper):
+    route1 = synthesis_route
+    route1.assign_atom_mapping()
+    old_reaction_smiles = route1.atom_mapped_reaction_smiles()
+    reactants, products = old_reaction_smiles[0].split(">>")
+    rsmi_old = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
+    psmi_old = Chem.MolToSmiles(Chem.MolFromSmiles(products))
+
+    route1.remap(products)
+
+    reactants, products = route1.atom_mapped_reaction_smiles()[0].split(">>")
+    rsmi = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
+    psmi = Chem.MolToSmiles(Chem.MolFromSmiles(products))
+    assert rsmi == rsmi_old
+    assert psmi == psmi_old
+
+    route1.remap("[CH3:10][O:2][c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1")
+
+    reactants, products = route1.atom_mapped_reaction_smiles()[0].split(">>")
+    rsmi = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
+    psmi = Chem.MolToSmiles(Chem.MolFromSmiles(products))
+    assert rsmi != rsmi_old
+    assert psmi != psmi_old
+
+
+def test_remap_ref_dict(synthesis_route, setup_mapper):
+    route1 = synthesis_route
+    route1.assign_atom_mapping()
+    old_reaction_smiles = route1.atom_mapped_reaction_smiles()
+    reactants, products = old_reaction_smiles[0].split(">>")
+    rsmi_old = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
+    psmi_old = Chem.MolToSmiles(Chem.MolFromSmiles(products))
+
+    route1.remap({1: 10, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8})
+
+    reactants, products = route1.atom_mapped_reaction_smiles()[0].split(">>")
+    rsmi = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
+    psmi = Chem.MolToSmiles(Chem.MolFromSmiles(products))
+    assert rsmi != rsmi_old
+    assert psmi != psmi_old
 
 
 def test_extract_chains(synthesis_route):

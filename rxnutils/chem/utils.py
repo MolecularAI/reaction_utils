@@ -1,4 +1,5 @@
 """Module containing various chemical utility routines"""
+
 import logging
 import functools
 from typing import List, Tuple
@@ -291,7 +292,7 @@ def get_special_groups(mol) -> List[Tuple[Tuple[int, ...], Tuple[int, ...]]]:
 
     # Build list
     groups = []
-    for (add_if_match, template) in group_templates:
+    for add_if_match, template in group_templates:
         matches = mol.GetSubstructMatches(
             Chem.MolFromSmarts(template), useChirality=True
         )

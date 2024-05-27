@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## Version 1.5.0 - 2024-05-27
+
+### Features
+
+- Adding support for tagging reaction sites in SMILES
+- Adding more options for re-mapping routes
+
+### Miscellaneous
+
+- Improving batch routines
+- Updating InChI tools download URL
+
 ## Version 1.4.0 - 2024-03-12
 
 ### Features

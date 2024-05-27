@@ -12,9 +12,12 @@ from rxnutils.pipeline.actions.reaction_mod import (
     SplitReaction,
     RemoveUnchangedProducts,
     IsotopeInfo,
+    AtomMapTagDisconnectionSite,
+    ConvertAtomMapDisconnectionTag,
     DesaltMolecules,
     CONTRIB_INSTALLED,
 )
+from rxnutils.chem.disconnection_sites.tag_converting import smiles_tokens
 from rxnutils.pipeline.base import global_apply
 
 global_apply.max_workers = 1
@@ -215,6 +218,50 @@ def test_isotope_info():
         "[H:3]",
         "[H-:3][CH2]",
     ]
+
+
+def test_disconnection_tagging(shared_datadir):
+
+    df = pd.read_csv(shared_datadir / "mapped_tests_reactions.csv", sep="\t")
+
+    action_atom_map_tag = AtomMapTagDisconnectionSite(in_column="RxnmapperRxnSmiles")
+    action_convert_tag = ConvertAtomMapDisconnectionTag()
+
+    df_atom_map_tag = action_atom_map_tag(df)
+    df_tag = action_convert_tag(df_atom_map_tag)
+
+    df_ground_truth = pd.Series(
+        ["Cl!c!1ccccc1", "CO!c!1ccccc1"], name="products_tagged"
+    )
+
+    assert df_ground_truth.equals(df_tag["products_tagged"])
+
+
+def test_smiles_tokenization_unknown_token_error(shared_datadir):
+
+    df = pd.read_csv(shared_datadir / "mapped_tests_reactions.csv", sep="\t")
+
+    action_atom_map_tag = AtomMapTagDisconnectionSite(in_column="RxnmapperRxnSmiles")
+    df_atom_map_tag = action_atom_map_tag(df)
+
+    product_atom_map_tagged = df_atom_map_tag["products_atom_map_tagged"].values[0]
+
+    with pytest.raises(AssertionError):
+        smiles_tokens(product_atom_map_tagged + "{")
+
+
+def test_converting_no_atom_map_tag(shared_datadir):
+
+    df = pd.read_csv(shared_datadir / "mapped_tests_reactions.csv", sep="\t")
+    df["products"] = [rxn.split(">")[-1] for rxn in df.smiles]
+
+    action_convert_tag = ConvertAtomMapDisconnectionTag(in_column="products")
+
+    df_tag = action_convert_tag(df)
+
+    df_ground_truth = pd.Series(["", ""], name="products_tagged")
+
+    assert df_ground_truth.equals(df_tag["products_tagged"])
 
 
 def test_desalting():

@@ -4,7 +4,7 @@ as well as routines for assigning proper atom-mapping
 and drawing the route
 """
 
-from typing import Dict, Any, List, Callable
+from typing import Dict, Any, List, Callable, Union
 from copy import deepcopy
 from operator import itemgetter
 
@@ -24,7 +24,7 @@ from rxnutils.chem.utils import (
 class SynthesisRoute:
     """
     This encapsulates a synthesis route or a reaction tree.
-    It provides convenient methods for assigning atom-mapping
+    It provide convenient methods for assigning atom-mapping
     to the reactions, and for providing reaction-level data
     of the route
 
@@ -68,11 +68,13 @@ class SynthesisRoute:
         return smiles
 
     def assign_atom_mapping(
-        self, overwrite: bool = False, only_rxnmapper: bool = False
+        self,
+        overwrite: bool = False,
+        only_rxnmapper: bool = False,
     ) -> None:
         """
         Assign atom-mapping to each reaction in the route and
-        ensure that is consistent from root compound and throughout
+        ensure that it is consistent from root compound and throughout
         the route.
 
         It will use NameRxn to assign classification and possiblty atom-mapping,
@@ -92,7 +94,7 @@ class SynthesisRoute:
         """
         Returns linear sequences or chains extracted from the route.
 
-        Each chain is a list of dictionaries representing the molecules, only the most
+        Each chain is a list of a dictionary representing the molecules, only the most
         complex molecule is kept for each reaction - making the chain a sequence of molecule
         to molecule transformation.
 
@@ -168,19 +170,25 @@ class SynthesisRoute:
     def remap(self, other: "SynthesisRoute") -> None:
         """
         Remap the reaction so that it follows the mapping of a
-        root compound in a reference routes
+        1) root compound in a reference route, 2) a ref compound given
+        as a SMILES, or 3) using a raw mapping
 
-        :param other: the reference route
+        :param other: the reference for re-mapping
         """
-        try:
-            ref = other.mapped_root_smiles
-            other = self.mapped_root_smiles
-        except ValueError as err:
-            # For single-compound routes, we can just ignore this
-            if str(err).startswith("Single"):
+        if isinstance(other, SynthesisRoute):
+            if len(self.reaction_smiles()) == 0 or len(other.reaction_smiles()) == 0:
                 return
-            raise
-        mapping_dict = _find_remapping(ref, other)
+            mapping_dict = _find_remapping(
+                other.mapped_root_smiles, self.mapped_root_smiles
+            )
+        elif isinstance(other, str):
+            if len(self.reaction_smiles()) == 0:
+                return
+            mapping_dict = _find_remapping(other, self.mapped_root_smiles)
+        elif isinstance(other, dict):
+            mapping_dict = other
+        else:
+            raise ValueError(f"Cannot perform re-mapping using a {type(other)}")
         _remap_reactions(self.reaction_tree, mapping_dict)
 
     def _assign_mapping(
@@ -196,11 +204,14 @@ class SynthesisRoute:
                 return
 
         df = pd.DataFrame({"smiles": list(set(self.reaction_smiles()))})
-        nextmove_action = NameRxn(in_column="smiles")
+        nextmove_action = NameRxn(in_column="smiles", nm_rxn_column="mapped_smiles")
         rxnmapper_action = RxnMapper(in_column="smiles")
         df = rxnmapper_action(nextmove_action(df))
         if only_rxnmapper:
-            df["NextMoveRxnSmiles"] = df["RxnmapperRxnSmiles"]
+            df["mapped_smiles"] = df["RxnmapperRxnSmiles"]
+        else:
+            sel = df["NMC"] == "0.0"
+            df["mapped_smiles"].mask(sel, df["RxnmapperRxnSmiles"], inplace=True)
         datamap = df.set_index("smiles").to_dict("index")
         _copy_mapping_from_datamap(self.reaction_tree, datamap)
 
@@ -489,10 +500,7 @@ def _copy_mapping_from_datamap(
     rxnsmi = f"{reactants}>>{tree_dict['smiles']}"
     metadata = children[0].get("metadata", {})
     metadata["classification"] = datamap[rxnsmi]["NMC"]
-    if datamap[rxnsmi]["NMC"] == "0.0":
-        metadata["mapped_reaction_smiles"] = datamap[rxnsmi]["RxnmapperRxnSmiles"]
-    else:
-        metadata["mapped_reaction_smiles"] = datamap[rxnsmi]["NextMoveRxnSmiles"]
+    metadata["mapped_reaction_smiles"] = datamap[rxnsmi]["mapped_smiles"]
     metadata = children[0]["metadata"] = metadata
     for grandchild in grandchildren:
         _copy_mapping_from_datamap(grandchild, datamap)
