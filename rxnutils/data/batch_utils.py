@@ -101,6 +101,9 @@ def create_csv_batches(
     file_size = (
         nlines(filename) - 1
     )  # Header should not be counted for batch size calculations
+    nbatches = min(
+        file_size, nbatches
+    )  # Adjust the number of batches to the size of the file
     batch_size, remainder = divmod(file_size, nbatches)
     stop = 1  # 1-indexed to account for header in the .csv file
     batches = []

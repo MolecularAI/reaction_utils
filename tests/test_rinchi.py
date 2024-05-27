@@ -17,11 +17,13 @@ def rinchi_download():
 
 
 @pytest.mark.xfail(sys.platform not in PLATFORM2FOLDER, reason="Platform not supported")
-@pytest.mark.xfail(raises=HTTPError)
+@pytest.mark.xfail(
+    raises=HTTPError,
+)  # Expect a failure incase of failure to download RInChI archive
 def test_download_rinchi(mocker, tmpdir):
     config = {
         "download_folder": str(tmpdir),
-        "download_url": "http://www.inchi-trust.org/download/RInChI/RInChI-V1-00.zip",
+        "download_url": "https://www.inchi-trust.org/wp/download/RInChI/RInChI-V1-00.zip",
     }
     mocker.patch("rxnutils.chem.rinchi.download_rinchi.CONFIG", config)
 
@@ -31,7 +33,9 @@ def test_download_rinchi(mocker, tmpdir):
 
 
 @pytest.mark.xfail(sys.platform not in PLATFORM2FOLDER, reason="Platform not supported")
-@pytest.mark.xfail(raises=HTTPError)
+@pytest.mark.xfail(
+    raises=HTTPError,
+)  # Expect a failure incase of failure to download RInChI archive
 def test_generate_rinchi(rinchi_download):
     rsmi = (
         "[ClH;D0;+0:1]>>"
