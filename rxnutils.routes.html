@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>rxnutils.routes package &#8212; ReactionUtils 1.5.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="rxnutils.pipeline.actions package" href="rxnutils.pipeline.actions.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">rxnutils.routes package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.routes.base">rxnutils.routes.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.routes.image">rxnutils.routes.image module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.routes.readers">rxnutils.routes.readers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.routes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+      <li>Previous: <a href="rxnutils.pipeline.actions.html" title="previous chapter">rxnutils.pipeline.actions package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-routes-package">
+<h1>rxnutils.routes package<a class="headerlink" href="#rxnutils-routes-package" title="Permalink to this headline">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-rxnutils.routes.base">
+<span id="rxnutils-routes-base-module"></span><h2>rxnutils.routes.base module<a class="headerlink" href="#module-rxnutils.routes.base" title="Permalink to this headline">¶</a></h2>
+<p>Contains a class encapsulating a synthesis route,
+as well as routines for assigning proper atom-mapping
+and drawing the route</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.base.SynthesisRoute">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.base.</span></span><span class="sig-name descname"><span class="pre">SynthesisRoute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction_tree</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.base.SynthesisRoute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This encapsulates a synthesis route or a reaction tree.
+It provide convenient methods for assigning atom-mapping
+to the reactions, and for providing reaction-level data
+of the route</p>
+<p>It is typically initiallized by one of the readers in the
+<cite>rxnutils.routes.readers</cite> module.</p>
+<p>The tree depth and the forward step are automatically assigned
+to each reaction node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>reaction_tree</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – the tree structure representing the route</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.routes.base.SynthesisRoute.mapped_root_smiles">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mapped_root_smiles</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.routes.base.SynthesisRoute.mapped_root_smiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the atom-mapped SMILES of the root compound</p>
+<p>Will raise an exception if the route is a just a single
+compound, or if the route has not been assigned atom-mapping.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.base.SynthesisRoute.atom_mapped_reaction_smiles">
+<span class="sig-name descname"><span class="pre">atom_mapped_reaction_smiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.base.SynthesisRoute.atom_mapped_reaction_smiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the atom-mapped reaction SMILES in the route</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>List</em>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.base.SynthesisRoute.assign_atom_mapping">
+<span class="sig-name descname"><span class="pre">assign_atom_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_rxnmapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.base.SynthesisRoute.assign_atom_mapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assign atom-mapping to each reaction in the route and
+ensure that it is consistent from root compound and throughout
+the route.</p>
+<p>It will use NameRxn to assign classification and possiblty atom-mapping,
+as well as rxnmapper to assign atom-mapping in case NameRxn cannot classify
+a reaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>overwrite</strong> (<em>bool</em>) – if True will overwrite existing mapping</p></li>
+<li><p><strong>only_rxnmapper</strong> (<em>bool</em>) – if True will disregard NameRxn mapping and use only rxnmapper</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.base.SynthesisRoute.chains">
+<span class="sig-name descname"><span class="pre">chains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">complexity_func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.base.SynthesisRoute.chains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns linear sequences or chains extracted from the route.</p>
+<p>Each chain is a list of a dictionary representing the molecules, only the most
+complex molecule is kept for each reaction - making the chain a sequence of molecule
+to molecule transformation.</p>
+<p>The first chain will be the longest linear sequence (LLS), and the second chain
+will be longest branch if this is a convergent route. This branch will be processed
+further, but the other branches can probably be discarded as they have not been
+investigated thoroughly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>complexity_func</strong> (<em>Callable</em><em>[</em><em>[</em><em>str</em><em>]</em><em>, </em><em>float</em><em>]</em>) – a function that takes a SMILES and returns a
+complexity metric of the molecule</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of chains where each chain is a list of molecules</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>List</em>[<em>List</em>[<em>Dict</em>[str, <em>Any</em>]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.base.SynthesisRoute.image">
+<span class="sig-name descname"><span class="pre">image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">show_atom_mapping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.base.SynthesisRoute.image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depict the route.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>show_atom_mapping</strong> – if True, will show the atom-mapping</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the image of the route</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>PIL.Image.Image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.base.SynthesisRoute.reaction_data">
+<span class="sig-name descname"><span class="pre">reaction_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.base.SynthesisRoute.reaction_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of dictionaries for each reaction
+in the route. This is metadata of the reactions
+augmented with reaction SMILES and depth of the reaction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>List</em>[<em>Dict</em>[str, <em>Any</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.base.SynthesisRoute.reaction_smiles">
+<span class="sig-name descname"><span class="pre">reaction_smiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.base.SynthesisRoute.reaction_smiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of the un-mapped reaction SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>List</em>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.base.SynthesisRoute.remap">
+<span class="sig-name descname"><span class="pre">remap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.base.SynthesisRoute.remap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remap the reaction so that it follows the mapping of a
+1) root compound in a reference route, 2) a ref compound given
+as a SMILES, or 3) using a raw mapping</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#rxnutils.routes.base.SynthesisRoute" title="rxnutils.routes.base.SynthesisRoute"><em>rxnutils.routes.base.SynthesisRoute</em></a>) – the reference for re-mapping</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.base.smiles2inchikey">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.base.</span></span><span class="sig-name descname"><span class="pre">smiles2inchikey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_stereo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.base.smiles2inchikey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a SMILES to an InChI key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smiles</strong> (<em>str</em>) – </p></li>
+<li><p><strong>ignore_stereo</strong> (<em>bool</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.image">
+<span id="rxnutils-routes-image-module"></span><h2>rxnutils.routes.image module<a class="headerlink" href="#module-rxnutils.routes.image" title="Permalink to this headline">¶</a></h2>
+<p>This module contains a collection of routines to produce pretty images</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.image.molecule_to_image">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.image.</span></span><span class="sig-name descname"><span class="pre">molecule_to_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.image.molecule_to_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a pretty image of a molecule,
+with a colored frame around it</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol</strong> (<em>Chem.rdchem.Mol</em>) – the molecule</p></li>
+<li><p><strong>frame_color</strong> (<em>PilColor</em>) – the color of the frame</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – the size of the image</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the produced image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>PilImage</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.image.molecules_to_images">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.image.</span></span><span class="sig-name descname"><span class="pre">molecules_to_images</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_colors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.image.molecules_to_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create pretty images of molecules with a colored frame around each one of them.</p>
+<p>The molecules will be resized to be of similar sizes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smiles_list</strong> – the molecules</p></li>
+<li><p><strong>frame_colors</strong> (<em>Sequence</em><em>[</em><em>PilColor</em><em>]</em>) – the color of the frame for each molecule</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – the sub-image size</p></li>
+<li><p><strong>mols</strong> (<em>Sequence</em><em>[</em><em>Chem.rdchem.Mol</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the produced images</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[PilImage]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.image.crop_image">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.image.</span></span><span class="sig-name descname"><span class="pre">crop_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.image.crop_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop an image by removing white space around it</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>PilImage</em>) – the image to crop</p></li>
+<li><p><strong>margin</strong> (<em>int</em>) – padding, defaults to 20</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the cropped image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>PilImage</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.image.draw_rounded_rectangle">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.image.</span></span><span class="sig-name descname"><span class="pre">draw_rounded_rectangle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arc_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.image.draw_rounded_rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a rounded rectangle around an image</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>PilImage</em>) – the image to draw upon</p></li>
+<li><p><strong>color</strong> (<em>PilColor</em>) – the color of the rectangle</p></li>
+<li><p><strong>arc_size</strong> (<em>int</em>) – the size of the corner, defaults to 20</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the new image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>PilImage</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.image.RouteImageFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.image.</span></span><span class="sig-name descname"><span class="pre">RouteImageFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_stock_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.image.RouteImageFactory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Factory class for drawing a route</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – the dictionary representation of the route</p></li>
+<li><p><strong>in_stock_colors</strong> (<em>FrameColors</em>) – the colors around molecules, defaults to {True: “green”, False: “orange”}</p></li>
+<li><p><strong>show_all</strong> (<em>bool</em>) – if True, also show nodes that are marked as hidden</p></li>
+<li><p><strong>margin</strong> (<em>int</em>) – the margin between images</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.readers">
+<span id="rxnutils-routes-readers-module"></span><h2>rxnutils.routes.readers module<a class="headerlink" href="#module-rxnutils.routes.readers" title="Permalink to this headline">¶</a></h2>
+<p>Routines for reading routes from various formats</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.readers.read_reaction_lists">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.readers.</span></span><span class="sig-name descname"><span class="pre">read_reaction_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.readers.read_reaction_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read one or more simple lists of reactions into one or more
+retrosynthesis trees.</p>
+<p>Each list of reactions should be separated by an empty line.
+Each row of each reaction should contain the reaction SMILES (reactants&gt;&gt;products)
+and nothing else.</p>
+<p>Example:
+A.B&gt;&gt;C
+D.E&gt;&gt;B</p>
+<p>A.X&gt;&gt;Y
+Z&gt;&gt;X</p>
+<dl class="simple">
+<dt>defines two retrosynthesis trees, and the first being</dt><dd><p>A</p>
+</dd>
+<dt>C -&gt;      D</dt><dd><dl class="simple">
+<dt>B -&gt;</dt><dd><p>E</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Params filename</dt>
+<dd class="field-odd"><p>the path to the file with the reactions</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of the created trees</p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><em>List</em>[<a class="reference internal" href="#rxnutils.routes.base.SynthesisRoute" title="rxnutils.routes.base.SynthesisRoute">rxnutils.routes.base.SynthesisRoute</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.readers.read_aizynthcli_dataframe">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.readers.</span></span><span class="sig-name descname"><span class="pre">read_aizynthcli_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.readers.read_aizynthcli_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read routes as produced by the <cite>aizynthcli</cite> tool of the <cite>AiZynthFinder</cite> package.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – the dataframe as output by <cite>aizynthcli</cite></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created routes</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.core.series.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.readers.read_reactions_dataframe">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.readers.</span></span><span class="sig-name descname"><span class="pre">read_reactions_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smiles_column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_by</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_columns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.readers.read_reactions_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read routes from reactions stored in a pandas dataframe. The different
+routes are groupable by one or more column. Additional metadata columns
+can be extracted from the dataframe as well.</p>
+<p>The dataframe is grouped by the columns specified by <cite>group_by</cite> and
+then one routes is extracted from each subset dataframe. The function
+returns a series with the routes, which is indexable by the columns
+in the <cite>group_by</cite> list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – the dataframe with reaction data</p></li>
+<li><p><strong>smiles_column</strong> (<em>str</em>) – the column with the reaction SMILES</p></li>
+<li><p><strong>group_by</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the columns that uniquely identifies each route</p></li>
+<li><p><strong>metadata_column</strong> – additional columns to be added as metadata to each route</p></li>
+<li><p><strong>metadata_columns</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><em>str</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created series with route.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.core.series.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.readers.reactions2route">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.readers.</span></span><span class="sig-name descname"><span class="pre">reactions2route</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reactions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.readers.reactions2route" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a list of reactions into a retrosynthesis tree</p>
+<p>This is based on matching partial InChI keys of the reactants in one
+reaction with the partial InChI key of a product.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params reactions</dt>
+<dd class="field-odd"><p>list of reaction SMILES</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the created trees</p>
+</dd>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reactions</strong> (<em>Sequence</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>metadata</strong> (<em>Optional</em><em>[</em><em>Sequence</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="#rxnutils.routes.base.SynthesisRoute" title="rxnutils.routes.base.SynthesisRoute">rxnutils.routes.base.SynthesisRoute</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.routes" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.15</a>
+      
+      |
+      <a href="_sources/rxnutils.routes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,344 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>rxnutils.pipeline package &#8212; ReactionUtils 1.5.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.pipeline.actions package" href="rxnutils.pipeline.actions.html" />
+    <link rel="prev" title="rxnutils.data.uspto package" href="rxnutils.data.uspto.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">rxnutils.pipeline package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.pipeline.actions.html">rxnutils.pipeline.actions package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.pipeline.base">rxnutils.pipeline.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.pipeline.runner">rxnutils.pipeline.runner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.pipeline">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+      <li>Previous: <a href="rxnutils.data.uspto.html" title="previous chapter">rxnutils.data.uspto package</a></li>
+      <li>Next: <a href="rxnutils.pipeline.actions.html" title="next chapter">rxnutils.pipeline.actions package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-pipeline-package">
+<h1>rxnutils.pipeline package<a class="headerlink" href="#rxnutils-pipeline-package" title="Permalink to this headline">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.pipeline.actions.html">rxnutils.pipeline.actions package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.dataframe_mod">rxnutils.pipeline.actions.dataframe_mod module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.reaction_mod">rxnutils.pipeline.actions.reaction_mod module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.reaction_props">rxnutils.pipeline.actions.reaction_props module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.templates">rxnutils.pipeline.actions.templates module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-rxnutils.pipeline.base">
+<span id="rxnutils-pipeline-base-module"></span><h2>rxnutils.pipeline.base module<a class="headerlink" href="#module-rxnutils.pipeline.base" title="Permalink to this headline">¶</a></h2>
+<p>Module containing routines for the validation framework</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.action">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.base.</span></span><span class="sig-name descname"><span class="pre">action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator that register a callable as a validation action.</p>
+<p>An action will be called with a <cite>pandas.DataFrame</cite> object
+and return a new <cite>pandas.DataFrame</cite> object.</p>
+<p>An action needs to have an attribute <cite>pretty_name</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>obj</strong> (<em>Callable</em><em>[</em><em>[</em><em>pandas.core.frame.DataFrame</em><em>]</em><em>, </em><em>pandas.core.frame.DataFrame</em><em>]</em>) – the callable to register as an action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the same as <cite>obj</cite>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>Callable</em>[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.list_actions">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.base.</span></span><span class="sig-name descname"><span class="pre">list_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.list_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all available actions in a nice table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>short</strong> (<em>bool</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.create_action">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.base.</span></span><span class="sig-name descname"><span class="pre">create_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pretty_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.create_action" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an action that can be called</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pretty_name</strong> (<em>str</em>) – the name of the action</p></li>
+<li><p><strong>args</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the instantiated actions</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>Callable</em>[[pandas.core.frame.DataFrame], pandas.core.frame.DataFrame]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.base.</span></span><span class="sig-name descname"><span class="pre">ReactionActionMixIn</span></span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mixin class with standard routines for splitting and joining reaction SMILES</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn.join_lists">
+<span class="sig-name descname"><span class="pre">join_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reactants_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reagents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">products_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn.join_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join list of components into a reaction SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reactants_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the list of reactant SMILES</p></li>
+<li><p><strong>reagents_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the list of reagent SMILES</p></li>
+<li><p><strong>products_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the list of product SMILES</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the concatenated reaction SMILES</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn.join_smiles">
+<span class="sig-name descname"><span class="pre">join_smiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reactants</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reagents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">products</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn.join_smiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join component SMILES into a reaction SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reactants</strong> (<em>str</em>) – the reactant SMILES</p></li>
+<li><p><strong>reagents</strong> (<em>str</em>) – the reagent SMILES</p></li>
+<li><p><strong>products</strong> (<em>str</em>) – the product SMILES</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the concatenated reaction SMILES</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn.split_lists">
+<span class="sig-name descname"><span class="pre">split_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn.split_lists" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a reaction SMILES into list of component SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>pandas.core.series.Series</em>) – the row with the SMILES</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the list of SMILES of the components</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>List</em>[str], <em>List</em>[str], <em>List</em>[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn.split_smiles">
+<span class="sig-name descname"><span class="pre">split_smiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn.split_smiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a reaction SMILES into components SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>pandas.core.series.Series</em>) – the row with the SMILES</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the SMILES of the components</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><em>Tuple</em>[str, str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.pipeline.runner">
+<span id="rxnutils-pipeline-runner-module"></span><h2>rxnutils.pipeline.runner module<a class="headerlink" href="#module-rxnutils.pipeline.runner" title="Permalink to this headline">¶</a></h2>
+<p>Module containg routines and interface to run pipelines</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.runner.run_pipeline">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.runner.</span></span><span class="sig-name descname"><span class="pre">run_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_intermediates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.runner.run_pipeline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a given pipeline on a dataset</p>
+<p>The actions are applied sequentials as they are defined in the pipeline</p>
+<p>The intermediate results of the pipeline will be written to separate
+tab-separated CSV files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>pandas.core.frame.DataFrame</em>) – the dataset</p></li>
+<li><p><strong>pipeline</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – the action specifications</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – path to the final output file</p></li>
+<li><p><strong>save_intermediates</strong> (<em>bool</em>) – if True will save intermediate results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the dataset after completing the pipeline</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas.core.frame.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.runner.main">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.runner.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.runner.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function for command line argument</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>Optional</em><em>[</em><em>Sequence</em><em>[</em><em>str</em><em>]</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.pipeline">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.pipeline" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 4.5.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.15</a>
+      
+      |
+      <a href="_sources/rxnutils.pipeline.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
