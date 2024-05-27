@@ -5,6 +5,7 @@
 ### Features
 
 - Adding support for tagging reaction sites in SMILES
+- Adding more options for re-mapping routes
 
 ### Miscellaneous
 
