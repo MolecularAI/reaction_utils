@@ -24,14 +24,14 @@ from rxnutils.chem.utils import (
 class SynthesisRoute:
     """
     This encapsulates a synthesis route or a reaction tree.
-    It provide convinient methods for assigning atom-mapping
+    It provide convenient methods for assigning atom-mapping
     to the reactions, and for providing reaction-level data
     of the route
 
     It is typically initiallized by one of the readers in the
     `rxnutils.routes.readers` module.
 
-    The tree depth and the forward step is automatically assigned
+    The tree depth and the forward step are automatically assigned
     to each reaction node.
 
     :param reaction_tree: the tree structure representing the route
@@ -74,7 +74,7 @@ class SynthesisRoute:
     ) -> None:
         """
         Assign atom-mapping to each reaction in the route and
-        ensure that is is consistent from root compound and throughout
+        ensure that it is consistent from root compound and throughout
         the route.
 
         It will use NameRxn to assign classification and possiblty atom-mapping,
