@@ -1,4 +1,5 @@
 """Module containing actions that modify the dataframe in some way"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -30,7 +31,7 @@ class DropColumns:
     columns: list[str]
 
     def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
-        return data.drop(self.columns, 1)
+        return data.drop(self.columns, axis=1)
 
     def __str__(self) -> str:
         return f"{self.pretty_name} (drop columns in specified list, keeps the rest)"
@@ -99,7 +100,7 @@ class KeepColumns:
         for name in self.columns:
             drop_columns.remove(name)
 
-        return data.drop(drop_columns, 1)
+        return data.drop(drop_columns, axis=1)
 
     def __str__(self) -> str:
         return f"{self.pretty_name} (keeps columns in specified list, drops the rest)"
@@ -186,7 +187,7 @@ class StackColumns:
             value_vars=self.in_columns,
             var_name=var_column_name,
             value_name=self.out_column,
-        ).drop(var_column_name, 1)
+        ).drop(var_column_name, axis=1)
 
     def __str__(self) -> str:
         return f"{self.pretty_name} (stacks two columns into a single column)"
