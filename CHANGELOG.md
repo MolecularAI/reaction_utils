@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 1.6.0 - 2024-06-13
+
+### Trivial changes
+
+- rdkit version requirements have been updated to versions above 2023.9.1.
+
 ## Version 1.5.0 - 2024-05-27
 
 ### Features
