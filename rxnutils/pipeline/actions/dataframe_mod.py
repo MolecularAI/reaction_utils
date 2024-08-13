@@ -1,5 +1,4 @@
 """Module containing actions that modify the dataframe in some way"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
