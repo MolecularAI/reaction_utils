@@ -213,10 +213,10 @@ def test_isotope_info():
     assert df2["Isotope"].to_list()[1:] == ["13C", "13C", "2H", "2H"]
     assert df2["RxnSmilesWithoutIsotopes"].to_list() == [
         "c1ccccc1",
-        "[13C]c1ccccc1",
-        "[13CH2]c1ccccc1",
-        "[2H:3]",
-        "[2H-:3][13CH2]",
+        "[C]c1ccccc1",
+        "[CH2]c1ccccc1",
+        "[H:3]",
+        "[H-:3][CH2]",
     ]
 
 
