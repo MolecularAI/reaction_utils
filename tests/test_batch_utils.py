@@ -119,9 +119,9 @@ def test_combine_csv_batches(tmpdir):
 
 def test_combine_sparse_matrix_batches(tmpdir):
     filename1 = str(tmpdir / "temp.0.npz")
-    sparse.save_npz(filename1, sparse.csr_array([0, 0, 0, 1]), compressed=True)
+    sparse.save_npz(filename1, sparse.csr_array([[0, 0, 0, 1]]), compressed=True)
     filename2 = str(tmpdir / "temp.1.npz")
-    sparse.save_npz(filename2, sparse.csr_array([1, 1, 1, 0]), compressed=True)
+    sparse.save_npz(filename2, sparse.csr_array([[1, 1, 1, 0]]), compressed=True)
     filename = str(tmpdir / "temp.npz")
 
     assert os.path.exists(filename1)
