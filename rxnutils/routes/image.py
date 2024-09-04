@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     # pylint: disable=ungrouped-imports
     from typing import (
         Any,
+        Callable,
         Optional,
         Dict,
         List,
@@ -47,6 +48,7 @@ def molecules_to_images(
     mols: Sequence[Chem.rdchem.Mol],
     frame_colors: Sequence[PilColor],
     size: int = 300,
+    draw_kwargs: Dict[str, Any] = None,
 ) -> List[PilImage]:
     """
     Create pretty images of molecules with a colored frame around each one of them.
@@ -56,12 +58,12 @@ def molecules_to_images(
     :param smiles_list: the molecules
     :param frame_colors: the color of the frame for each molecule
     :param size: the sub-image size
+    :param draw_kwargs: additional keyword-arguments sent to `MolsToGridImage`
     :return: the produced images
     """
+    draw_kwargs = draw_kwargs or {}
     all_mols = Draw.MolsToGridImage(
-        mols,
-        molsPerRow=len(mols),
-        subImgSize=(size, size),
+        mols, molsPerRow=len(mols), subImgSize=(size, size), **draw_kwargs
     )
     if not hasattr(all_mols, "crop"):  # Is not a PIL image
         fileobj = io.BytesIO(all_mols.data)
@@ -153,6 +155,9 @@ class RouteImageFactory:
     :param in_stock_colors: the colors around molecules, defaults to {True: "green", False: "orange"}
     :param show_all: if True, also show nodes that are marked as hidden
     :param margin: the margin between images
+    :param mol_size: the size of the molecule
+    :param mol_draw_kwargs: additional arguments sent to the drawing routine
+    :param replace_mol_func: an optional function to replace molecule images
     """
 
     def __init__(
@@ -161,6 +166,9 @@ class RouteImageFactory:
         in_stock_colors: FrameColors = None,
         show_all: bool = True,
         margin: int = 100,
+        mol_size: int = 300,
+        mol_draw_kwargs: Dict[str, Any] = None,
+        replace_mol_func: Callable[[Dict[str, Any]], None] = None,
     ) -> None:
         in_stock_colors = in_stock_colors or {
             True: "green",
@@ -172,9 +180,13 @@ class RouteImageFactory:
         self._stock_lookup: Dict[str, Any] = {}
         self._mol_lookup: Dict[str, Any] = {}
         self._extract_molecules(route)
+        if replace_mol_func is not None:
+            replace_mol_func(self._mol_lookup)
         images = molecules_to_images(
             list(self._mol_lookup.values()),
             [in_stock_colors[val] for val in self._stock_lookup.values()],
+            size=mol_size,
+            draw_kwargs=mol_draw_kwargs or {},
         )
         self._image_lookup = dict(zip(self._mol_lookup.keys(), images))
 

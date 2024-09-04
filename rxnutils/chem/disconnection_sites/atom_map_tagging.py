@@ -95,6 +95,30 @@ def get_atom_list(reactants_smiles: str, product_smiles: str) -> List[int]:
     return atom_list
 
 
+def atom_map_tag_reactants(mapped_rxn: str) -> str:
+    """
+    Given atom-mapped reaction, returns disconnection site-tagged reactants where atoms
+    with changed atom environment are represented by [<atom>:1].
+
+    :param mapped_rxn: Atom-mapped reaction SMILES
+    :return: SMILES of the reactants containing tags corresponding to atoms changed in the
+        reaction.
+    """
+    reactants_smiles, _, product_smiles = mapped_rxn.split(">")
+
+    reactants_mol = Chem.MolFromSmiles(reactants_smiles)
+    atom_list = get_atom_list(reactants_smiles, product_smiles)
+
+    # Set atoms in product with a different environment in reactants to 1
+    for atom in reactants_mol.GetAtoms():
+        if atom.GetAtomMapNum() in atom_list:
+            atom.SetAtomMapNum(1)
+        else:
+            atom.SetAtomMapNum(0)
+
+    return Chem.MolToSmiles(reactants_mol)
+
+
 def atom_map_tag_products(mapped_rxn: str) -> str:
     """
     Given atom-mapped reaction, returns disconnection site-tagged product where atoms

@@ -2,6 +2,7 @@
 Module containing pipeline for downloading, transforming and cleaning USPTO data
 This needs to be run in an environment with rxnutils installed
 """
+
 from pathlib import Path
 
 from metaflow import step

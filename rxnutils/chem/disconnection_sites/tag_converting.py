@@ -15,10 +15,16 @@ def smiles_tokens(smiles: str) -> List[str]:
     :param smiles: SMILES to tokenize
     :return: List of tokens identified in SMILES.
     """
-    pattern = r"(\[[^\]]+]|Br?|Cl?|N|O|S|P|F|I|b|c|n|o|s|p|\(|\)|\.|=|#|-|\+|\\\\|\/|:|~|@|\?|>|\*|\!|\$|\%[0-9]{2}|[0-9])"
+    pattern = r"(\[[^\]]+]|Br?|Cl?|N|O|S|P|F|I|b|c|n|o|s|p|\(|\)|\.|=|#|-|\+|\\\\|\\|\/|:|~|@|\?|>|\*|\!|\$|\%[0-9]{2}|[0-9])"
     regex = re.compile(pattern)
     tokens = [token for token in regex.findall(smiles)]
-    assert smiles == "".join(tokens)
+
+    tokenized_smiles = "".join(tokens)
+    if smiles != tokenized_smiles:
+        raise AssertionError(
+            f"tokenized SMILES not the same as input SMILES: {tokenized_smiles}, "
+            "{smiles}, tokens: {tokens}"
+        )
     return tokens
 
 
@@ -67,8 +73,6 @@ def tagged_smiles_from_tokens(
     :return: Tuple of SMILES of the product containing tags corresponding to atoms changed in the
         reaction using "<atom>!", and SMILES of the (reconstructed) untagged product
     """
-
-    print(product_tagged_tokens)
 
     product_converted = ""
     product_untagged = ""

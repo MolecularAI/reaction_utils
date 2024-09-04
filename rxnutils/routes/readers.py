@@ -1,9 +1,11 @@
 """Routines for reading routes from various formats"""
+
 import copy
 from typing import Sequence, List, Dict, Any
 
 import pandas as pd
 from rdkit import Chem
+from rdkit.Chem import AllChem
 
 from rxnutils.routes.base import SynthesisRoute
 from rxnutils.routes.base import smiles2inchikey
@@ -169,9 +171,44 @@ def reactions2route(
     return SynthesisRoute(make_dict(inchi_map[target_inchi]))
 
 
+def read_rdf_file(filename: str) -> SynthesisRoute:
+    def finish_reaction():
+        if not rxnblock:
+            return
+        rxn = AllChem.ReactionFromRxnBlock(
+            "\n".join(rxnblock), sanitize=False, strictParsing=False
+        )
+        reactions.append(AllChem.ReactionToSmiles(rxn))
+
+    with open(filename, "r") as fileobj:
+        lines = fileobj.read().splitlines()
+
+    reactions = []
+    rxnblock = []
+    read_rxn = skip_entry = False
+    for line in lines:
+        if line.startswith("$RFMT"):
+            read_rxn = skip_entry = False
+            finish_reaction()
+            rxnblock = []
+        elif line.startswith(("$MFMT", "$DATUM")):
+            # Ignore MFMT and DATUM entries for now
+            skip_entry = True
+        elif skip_entry:
+            continue
+        elif line.startswith("$RXN"):
+            rxnblock = [line]
+            read_rxn = True
+        elif read_rxn:
+            rxnblock.append(line)
+    finish_reaction()
+
+    return reactions2route(reactions)
+
+
 def _transform_retrosynthesis_atom_mapping(tree_dict: Dict[str, Any]) -> None:
     """
-    Routes output from AiZynth have atom-mapping from the template-based model,
+    Routes output from AiZynth has atom-mapping from the template-based model,
     but it needs to be processed
     1. Remove atom-mapping from reactants not in product
     2. Reverse reaction SMILES
