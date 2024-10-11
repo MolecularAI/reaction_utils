@@ -4,7 +4,7 @@ This needs to be run in an environment with rxnmapper installed
 """
 from pathlib import Path
 
-from metaflow import step, Parameter
+from metaflow import Parameter, step
 
 from rxnutils.data.base_pipeline import DataBaseFlow
 from rxnutils.data.mapping import main as map_data

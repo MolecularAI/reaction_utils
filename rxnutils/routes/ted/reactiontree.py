@@ -4,22 +4,22 @@ Since APTED is based on ordered trees and the reaction trees are unordered, plen
 heuristics are implemented to deal with this.
 """
 from __future__ import annotations
+
 import itertools
 import math
 from copy import deepcopy
-from typing import Any, Dict, List, Union, Iterable, Tuple, Callable, Optional
 from logging import getLogger
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Union
 
 import numpy as np
 from apted import APTED as Apted
-from rxnutils.routes.base import SynthesisRoute
 
+from rxnutils.routes.base import SynthesisRoute
 from rxnutils.routes.ted.utils import (
-    TreeContent,
     AptedConfig,
     StandardFingerprintFactory,
+    TreeContent,
 )
-
 
 StrDict = Dict[str, Any]
 _FloatIterator = Iterable[float]

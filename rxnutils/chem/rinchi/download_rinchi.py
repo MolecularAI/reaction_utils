@@ -1,9 +1,9 @@
 """Module for downloading InChI Trust Reaction InChI."""
-import os
-import sys
-import stat
-from zipfile import ZipFile
 import logging
+import os
+import stat
+import sys
+from zipfile import ZipFile
 
 import requests
 

@@ -8,6 +8,7 @@ Can be run as a module to create a collection from a set of routes:
 """
 
 from __future__ import annotations
+
 import json
 from dataclasses import dataclass
 from typing import Any, Set, Tuple

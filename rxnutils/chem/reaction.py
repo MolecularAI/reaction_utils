@@ -1,19 +1,16 @@
 """Module containing a class to handle chemical reactions"""
 import hashlib
-from typing import List, Tuple, Optional, Dict, Any
+from typing import Any, Dict, List, Optional, Tuple
 
 import wrapt_timeout_decorator
+from rdchiral import template_extractor as extractor
 from rdkit import Chem
 from rdkit.Chem import AllChem
-from rdchiral import template_extractor as extractor
 
-from rxnutils.chem.rinchi import rinchi_api
 from rxnutils.chem import utils
+from rxnutils.chem.rinchi import rinchi_api
 from rxnutils.chem.template import ReactionTemplate
-from rxnutils.chem.utils import (
-    reassign_rsmi_atom_mapping,
-    split_smiles_from_reaction,
-)
+from rxnutils.chem.utils import reassign_rsmi_atom_mapping, split_smiles_from_reaction
 
 
 class ReactionException(Exception):

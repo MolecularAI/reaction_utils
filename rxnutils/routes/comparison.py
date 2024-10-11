@@ -1,15 +1,14 @@
 """ Contains routines for computing route similarities
 """
 import functools
-from typing import Any, Callable, Dict, Sequence, Tuple, List, Set
+from typing import Any, Callable, Dict, List, Sequence, Set, Tuple
 
 import numpy as np
 
-from rxnutils.chem.utils import atom_mapping_numbers
 from rxnutils.chem.reaction import ChemicalReaction
+from rxnutils.chem.utils import atom_mapping_numbers
 from rxnutils.routes.base import SynthesisRoute
 from rxnutils.routes.ted.distances_calculator import ted_distances_calculator
-
 
 RouteDistancesCalculator = Callable[[Sequence[SynthesisRoute]], np.ndarray]
 

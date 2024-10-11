@@ -5,7 +5,7 @@ import json
 import os
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import ClassVar, List, Set, Tuple, Optional
+from typing import ClassVar, List, Optional, Set, Tuple
 
 import pandas as pd
 from rdkit import Chem, RDLogger
@@ -14,11 +14,8 @@ from rdkit.Chem.MolKey.InchiInfo import InchiInfo
 from rdkit.Chem.rdMolDescriptors import CalcNumRings
 from rdkit.Chem.rdmolops import FindPotentialStereo
 
-from rxnutils.pipeline.base import (
-    action,
-    global_apply,
-    ReactionActionMixIn,
-)
+from rxnutils.chem.cgr import CondensedGraphReaction
+from rxnutils.chem.reaction import ChemicalReaction
 from rxnutils.chem.utils import (
     atom_mapping_numbers,
     has_atom_mapping,
@@ -26,8 +23,7 @@ from rxnutils.chem.utils import (
     reaction_centres,
     split_smiles_from_reaction,
 )
-from rxnutils.chem.reaction import ChemicalReaction
-from rxnutils.chem.cgr import CondensedGraphReaction
+from rxnutils.pipeline.base import ReactionActionMixIn, action, global_apply
 
 rd_logger = RDLogger.logger()
 rd_logger.setLevel(RDLogger.CRITICAL)

@@ -1,11 +1,9 @@
 """Module containing various chemical utility routines"""
-import logging
 import functools
+import logging
 from typing import List, Tuple
 
-
 import rdchiral.template_extractor
-
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem.MolStandardize import rdMolStandardize

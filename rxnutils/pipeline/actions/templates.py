@@ -1,16 +1,16 @@
 """Module containing template validation actions"""
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import ClassVar, Set, Sequence
+from typing import ClassVar, Sequence, Set
 
 import pandas as pd
-from rdkit import RDLogger
-from rdkit import Chem
+from rdkit import Chem, RDLogger
 from rdkit.Chem import AllChem
 
-from rxnutils.pipeline.base import action, global_apply
 from rxnutils.chem.template import ReactionTemplate
 from rxnutils.chem.utils import split_smiles_from_reaction
+from rxnutils.pipeline.base import action, global_apply
 
 rd_logger = RDLogger.logger()
 rd_logger.setLevel(RDLogger.CRITICAL)

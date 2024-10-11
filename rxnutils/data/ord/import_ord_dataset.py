@@ -1,9 +1,9 @@
 """
 Module containing script to import ORD dataset to a CSV file
 """
-import re
 import argparse
 import os
+import re
 from collections import defaultdict
 from typing import Optional, Sequence
 

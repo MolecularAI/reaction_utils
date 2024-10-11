@@ -5,22 +5,22 @@ and drawing the route
 """
 
 import warnings
-from typing import Dict, Any, List, Callable, Tuple, Set, Union
 from copy import deepcopy
 from operator import itemgetter
+from typing import Any, Callable, Dict, List, Set, Tuple, Union
 
 import pandas as pd
 from PIL.Image import Image as PilImage
 from rdkit import Chem
 
-from rxnutils.pipeline.actions.reaction_mod import NameRxn, RxnMapper
-from rxnutils.routes.image import RouteImageFactory
 from rxnutils.chem.augmentation import single_reactant_augmentation
 from rxnutils.chem.utils import (
     atom_mapping_numbers,
-    split_smiles_from_reaction,
     join_smiles_from_reaction,
+    split_smiles_from_reaction,
 )
+from rxnutils.pipeline.actions.reaction_mod import NameRxn, RxnMapper
+from rxnutils.routes.image import RouteImageFactory
 from rxnutils.routes.utils.validation import validate_dict
 
 

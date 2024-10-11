@@ -1,9 +1,10 @@
 """ Module containing routes to validate AiZynthFinder-like input dictionaries """
 from __future__ import annotations
-from typing import Any, Dict, Optional, List
-from typing_extensions import Annotated
 
-from pydantic import BaseModel, StringConstraints, conlist, ValidationError
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, StringConstraints, ValidationError, conlist
+from typing_extensions import Annotated
 
 StrDict = Dict[str, Any]
 

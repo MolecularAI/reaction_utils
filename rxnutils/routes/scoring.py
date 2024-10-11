@@ -1,15 +1,15 @@
 """ Routines for scoring synthesis routes
 """
 
-from typing import Any, Callable, List, Dict, Tuple
+from typing import Any, Callable, Dict, List, Tuple
 
 import numpy as np
 
 from rxnutils.routes.base import SynthesisRoute
 from rxnutils.routes.retro_bleu.scoring import (
-    ngram_overlap_score,
+    ngram_overlap_score,  # noqa
     retro_bleu_score,
-)  # noqa
+)
 
 
 def route_sorter(

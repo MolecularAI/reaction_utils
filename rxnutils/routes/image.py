@@ -11,16 +11,7 @@ from rdkit.Chem import Draw
 
 if TYPE_CHECKING:
     # pylint: disable=ungrouped-imports
-    from typing import (
-        Any,
-        Callable,
-        Optional,
-        Dict,
-        List,
-        Sequence,
-        Tuple,
-        Union,
-    )
+    from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 
     PilColor = Union[str, Tuple[int, int, int]]
     FrameColors = Optional[Dict[bool, PilColor]]

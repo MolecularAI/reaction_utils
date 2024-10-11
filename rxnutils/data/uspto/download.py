@@ -1,14 +1,13 @@
 """Module containing a script to download USPTO files Figshare
 """
-import os
 import argparse
+import os
 from pathlib import Path
 from typing import Optional, Sequence
 
-import tqdm
-import requests
 import py7zr
-
+import requests
+import tqdm
 
 FILES_TO_DOWNLOAD = [
     {

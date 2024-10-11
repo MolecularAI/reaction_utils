@@ -4,9 +4,9 @@ import io
 import warnings
 from typing import List
 
-from CGRtools.files.SDFrw import SDFRead
-from CGRtools.containers.reaction import ReactionContainer
 from CGRtools.containers.molecule import MoleculeContainer
+from CGRtools.containers.reaction import ReactionContainer
+from CGRtools.files.SDFrw import SDFRead
 from rdkit import Chem
 
 from rxnutils.chem.reaction import ChemicalReaction

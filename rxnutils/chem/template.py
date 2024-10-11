@@ -1,18 +1,17 @@
 """Module containing useful representations of templates
 """
-import re
 import hashlib
 import logging
+import re
 from collections import defaultdict
 from itertools import permutations
-from typing import List, Dict, Set, Iterator, Tuple, Any
+from typing import Any, Dict, Iterator, List, Set, Tuple
 
 import numpy as np
 import rdchiral.main as rdc
-from xxhash import xxh32
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem, SanitizeFlags  # pylint: disable=all
-
+from xxhash import xxh32
 
 DELIM_REGEX_STR = r"[&:\]]"
 AROMATIC_REGEX_STR = r"&a" + DELIM_REGEX_STR

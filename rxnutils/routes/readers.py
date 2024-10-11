@@ -1,15 +1,14 @@
 """Routines for reading routes from various formats"""
 
 import copy
-from typing import Sequence, List, Dict, Any
+from typing import Any, Dict, List, Sequence
 
 import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
-from rxnutils.routes.base import SynthesisRoute
-from rxnutils.routes.base import smiles2inchikey
-from rxnutils.chem.utils import split_smiles_from_reaction, join_smiles_from_reaction
+from rxnutils.chem.utils import join_smiles_from_reaction, split_smiles_from_reaction
+from rxnutils.routes.base import SynthesisRoute, smiles2inchikey
 
 
 def read_reaction_lists(filename: str) -> List[SynthesisRoute]:

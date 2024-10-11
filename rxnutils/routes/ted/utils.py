@@ -1,16 +1,16 @@
 """ Module containing utilities for TED calculations """
 from __future__ import annotations
-from typing import Any, Callable, Dict, List
+
 import random
 from enum import Enum
 from operator import itemgetter
+from typing import Any, Callable, Dict, List
 
 import numpy as np
+from apted import Config as BaseAptedConfig
 from rdkit import Chem, DataStructs
 from rdkit.Chem import AllChem
-from apted import Config as BaseAptedConfig
 from scipy.spatial.distance import jaccard as jaccard_dist
-
 
 StrDict = Dict[str, Any]
 
