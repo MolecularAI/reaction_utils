@@ -6,7 +6,7 @@ import glob
 import os
 from pathlib import Path
 
-from metaflow import step, Parameter
+from metaflow import Parameter, step
 
 from rxnutils.data.base_pipeline import DataPreparationBaseFlow
 from rxnutils.data.ord.import_ord_dataset import main as import_data

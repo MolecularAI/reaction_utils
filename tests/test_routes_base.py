@@ -9,8 +9,20 @@ from rxnutils.routes.base import SynthesisRoute
 
 def test_collect_reaction_smiles(synthesis_route):
     smiles = synthesis_route.reaction_smiles()
+    assert synthesis_route.nsteps == 2
     assert len(smiles) == 2
     assert smiles[0] == "CO.Clc1ccccc1>>COc1ccccc1"
+
+
+def test_collect_reaction_smiles_augmented(augmentable_sythesis_route):
+    smiles = augmentable_sythesis_route.reaction_smiles(augment=True)
+
+    assert len(smiles) == 3
+    assert smiles == [
+        "Cl.c1ccccc1>>Clc1ccccc1",
+        "Cc1ccccc1>>c1ccccc1",
+        "Oc1ccccc1.C>>Cc1ccccc1",
+    ]
 
 
 def test_atom_mapping(synthesis_route, setup_mapper):
@@ -29,6 +41,39 @@ def test_atom_mapping(synthesis_route, setup_mapper):
     smiles = synthesis_route.atom_mapped_reaction_smiles()
     assert (
         smiles[0]
+        == "Cl[c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1.[CH3:1][OH:2]>>[CH3:1][O:2][c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1"
+    )
+
+
+def test_atom_mapping_no_namerxn(synthesis_route, setup_mapper_no_namerxn, recwarn):
+    synthesis_route.assign_atom_mapping()
+
+    assert len(recwarn) == 1
+    assert "namerxn" in str(recwarn[0])
+
+    data = pd.DataFrame(synthesis_route.reaction_data())
+
+    assert len(data) == 2
+    assert data["classification"].to_list() == ["0.0", "0.0"]
+    assert (
+        data["mapped_reaction_smiles"][0]
+        == "Cl[c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1.[CH3:1][OH:2]>>[CH3:1][O:2][c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1"
+    )
+
+
+def test_atom_mapping_no_namerxn_choose_rxnmapper(
+    synthesis_route, setup_mapper_no_namerxn, recwarn
+):
+    synthesis_route.assign_atom_mapping(only_rxnmapper=True)
+
+    assert len(recwarn) == 0
+
+    data = pd.DataFrame(synthesis_route.reaction_data())
+
+    assert len(data) == 2
+    assert data["classification"].to_list() == ["0.0", "0.0"]
+    assert (
+        data["mapped_reaction_smiles"][0]
         == "Cl[c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1.[CH3:1][OH:2]>>[CH3:1][O:2][c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1"
     )
 
@@ -160,3 +205,58 @@ def test_extract_branched_chains(branched_synthesis_route):
     assert chains[1][2]["step"] == 2
     assert chains[1][2]["chain"] == "sub1"
     assert chains[1][2]["type"] == "branch"
+
+
+def test_route_leaves(synthesis_route):
+    leaves = synthesis_route.leaves()
+
+    assert leaves == {"c1ccccc1", "Cl", "CO"}
+
+
+def test_route_is_solved(synthesis_route, setup_stock):
+    assert synthesis_route.is_solved()
+
+    setup_stock(synthesis_route, {"c1ccccc1", "Cl", "CO"})
+    assert synthesis_route.is_solved()
+
+    setup_stock(synthesis_route, {"Cl", "CO"})
+    assert not synthesis_route.is_solved()
+
+
+def test_extract_monograms(synthesis_route):
+    monograms = synthesis_route.reaction_ngrams(1, "reaction_smiles")
+
+    assert len(monograms) == 2
+    assert monograms[0] == ("CO.Clc1ccccc1>>COc1ccccc1",)
+    assert monograms[1] == ("Cl.c1ccccc1>>Clc1ccccc1",)
+
+
+def test_extract_bigrams(synthesis_route):
+    bigrams = synthesis_route.reaction_ngrams(2, "reaction_smiles")
+
+    assert len(bigrams) == 1
+    assert bigrams[0] == ("CO.Clc1ccccc1>>COc1ccccc1", "Cl.c1ccccc1>>Clc1ccccc1")
+
+
+def test_extract_bigrams_branched(branched_synthesis_route):
+    bigrams = branched_synthesis_route.reaction_ngrams(2, "reaction_smiles")
+
+    assert len(bigrams) == 2
+    assert bigrams[0] == ("CO.Clc1ccccc1>>COc1ccccc1", "C.O>>CO")
+    assert bigrams[1] == ("CO.Clc1ccccc1>>COc1ccccc1", "Cl.c1ccccc1>>Clc1ccccc1")
+
+
+def test_extract_trigrams_too_short(synthesis_route):
+    trigrams = synthesis_route.reaction_ngrams(3, "reaction_smiles")
+
+    assert len(trigrams) == 0
+
+
+def test_extract_grams_augmentable(augmentable_sythesis_route):
+    route = augmentable_sythesis_route
+    bigrams = route.reaction_ngrams(2, "hash")
+
+    assert bigrams == [("xyz", "xyy"), ("xyy", "xxz")]
+
+    trigrams = route.reaction_ngrams(3, "hash")
+    assert trigrams == [("xyz", "xyy", "xxz")]

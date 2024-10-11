@@ -14,6 +14,7 @@ from rxnutils.chem.utils import (
     get_special_groups,
     reaction_centres,
 )
+from rxnutils.chem.augmentation import single_reactant_augmentation
 
 
 @pytest.mark.parametrize(
@@ -140,3 +141,37 @@ def test_reaction_centers(smiles, expected):
     rxn.Initialize()
 
     assert reaction_centres(rxn) == expected
+
+
+@pytest.mark.parametrize(
+    ("smiles", "classification", "expected"),
+    [
+        (
+            "A.B>>C",
+            "",
+            "A.B>>C",
+        ),
+        (
+            "A.B>>C",
+            "0.0",
+            "A.B>>C",
+        ),
+        (
+            "A>>C",
+            "0.0",
+            "A>>C",
+        ),
+        (
+            "A>>C",
+            "10.1.1",
+            "Br.A>>C",
+        ),
+        (
+            "A>>C",
+            "10.1.2 Chlorination",
+            "Cl.A>>C",
+        ),
+    ],
+)
+def test_single_reactant_agumentation(smiles, classification, expected):
+    assert single_reactant_augmentation(smiles, classification) == expected

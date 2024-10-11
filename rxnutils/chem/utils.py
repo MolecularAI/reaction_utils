@@ -1,12 +1,9 @@
 """Module containing various chemical utility routines"""
-
-import logging
 import functools
+import logging
 from typing import List, Tuple
 
-
 import rdchiral.template_extractor
-
 from rdkit import Chem
 from rdkit.Chem import AllChem
 from rdkit.Chem.MolStandardize import rdMolStandardize
@@ -292,7 +289,7 @@ def get_special_groups(mol) -> List[Tuple[Tuple[int, ...], Tuple[int, ...]]]:
 
     # Build list
     groups = []
-    for add_if_match, template in group_templates:
+    for (add_if_match, template) in group_templates:
         matches = mol.GetSubstructMatches(
             Chem.MolFromSmarts(template), useChirality=True
         )

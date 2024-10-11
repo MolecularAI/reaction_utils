@@ -18,9 +18,9 @@ from rxnutils.chem.disconnection_sites.atom_map_tagging import atom_map_tag_prod
 from rxnutils.chem.disconnection_sites.tag_converting import convert_atom_map_tag
 from rxnutils.chem.utils import (
     atom_mapping_numbers,
+    desalt_molecules,
     neutralize_molecules,
     remove_atom_mapping,
-    desalt_molecules,
 )
 from rxnutils.pipeline.base import ReactionActionMixIn, action, global_apply
 

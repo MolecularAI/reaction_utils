@@ -1,18 +1,19 @@
 """Module containg routines and interface to run pipelines"""
 import argparse
-from typing import Dict, Any, Optional, Sequence
+from typing import Any, Dict, Optional, Sequence
 
-import yaml
 import pandas as pd
+import yaml
+
+import rxnutils.pipeline.actions.dataframe_mod  # noqa
 
 # imports needed to register all the actions
 # pylint: disable=unused-import
 import rxnutils.pipeline.actions.reaction_mod  # noqa
 import rxnutils.pipeline.actions.reaction_props  # noqa
 import rxnutils.pipeline.actions.templates  # noqa
-import rxnutils.pipeline.actions.dataframe_mod  # noqa
-from rxnutils.pipeline.base import create_action, global_apply, list_actions
 from rxnutils.data.batch_utils import read_csv_batch
+from rxnutils.pipeline.base import create_action, global_apply, list_actions
 
 
 def run_pipeline(

@@ -1,6 +1,7 @@
 import pytest
 from rxnutils.chem.disconnection_sites.atom_map_tagging import (
     atom_map_tag_products,
+    atom_map_tag_reactants,
     get_atom_list,
 )
 from rxnutils.chem.disconnection_sites.tag_converting import (
@@ -47,6 +48,26 @@ def test_get_atom_list(reactants_smiles, product_smiles, expected):
 def test_atom_map_tag_products(reactants_smiles, product_smiles, expected):
     tagged_product = atom_map_tag_products(f"{reactants_smiles}>>{product_smiles}")
     assert tagged_product == expected
+
+
+@pytest.mark.parametrize(
+    ("reactants_smiles", "product_smiles", "expected"),
+    [
+        (
+            "[Cl:2].[CH:1]1=[CH:7][CH:6]=[CH:5][CH:4]=[CH:3]1",
+            "[Cl:2][C:1]1=[CH:7][CH:6]=[CH:5][CH:4]=[CH:3]1",
+            "[Cl:1].c1cc[cH:1]cc1",
+        ),
+        (
+            "Cl.[CH:1]1=[CH:7][CH:6]=[CH:5][CH:4]=[CH:3]1",
+            "Cl[C:1]1=[CH:7][CH:6]=[CH:5][CH:4]=[CH:3]1",
+            "Cl.c1cc[cH:1]cc1",
+        ),
+    ],
+)
+def test_atom_map_tag_reactants(reactants_smiles, product_smiles, expected):
+    tagged_reactants = atom_map_tag_reactants(f"{reactants_smiles}>>{product_smiles}")
+    assert tagged_reactants == expected
 
 
 @pytest.mark.parametrize(

@@ -1,15 +1,14 @@
 """Module containing base class for data pipelines
 """
-import os
 import math
+import os
 from pathlib import Path
+from typing import List, Tuple
 
 import pandas as pd
 from metaflow import FlowSpec, Parameter
 
-from typing import List, Tuple
-
-from rxnutils.data.batch_utils import create_csv_batches, combine_csv_batches
+from rxnutils.data.batch_utils import combine_csv_batches, create_csv_batches
 
 # This is hack to only import the validation_runner if rxnmapper is not installed
 try:

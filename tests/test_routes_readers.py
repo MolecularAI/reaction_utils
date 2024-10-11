@@ -6,6 +6,7 @@ from rxnutils.routes.readers import reactions2route
 from rxnutils.routes.readers import (
     read_reactions_dataframe,
     read_aizynthcli_dataframe,
+    read_rdf_file,
 )
 
 
@@ -68,3 +69,14 @@ def test_create_route_from_aizynth_cli(shared_datadir):
         routes[0][0].reaction_smiles()[-1]
         == "NC1CCCCC1.C1=CCC=C1>>NC1CCCC(C2C=CC=C2)C1"
     )
+
+
+def test_create_route_from_rdf(shared_datadir):
+    filename = str(shared_datadir / "example_route.rdf")
+
+    route = read_rdf_file(filename)
+
+    reactions = route.reaction_smiles()
+    assert len(reactions) == 2
+    assert reactions[0] == "CCC=O>>CCC(=O)O"
+    assert reactions[1] == "CCCN>>CCC=O"
