@@ -4,9 +4,9 @@ import sys
 sys.path.insert(0, os.path.abspath("."))
 
 project = "ReactionUtils"
-copyright = "2022, Molecular AI group"
+copyright = "2022-2024, Molecular AI group"
 author = "Molecular AI group"
-release = "1.6.0"
+release = "1.7.0"
 
 extensions = [
     "sphinx.ext.autodoc",
