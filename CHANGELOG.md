@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## Version 1.7.0 - 2024-10-15
+
+### Features
+
+- Support for novel route comparison metric
+- Support for tree edit distance (TED) calculations previously in the `route_distances` package
+- Support for Retro-BLEU and Badowski et al. route scoring
+- Update to USPTO pre-processing pipeline to support extracting yields
+- Extended route methods taken from `route_distances`
+- Support for augmenting single-reactant reactions
+
+### Trivial changes
+
+- Updates to reaction tagging routines
+
 ## Version 1.6.0 - 2024-06-13
 
 ### Trivial changes
