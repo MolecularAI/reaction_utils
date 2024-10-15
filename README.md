@@ -29,8 +29,6 @@ Setup your python environment and then run
 
 Consult the documentation for further information.
 
-For some tasks such as atom-mapping with `rxnmapper` you need to setup additional environment and packages, see [here](https://molecularai.github.io/reaction_utils/uspto.html)
-
 ### For developers
 
 First clone the repository using Git.
@@ -109,8 +107,7 @@ Please use ``black`` package for formatting, and follow ``pep8`` style guide.
 
 * [@ckannas](https://github.com/ckannas)
 * [@SGenheden](https://www.github.com/SGenheden)
-* [@anniewesterlund](https://www.github.com/anniewesterlund)
-* [@Lakshidaa](https://github.com/Lakshidaa) 
+* [@anniewesterlund](https://www.github.com/anniewesterlund) 
 * [@CBA087](https://www.github.com/CBA087) 
 * [@EBjerrum](https://www.github.com/EBjerrum)
 * [@A-Thakkar](https://www.github.com/A-Thakkar)
