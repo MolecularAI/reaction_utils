@@ -97,7 +97,8 @@ def read_reactions_dataframe(
         return route
 
     metadata_columns = metadata_columns or []
-    return data.groupby(group_by).apply(reaction_dataframe2routes)
+    grouped = data.groupby(group_by)[data.columns.to_list()]
+    return grouped.apply(reaction_dataframe2routes)
 
 
 def reactions2route(
