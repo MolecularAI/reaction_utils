@@ -1,5 +1,5 @@
 import json
-
+import functools
 import pytest
 
 from rxnutils.chem.reaction import ChemicalReaction
@@ -224,7 +224,7 @@ def test_retro_template_validation(rsmi, valid_template, selectivity):
     assert rxn.retro_template_selectivity() == selectivity
 
 
-def test_timedout_template_creation():
+def test_timedout_template_creation(monkeypatch):
     rsmi = (
         "Cc1c(C)c(S(=O)(=O)NC(=N)NCCC[C@H](NC(=O)[C@@H]2CCCN2C(=O)[C@H](CCC(=O)NC(c2ccccc2)(c2ccccc2)"
         "c2ccccc2)NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CCCCNC(=O)OC(C)(C)C)NC(=O)[C@H](C)NC(=O)[C@@H]2CCCN2C"
@@ -239,6 +239,10 @@ def test_timedout_template_creation():
         "c(C)c2c1OC(C)(C)CC2.Cc1c(C)c(S(=O)(NC(=N)NCCC[C@H](NC(=O)OCC2c3ccccc3-c3ccccc32)C(=O)O)=[O:12])c(C)c2c1O"
         "C(C)(C)CC2>>[NH:1]([CH2:2][C:3]([OH:4])=[O:12])[C:5](=[O:6])[O:7][C:8]([CH3:9])([CH3:10])[CH3:11]"
     )
+    func = functools.partial(
+        ChemicalReaction._generate_rdchiral_template, dec_timeout=2
+    )
+    monkeypatch.setattr(ChemicalReaction, "_generate_rdchiral_template", func)
     rxn = ChemicalReaction(rsmi)
     # Capture ReactionException
     with pytest.raises(
