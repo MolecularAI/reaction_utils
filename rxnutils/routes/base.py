@@ -293,7 +293,7 @@ class SynthesisRoute:
             df["mapped_smiles"] = df["RxnmapperRxnSmiles"]
         else:
             sel = df["NMC"] == "0.0"
-            df["mapped_smiles"].mask(sel, df["RxnmapperRxnSmiles"], inplace=True)
+            df.loc[sel, "mapped_smiles"] = df.loc[sel, "RxnmapperRxnSmiles"]
         datamap = df.set_index("smiles").to_dict("index")
         _copy_mapping_from_datamap(self.reaction_tree, datamap)
 
