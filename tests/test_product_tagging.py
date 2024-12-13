@@ -1,13 +1,11 @@
 import pytest
+
 from rxnutils.chem.disconnection_sites.atom_map_tagging import (
     atom_map_tag_products,
     atom_map_tag_reactants,
     get_atom_list,
 )
-from rxnutils.chem.disconnection_sites.tag_converting import (
-    convert_atom_map_tag,
-    tagged_smiles_from_tokens,
-)
+from rxnutils.chem.disconnection_sites.tag_converting import convert_atom_map_tag, tagged_smiles_from_tokens
 
 
 @pytest.mark.parametrize(

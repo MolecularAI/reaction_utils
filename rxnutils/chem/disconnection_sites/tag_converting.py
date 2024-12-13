@@ -15,22 +15,21 @@ def smiles_tokens(smiles: str) -> List[str]:
     :param smiles: SMILES to tokenize
     :return: List of tokens identified in SMILES.
     """
-    pattern = r"(\[[^\]]+]|Br?|Cl?|N|O|S|P|F|I|b|c|n|o|s|p|\(|\)|\.|=|#|-|\+|\\\\|\\|\/|:|~|@|\?|>|\*|\!|\$|\%[0-9]{2}|[0-9])"
+    pattern = (
+        r"(\[[^\]]+]|Br?|Cl?|N|O|S|P|F|I|b|c|n|o|s|p|\(|\)|\.|=|#|-|\+|\\\\|\\|\/|:|~|@|\?|>|\*|\!|\$|\%[0-9]{2}|[0-9])"
+    )
     regex = re.compile(pattern)
     tokens = [token for token in regex.findall(smiles)]
 
     tokenized_smiles = "".join(tokens)
     if smiles != tokenized_smiles:
         raise AssertionError(
-            f"tokenized SMILES not the same as input SMILES: {tokenized_smiles}, "
-            "{smiles}, tokens: {tokens}"
+            f"tokenized SMILES not the same as input SMILES: {tokenized_smiles}, " "{smiles}, tokens: {tokens}"
         )
     return tokens
 
 
-def _next_tagged_token(
-    product_tagged_tokens: List[str], untagged_token: str, tagged_token_idx: int
-) -> Tuple[str, int]:
+def _next_tagged_token(product_tagged_tokens: List[str], untagged_token: str, tagged_token_idx: int) -> Tuple[str, int]:
     """
     Get the next tagged token in the sequence. Includes checks and fixes for
     stereochemistry changes due to removing atom mapping.
@@ -51,19 +50,13 @@ def _next_tagged_token(
             tagged_token_idx += 1
             return product_tagged_tokens[tagged_token_idx], tagged_token_idx
 
-    if (
-        tagged_token != untagged_token
-        and not ":1" in tagged_token
-        and "@" in tagged_token
-    ):
+    if tagged_token != untagged_token and not ":1" in tagged_token and "@" in tagged_token:
         return untagged_token, tagged_token_idx
 
     return tagged_token, tagged_token_idx
 
 
-def tagged_smiles_from_tokens(
-    product_tagged_tokens: List[str], product_untagged_tokens: List[str]
-) -> Tuple[str, str]:
+def tagged_smiles_from_tokens(product_tagged_tokens: List[str], product_untagged_tokens: List[str]) -> Tuple[str, str]:
     """
     Convert the tagged SMILES from atom-mapping to unmapped-token + '!'
 
@@ -81,24 +74,16 @@ def tagged_smiles_from_tokens(
 
     for untagged_token in product_untagged_tokens:
 
-        tagged_token, tagged_token_idx = _next_tagged_token(
-            product_tagged_tokens, untagged_token, tagged_token_idx
-        )
+        tagged_token, tagged_token_idx = _next_tagged_token(product_tagged_tokens, untagged_token, tagged_token_idx)
 
-        if tagged_token != untagged_token and (
-            untagged_token == "/" or untagged_token == "\\"
-        ):
+        if tagged_token != untagged_token and (untagged_token == "/" or untagged_token == "\\"):
             continue
 
         if tagged_token == untagged_token:
             product_converted += untagged_token
         else:
             # Remove brackets around a single letter
-            if (
-                len(untagged_token) == 3
-                and untagged_token.startswith("[")
-                and untagged_token.endswith("]")
-            ):
+            if len(untagged_token) == 3 and untagged_token.startswith("[") and untagged_token.endswith("]"):
                 untagged_token = untagged_token[1]
             product_converted += untagged_token + "!"
 
@@ -109,9 +94,7 @@ def tagged_smiles_from_tokens(
     return product_converted, product_untagged
 
 
-def _canonicalize_tagged_smiles(
-    product_tagged: str, product_untagged: str = None
-) -> Tuple[str, str]:
+def _canonicalize_tagged_smiles(product_tagged: str, product_untagged: str = None) -> Tuple[str, str]:
     """
     Reorder the tagged-product SMILES on canonical form using the canonicalized
     untagged product.
@@ -123,13 +106,7 @@ def _canonicalize_tagged_smiles(
     mol = Chem.MolFromSmiles(product_tagged)
     mol_untagged = Chem.MolFromSmiles(product_untagged)
 
-    _, canonical_atom_order = tuple(
-        zip(
-            *sorted(
-                [(j, i) for i, j in enumerate(Chem.CanonicalRankAtoms(mol_untagged))]
-            )
-        )
-    )
+    _, canonical_atom_order = tuple(zip(*sorted([(j, i) for i, j in enumerate(Chem.CanonicalRankAtoms(mol_untagged))])))
 
     mol = Chem.RenumberAtoms(mol, canonical_atom_order)
     mol_untagged = Chem.RenumberAtoms(mol_untagged, canonical_atom_order)
@@ -158,9 +135,7 @@ def convert_atom_map_tag(product_atom_map_tagged: str) -> str:
     if not Chem.MolFromSmiles(product_untagged):
         return ""
 
-    product_tagged, product_untagged = _canonicalize_tagged_smiles(
-        product_atom_map_tagged, product_untagged
-    )
+    product_tagged, product_untagged = _canonicalize_tagged_smiles(product_atom_map_tagged, product_untagged)
 
     # Update the SMILES string to remove atom-mapping brackets and explicit [H]:s and
     # replace by <atom>!

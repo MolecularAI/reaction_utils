@@ -55,9 +55,7 @@ class UsptoDataPreparationFlow(DataPreparationBaseFlow):
     @step
     def end(self):
         """Final step, just print information"""
-        print(
-            f"Processed file is locate here: {Path(self.folder) / 'uspto_data_cleaned.csv'}"
-        )
+        print(f"Processed file is locate here: {Path(self.folder) / 'uspto_data_cleaned.csv'}")
 
 
 if __name__ == "__main__":

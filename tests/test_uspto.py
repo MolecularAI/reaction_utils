@@ -5,9 +5,7 @@ from rxnutils.data.uspto.uspto_yield import UsptoYieldCuration
 
 
 def test_combine_uspto(shared_datadir):
-    combine_uspto(
-        ["--filenames", "uspto_example_reactions.rsmi", "--folder", str(shared_datadir)]
-    )
+    combine_uspto(["--filenames", "uspto_example_reactions.rsmi", "--folder", str(shared_datadir)])
 
     data = pd.read_csv(shared_datadir / "uspto_data.csv", sep="\t")
 

@@ -62,9 +62,7 @@ def test_stack_columns():
 
 def test_stack_multi_columns():
     action = StackMultiColumns(stack_columns=["A", "B"], target_columns=["C", "D"])
-    df = pd.DataFrame(
-        {"A": [1, 1, 1], "B": ["A", "B", "C"], "C": [3, 4, 3], "D": ["X", "Y", "Z"]}
-    )
+    df = pd.DataFrame({"A": [1, 1, 1], "B": ["A", "B", "C"], "C": [3, 4, 3], "D": ["X", "Y", "Z"]})
 
     df2 = action(df)
 

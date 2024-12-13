@@ -1,9 +1,10 @@
 import copy
 
-import pytest
 import pandas as pd
+import pytest
 from rdkit import Chem
 
+from rxnutils.chem.utils import split_rsmi
 from rxnutils.routes.base import SynthesisRoute
 
 
@@ -61,9 +62,7 @@ def test_atom_mapping_no_namerxn(synthesis_route, setup_mapper_no_namerxn, recwa
     )
 
 
-def test_atom_mapping_no_namerxn_choose_rxnmapper(
-    synthesis_route, setup_mapper_no_namerxn, recwarn
-):
+def test_atom_mapping_no_namerxn_choose_rxnmapper(synthesis_route, setup_mapper_no_namerxn, recwarn):
     synthesis_route.assign_atom_mapping(only_rxnmapper=True)
 
     assert len(recwarn) == 0
@@ -86,10 +85,7 @@ def test_root_smiles(synthesis_route, setup_mapper):
         synthesis_route.mapped_root_smiles
 
     synthesis_route.assign_atom_mapping()
-    assert (
-        synthesis_route.mapped_root_smiles
-        == "[CH3:1][O:2][c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1"
-    )
+    assert synthesis_route.mapped_root_smiles == "[CH3:1][O:2][c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1"
 
 
 def test_reaction_data(synthesis_route, setup_mapper):
@@ -121,13 +117,13 @@ def test_remap_ref_smiles(synthesis_route, setup_mapper):
     route1 = synthesis_route
     route1.assign_atom_mapping()
     old_reaction_smiles = route1.atom_mapped_reaction_smiles()
-    reactants, products = old_reaction_smiles[0].split(">>")
+    reactants, _, products = split_rsmi(old_reaction_smiles[0])
     rsmi_old = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
     psmi_old = Chem.MolToSmiles(Chem.MolFromSmiles(products))
 
     route1.remap(products)
 
-    reactants, products = route1.atom_mapped_reaction_smiles()[0].split(">>")
+    reactants, _, products = split_rsmi(route1.atom_mapped_reaction_smiles()[0])
     rsmi = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
     psmi = Chem.MolToSmiles(Chem.MolFromSmiles(products))
     assert rsmi == rsmi_old
@@ -135,7 +131,7 @@ def test_remap_ref_smiles(synthesis_route, setup_mapper):
 
     route1.remap("[CH3:10][O:2][c:3]1[cH:4][cH:5][cH:6][cH:7][cH:8]1")
 
-    reactants, products = route1.atom_mapped_reaction_smiles()[0].split(">>")
+    reactants, _, products = split_rsmi(route1.atom_mapped_reaction_smiles()[0])
     rsmi = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
     psmi = Chem.MolToSmiles(Chem.MolFromSmiles(products))
     assert rsmi != rsmi_old
@@ -146,13 +142,13 @@ def test_remap_ref_dict(synthesis_route, setup_mapper):
     route1 = synthesis_route
     route1.assign_atom_mapping()
     old_reaction_smiles = route1.atom_mapped_reaction_smiles()
-    reactants, products = old_reaction_smiles[0].split(">>")
+    reactants, _, products = split_rsmi(old_reaction_smiles[0])
     rsmi_old = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
     psmi_old = Chem.MolToSmiles(Chem.MolFromSmiles(products))
 
     route1.remap({1: 10, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8})
 
-    reactants, products = route1.atom_mapped_reaction_smiles()[0].split(">>")
+    reactants, _, products = split_rsmi(route1.atom_mapped_reaction_smiles()[0])
     rsmi = Chem.MolToSmiles(Chem.MolFromSmiles(reactants))
     psmi = Chem.MolToSmiles(Chem.MolFromSmiles(products))
     assert rsmi != rsmi_old
@@ -211,6 +207,24 @@ def test_route_leaves(synthesis_route):
     leaves = synthesis_route.leaves()
 
     assert leaves == {"c1ccccc1", "Cl", "CO"}
+
+
+def test_route_leaves_count(synthesis_route):
+    counts = synthesis_route.leaf_counts()
+
+    assert counts == {"c1ccccc1": 1, "Cl": 1, "CO": 1}
+
+
+def test_route_intermediates(synthesis_route):
+    intermediates = synthesis_route.intermediates()
+
+    assert intermediates == {"Clc1ccccc1"}
+
+
+def test_route_intermediates_count(synthesis_route):
+    counts = synthesis_route.intermediate_counts()
+
+    assert counts == {"Clc1ccccc1": 1}
 
 
 def test_route_is_solved(synthesis_route, setup_stock):

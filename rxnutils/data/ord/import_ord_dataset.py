@@ -1,6 +1,7 @@
 """
 Module containing script to import ORD dataset to a CSV file
 """
+
 import argparse
 import os
 import re
@@ -24,9 +25,7 @@ def main(input_args: Optional[Sequence[str]] = None) -> None:
     """Function for command-line tool"""
 
     if not DEPENDENCY_OK:
-        raise ImportError(
-            "You need to install the ord-schema package and download the ord-data repository"
-        )
+        raise ImportError("You need to install the ord-schema package and download the ord-data repository")
 
     parser = argparse.ArgumentParser("Script to import ORD datasets")
     parser.add_argument("--filenames", nargs="+", help="the files to import")
@@ -42,14 +41,10 @@ def main(input_args: Optional[Sequence[str]] = None) -> None:
     data = defaultdict(list)
     for filename in tqdm(args.filenames):
         ord_dataset = message_helpers.load_message(filename, dataset_pb2.Dataset)
-        if include_only and not (
-            ord_dataset.dataset_id == include_only or ord_dataset.name == include_only
-        ):
+        if include_only and not (ord_dataset.dataset_id == include_only or ord_dataset.name == include_only):
             continue
         for reaction in tqdm(ord_dataset.reactions, desc=os.path.basename(filename)):
-            smiles = message_helpers.get_reaction_smiles(
-                reaction, generate_if_missing=True
-            )
+            smiles = message_helpers.get_reaction_smiles(reaction, generate_if_missing=True)
             # Trying to remove spurious spaces in reaction SMILES
             smiles = smiles.strip()
             smiles = re.sub(r"\.\s+", ".", smiles)
@@ -63,9 +58,7 @@ def main(input_args: Optional[Sequence[str]] = None) -> None:
             data["Date"].append(reaction.provenance.experiment_start.value)
             data["ReactionSmiles"].append(smiles)
             try:
-                data["Yield"].append(
-                    message_helpers.get_product_yield(reaction.outcomes[0].products[0])
-                )
+                data["Yield"].append(message_helpers.get_product_yield(reaction.outcomes[0].products[0]))
             except IndexError:
                 data["Yield"].append(None)
 

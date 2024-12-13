@@ -1,12 +1,13 @@
 """ Contains routines for computing route similarities
 """
+
 import functools
 from typing import Any, Callable, Dict, List, Sequence, Set, Tuple
 
 import numpy as np
 
 from rxnutils.chem.reaction import ChemicalReaction
-from rxnutils.chem.utils import atom_mapping_numbers
+from rxnutils.chem.utils import atom_mapping_numbers, split_rsmi
 from rxnutils.routes.base import SynthesisRoute
 from rxnutils.routes.ted.distances_calculator import ted_distances_calculator
 
@@ -159,11 +160,9 @@ def _extract_atom_mapping_numbers(route: SynthesisRoute) -> List[List[int]]:
     root_atom_numbers = sorted(atom_mapping_numbers(route.mapped_root_smiles))
     mapping_list = [root_atom_numbers]
     for reaction_smiles in route.atom_mapped_reaction_smiles():
-        reactants_smiles = reaction_smiles.split(">")[0]
+        reactants_smiles = split_rsmi(reaction_smiles)[0]
         for smi in reactants_smiles.split("."):
-            atom_numbers = sorted(
-                [num for num in atom_mapping_numbers(smi) if num in root_atom_numbers]
-            )
+            atom_numbers = sorted([num for num in atom_mapping_numbers(smi) if num in root_atom_numbers])
             mapping_list.append(atom_numbers)
     return mapping_list
 
@@ -209,9 +208,7 @@ def _extract_molecule_bond_tuple(molecules: List) -> Set[int]:
     return bonds
 
 
-def _bond_formed_overlap_score(
-    bonds1: List[Tuple[int]], bonds2: List[Tuple[int]]
-) -> float:
+def _bond_formed_overlap_score(bonds1: List[Tuple[int]], bonds2: List[Tuple[int]]) -> float:
     """
     Computes a similarity score of two routes by comparing the overlap
     of bonds formed in the synthesis routes.

@@ -25,9 +25,7 @@ def ngram_overlap_score(
     return len(route_ngrams.intersection(ref.ngrams)) / len(route_ngrams)
 
 
-def retro_bleu_score(
-    route: SynthesisRoute, ref: NgramCollection, ideal_steps: int = 3
-) -> float:
+def retro_bleu_score(route: SynthesisRoute, ref: NgramCollection, ideal_steps: int = 3) -> float:
     """
     Calculate the Retro-BLEU score according to the paper:
 

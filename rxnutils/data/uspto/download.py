@@ -1,5 +1,6 @@
 """Module containing a script to download USPTO files Figshare
 """
+
 import argparse
 import os
 from pathlib import Path
@@ -25,9 +26,7 @@ def _download_file(url: str, filename: str) -> None:
     with requests.get(url, stream=True) as response:
         response.raise_for_status()
         total_size = int(response.headers.get("content-length", 0))
-        pbar = tqdm.tqdm(
-            total=total_size, desc=os.path.basename(filename), unit="B", unit_scale=True
-        )
+        pbar = tqdm.tqdm(total=total_size, desc=os.path.basename(filename), unit="B", unit_scale=True)
         with open(filename, "wb") as fileobj:
             for chunk in response.iter_content(chunk_size=1024):
                 fileobj.write(chunk)
@@ -37,9 +36,7 @@ def _download_file(url: str, filename: str) -> None:
 
 def main(args: Optional[Sequence[str]] = None) -> None:
     """Function for command-line tool"""
-    parser = argparse.ArgumentParser(
-        "Script to download USPTO SMILES data from Figshare"
-    )
+    parser = argparse.ArgumentParser("Script to download USPTO SMILES data from Figshare")
     parser.add_argument(
         "--overwrite",
         action="store_true",

@@ -1,4 +1,5 @@
 """Module for downloading InChI Trust Reaction InChI."""
+
 import logging
 import os
 import stat
@@ -55,11 +56,7 @@ def main() -> str:
         logging.info("Download completed...")
         logging.info(f"Unziping: {rinchi_fn}")
         with ZipFile(rinchi_fn, "r") as out_fp:
-            bin_path = [
-                x
-                for x in out_fp.namelist()
-                if x.endswith(_exec_folder_ending(os_sep=False) + "/")
-            ]
+            bin_path = [x for x in out_fp.namelist() if x.endswith(_exec_folder_ending(os_sep=False) + "/")]
             logging.debug(bin_path)
             out_fp.extractall(download_loc)
         logging.info("Completed...")
@@ -69,19 +66,13 @@ def main() -> str:
             os.chmod(os.path.join(rinchi_cli_path, "rinchi_cmdline"), stat.S_IEXEC)
     else:
         logging.info(f"RInChI exists at: {rinchi_fn}")
-        bin_path = [
-            r
-            for r, d, f in os.walk(download_loc)
-            if r.endswith(_exec_folder_ending(os_sep=True))
-        ]
+        bin_path = [r for r, d, f in os.walk(download_loc) if r.endswith(_exec_folder_ending(os_sep=True))]
         logging.debug(bin_path)
         rinchi_cli_path = bin_path[0]
         logging.info(f"RInChI CLI: {rinchi_cli_path}")
         if sys.platform == "linux":
             os.chmod(
-                os.path.join(
-                    rinchi_cli_path, f"rinchi_cmdline{PLATFORM2EXTENSION[sys.platform]}"
-                ),
+                os.path.join(rinchi_cli_path, f"rinchi_cmdline{PLATFORM2EXTENSION[sys.platform]}"),
                 stat.S_IEXEC,
             )
 
@@ -90,9 +81,7 @@ def main() -> str:
 
 def _exec_folder_ending(os_sep: bool) -> str:
     sep = os.sep if os_sep else "/"
-    return sep.join(
-        ["bin", "rinchi_cmdline", f"{PLATFORM2FOLDER[sys.platform]}", "x86_64"]
-    )
+    return sep.join(["bin", "rinchi_cmdline", f"{PLATFORM2FOLDER[sys.platform]}", "x86_64"])
 
 
 if __name__ == "__main__":

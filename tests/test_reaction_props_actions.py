@@ -2,32 +2,33 @@ import json
 
 import pandas as pd
 
+from rxnutils.chem.utils import split_rsmi
+from rxnutils.pipeline.actions.reaction_mod import RemoveUnsanitizable
 from rxnutils.pipeline.actions.reaction_props import (
+    CgrCreated,
+    CgrNumberOfDynamicBonds,
     CountComponents,
     CountElements,
     HasUnsanitizableReactants,
+    MaxRingNumber,
     ProductAtomMappingStats,
     ProductSize,
     PseudoReactionHash,
     ReactantProductAtomBalance,
     ReactantSize,
-    SmilesLength,
-    SmilesSanitizable,
     RingBondMade,
     RingMadeSize,
     RingNumberChange,
-    StereoMesoProduct,
-    StereoCentreChanges,
+    SmilesLength,
+    SmilesSanitizable,
+    StereoCenterInReactantPotential,
     StereoCenterIsCreated,
     StereoCenterIsRemoved,
-    StereoHasChiralReagent,
-    StereoCenterInReactantPotential,
     StereoCenterOutsideReaction,
-    CgrCreated,
-    CgrNumberOfDynamicBonds,
-    MaxRingNumber,
+    StereoCentreChanges,
+    StereoHasChiralReagent,
+    StereoMesoProduct,
 )
-from rxnutils.pipeline.actions.reaction_mod import RemoveUnsanitizable
 from rxnutils.pipeline.base import global_apply
 
 global_apply.max_workers = 1
@@ -88,8 +89,7 @@ def test_pseudo_hash(make_reaction_dataframe):
     assert ">>" not in df2["PseudoHash"].iloc[0]
     assert df2["PseudoHash"].iloc[0].count(".") == 2
     assert (
-        df2["PseudoHash"].iloc[0]
-        == "GWIBCCZNAYLLCD-UHFFFAOYSA-N.QAOWNCQODCNURD-UHFFFAOYSA-N>"
+        df2["PseudoHash"].iloc[0] == "GWIBCCZNAYLLCD-UHFFFAOYSA-N.QAOWNCQODCNURD-UHFFFAOYSA-N>"
         "OFOBLEOULBTSOW-UHFFFAOYSA-L.UHOVQNZJYSORNB-UHFFFAOYSA-N>KOJXGMJOTRYLBD-UHFFFAOYSA-N"
     )
 
@@ -124,7 +124,7 @@ def test_smiles_length(make_reaction_dataframe):
 def test_smiles_sanitizable(make_reaction_dataframe):
     action = SmilesSanitizable(in_column="new_column")
     df = make_reaction_dataframe
-    df["new_column"] = df["rsmi"].apply(lambda row: row.split(">")[0])
+    df["new_column"] = df["rsmi"].apply(lambda row: split_rsmi(row)[0])
 
     df2 = action(df)
 
@@ -133,9 +133,7 @@ def test_smiles_sanitizable(make_reaction_dataframe):
 
 def test_unsanitizable_reactants(make_reaction_dataframe):
     action1 = RemoveUnsanitizable(in_column="rsmi")
-    action2 = HasUnsanitizableReactants(
-        rsmi_column="rsmi", bad_columns=["BadMolecules"]
-    )
+    action2 = HasUnsanitizableReactants(rsmi_column="rsmi", bad_columns=["BadMolecules"])
     df = make_reaction_dataframe
 
     df2 = action1(df)

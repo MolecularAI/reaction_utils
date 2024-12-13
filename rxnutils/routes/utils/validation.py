@@ -1,4 +1,5 @@
 """ Module containing routes to validate AiZynthFinder-like input dictionaries """
+
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional

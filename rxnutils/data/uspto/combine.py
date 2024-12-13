@@ -22,15 +22,9 @@ DEFAULT_FILENAMES = [
 
 def main(args: Optional[Sequence[str]] = None) -> None:
     """Function for command-line tool"""
-    parser = argparse.ArgumentParser(
-        "Script to combine USPTO SMILES data from Figshare"
-    )
-    parser.add_argument(
-        "--filenames", nargs="+", default=DEFAULT_FILENAMES, help="the files to combine"
-    )
-    parser.add_argument(
-        "--output", default="uspto_data.csv", help="the output filename"
-    )
+    parser = argparse.ArgumentParser("Script to combine USPTO SMILES data from Figshare")
+    parser.add_argument("--filenames", nargs="+", default=DEFAULT_FILENAMES, help="the files to combine")
+    parser.add_argument("--output", default="uspto_data.csv", help="the output filename")
     parser.add_argument("--folder", default=".", help="folder with downloaded files")
     parser.add_argument(
         "--with_yields",
@@ -41,12 +35,7 @@ def main(args: Optional[Sequence[str]] = None) -> None:
     args = parser.parse_args(args)
 
     filenames = [Path(args.folder) / filename for filename in args.filenames]
-    data = pd.concat(
-        [
-            pd.read_csv(filename, sep="\t", dtype={"ParagraphNum": "str"})
-            for filename in filenames
-        ]
-    )
+    data = pd.concat([pd.read_csv(filename, sep="\t", dtype={"ParagraphNum": "str"}) for filename in filenames])
 
     para_num = data["ParagraphNum"].fillna("")
     row_num = data.index.astype(str)

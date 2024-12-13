@@ -1,11 +1,9 @@
 """Module containing base class for data pipelines
 """
-import math
-import os
+
 from pathlib import Path
 from typing import List, Tuple
 
-import pandas as pd
 from metaflow import FlowSpec, Parameter
 
 from rxnutils.data.batch_utils import combine_csv_batches, create_csv_batches
@@ -26,9 +24,7 @@ class DataBaseFlow(FlowSpec):
     def _combine_batches(self, filename: str) -> None:
         combine_csv_batches(filename, self.nbatches)
 
-    def _create_batches(
-        self, input_filename: str, output_filename: str
-    ) -> List[Tuple[int, int, int]]:
+    def _create_batches(self, input_filename: str, output_filename: str) -> List[Tuple[int, int, int]]:
         return create_csv_batches(
             input_filename,
             self.nbatches,
@@ -61,9 +57,7 @@ class DataPreparationBaseFlow(DataBaseFlow):
                     "--data",
                     str(Path(self.folder) / f"{self.data_prefix}_data.csv"),
                     "--output",
-                    str(
-                        Path(self.folder) / f"{self.data_prefix}_data_cleaned.csv.{idx}"
-                    ),
+                    str(Path(self.folder) / f"{self.data_prefix}_data_cleaned.csv.{idx}"),
                     "--batch",
                     str(start),
                     str(end),
@@ -75,6 +69,4 @@ class DataPreparationBaseFlow(DataBaseFlow):
 
     def _join_cleaning(self):
         """Combined cleaned batches of data"""
-        self._combine_batches(
-            Path(self.folder) / f"{self.data_prefix}_data_cleaned.csv"
-        )
+        self._combine_batches(Path(self.folder) / f"{self.data_prefix}_data_cleaned.csv")

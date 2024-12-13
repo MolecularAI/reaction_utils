@@ -14,7 +14,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"
-urllib3 = "<2.0"
+urllib3 = "^1.2.26"
 pandas = "^1.0.0"
 xxhash = "^2.0.0"
 rdchiral = "^1.1.0"
@@ -30,21 +30,24 @@ cgrtools = "^4.1.35"
 scipy = "^1.11.4"
 pydantic = "^2.8.2"
 apted = "^1.0.3"
+onnxruntime = {version = "<1.17.0", optional=true}
 
-[tool.poetry.dev-dependencies]
-pytest = "^6.2.2"
-pytest-datadir = "^1.3.1"
-pytest-mock = "^3.7.0"
-pytest-mccabe = "^2.0"
-pytest-black = "^0.3.12"
-pytest-cov = "^3.0.0"
-black = "^22.0.0"
-mypy = "^0.800"
-pre-commit = "^2.10.1"
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+pytest-datadir = "^1.5.0"
+pytest-mock = "^3.14.0"
+pytest-cov = "^6.0.0"
+requests-mock = "^1.12.1"
+black = "^24.10.0"
+mypy = "^1.13.0"
+pre-commit = "^4.0.1"
 ipython = "^7.21.0"
-pylint = "^2.14.1"
-invoke = "^1.7.1"
-Sphinx = "^7.3.7"
+pylint = "^3.3.1"
+invoke = "^2.2.0"
+sphinx = "<8.1.0"
+
+[tool.poetry.extras]
+models = ["onnxruntime"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -57,3 +60,6 @@ max-attributes = 15
 max-public-methods = 25
 min-public-methods = 0
 disable = "W1203, W0707, W1514, W0602, typecheck"
+
+[tool.coverage.run]
+relative_files = true
