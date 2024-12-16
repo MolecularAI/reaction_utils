@@ -10,9 +10,9 @@ def build_docs(context):
 @task
 def run_tests(context):
     cmd = (
-        "pytest --black --mccabe "
+        "pytest "
         "--cov rxnutils --cov-branch --cov-report html:coverage --cov-report xml "
-        "-vv tests/"
+        "tests/"
     )
     context.run(cmd)
 
