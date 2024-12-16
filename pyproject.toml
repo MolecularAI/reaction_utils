@@ -13,9 +13,9 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.11"
+python = ">=3.9,<3.13"
 urllib3 = "^1.2.26"
-pandas = "^1.0.0"
+pandas = ">=1.0.0,<3.0.0"
 xxhash = "^2.0.0"
 rdchiral = "^1.1.0"
 PyYAML = "^6.0.1"
@@ -30,6 +30,7 @@ cgrtools = "^4.1.35"
 scipy = "^1.11.4"
 pydantic = "^2.8.2"
 apted = "^1.0.3"
+dask = ">=2024.4.1"
 onnxruntime = {version = "<1.17.0", optional=true}
 
 [tool.poetry.group.dev.dependencies]

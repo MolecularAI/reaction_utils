@@ -262,8 +262,10 @@ class IsotopeInfo:
 
     def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
         isotop_info = data[self.in_column].str.extract(self.match_regex)
-        isotop_col = isotop_info.mass + isotop_info.symbol
-        rsmi_col = data[self.in_column].str.replace(self.match_regex, self.sub_regex)
+        isotop_col = isotop_info["mass"] + isotop_info["symbol"]
+        rsmi_col = data[self.in_column].str.replace(
+            self.match_regex, self.sub_regex, regex=True
+        )
         return data.assign(**{self.isotope_column: isotop_col, self.out_column: rsmi_col})
 
     def __str__(self) -> str:
