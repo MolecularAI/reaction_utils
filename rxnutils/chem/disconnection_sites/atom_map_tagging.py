@@ -7,6 +7,8 @@ from typing import List, Optional, Sequence
 import pandas as pd
 from rdkit import Chem
 
+from rxnutils.chem.utils import split_rsmi
+
 
 def _get_atom_identifier(atom: Chem.rdchem.Atom) -> str:
     """
@@ -21,9 +23,7 @@ def _get_atom_identifier(atom: Chem.rdchem.Atom) -> str:
     return str(atom_id)
 
 
-def _get_bond_environment_identifier(
-    atoms: Sequence[Chem.rdchem.Atom], bond: Chem.rdchem.Bond
-) -> str:
+def _get_bond_environment_identifier(atoms: Sequence[Chem.rdchem.Atom], bond: Chem.rdchem.Bond) -> str:
     """
     Get the environment of a specific bond.
 
@@ -79,17 +79,14 @@ def get_atom_list(reactants_smiles: str, product_smiles: str) -> List[int]:
     ordered_reactant_neighbor_dict = _get_atomic_neighborhoods(reactants_smiles)
     ordered_product_neighbor_dict = _get_atomic_neighborhoods(product_smiles)
 
-    all_indices = set(ordered_product_neighbor_dict.keys()) | set(
-        ordered_reactant_neighbor_dict.keys()
-    )
+    all_indices = set(ordered_product_neighbor_dict.keys()) | set(ordered_reactant_neighbor_dict.keys())
 
     # Checks to see equivlence of atomic enviroments.
     # If environment changed, then add atom to list
     atom_list = [
         atom_map
         for atom_map in all_indices
-        if ordered_reactant_neighbor_dict.get(atom_map, [])
-        != ordered_product_neighbor_dict.get(atom_map, [])
+        if ordered_reactant_neighbor_dict.get(atom_map, []) != ordered_product_neighbor_dict.get(atom_map, [])
     ]
 
     return atom_list
@@ -104,7 +101,7 @@ def atom_map_tag_reactants(mapped_rxn: str) -> str:
     :return: SMILES of the reactants containing tags corresponding to atoms changed in the
         reaction.
     """
-    reactants_smiles, _, product_smiles = mapped_rxn.split(">")
+    reactants_smiles, _, product_smiles = split_rsmi(mapped_rxn)
 
     reactants_mol = Chem.MolFromSmiles(reactants_smiles)
     atom_list = get_atom_list(reactants_smiles, product_smiles)
@@ -128,7 +125,7 @@ def atom_map_tag_products(mapped_rxn: str) -> str:
     :return: SMILES of the product containing tags corresponding to atoms changed in the
         reaction.
     """
-    reactants_smiles, _, product_smiles = mapped_rxn.split(">")
+    reactants_smiles, _, product_smiles = split_rsmi(mapped_rxn)
 
     product_mol = Chem.MolFromSmiles(product_smiles)
     atom_list = get_atom_list(reactants_smiles, product_smiles)

@@ -1,4 +1,5 @@
 """Module containg routines and interface to run pipelines"""
+
 import argparse
 from typing import Any, Dict, Optional, Sequence
 
@@ -36,9 +37,7 @@ def run_pipeline(
     :param save_intermediates: if True will save intermediate results
     :return: the dataset after completing the pipeline
     """
-    actions = [
-        create_action(name, **(options or {})) for name, options in pipeline.items()
-    ]
+    actions = [create_action(name, **(options or {})) for name, options in pipeline.items()]
 
     for idx, action in enumerate(actions):
         print(f"Running {action}", flush=True)
@@ -52,12 +51,8 @@ def main(args: Optional[Sequence[str]] = None) -> None:
     """Function for command line argument"""
     parser = argparse.ArgumentParser("Runner of validation pipeline")
     parser.add_argument("--pipeline", help="the yaml file with a pipeline")
-    parser.add_argument(
-        "--data", help="the data to be processed. Should be a tab-separated CSV-file"
-    )
-    parser.add_argument(
-        "--output", help="the processed data. Will be a tab-separated CSV-file"
-    )
+    parser.add_argument("--data", help="the data to be processed. Should be a tab-separated CSV-file")
+    parser.add_argument("--output", help="the processed data. Will be a tab-separated CSV-file")
     parser.add_argument("--max-workers", type=int, help="the maximum number of works")
     parser.add_argument(
         "--batch",

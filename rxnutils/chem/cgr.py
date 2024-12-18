@@ -1,5 +1,6 @@
 """ Wrapper class for the CGRTools library
 """
+
 import io
 import warnings
 from typing import List
@@ -28,20 +29,14 @@ class CondensedGraphReaction:
         self._cgr_reactants = []
         self._cgr_products = []
         self._make_cgr_containers()
-        self.reaction_container = ReactionContainer(
-            reactants=self._cgr_reactants, products=self._cgr_products
-        )
+        self.reaction_container = ReactionContainer(reactants=self._cgr_reactants, products=self._cgr_products)
         try:
             self.cgr_container = self.reaction_container.compose()
         except ValueError as err:
             if str(err) == "mapping of graphs is not disjoint":
-                raise ValueError(
-                    "Reaction contains inconsistent atom-mapping, perhaps duplicates"
-                )
+                raise ValueError("Reaction contains inconsistent atom-mapping, perhaps duplicates")
             elif str(err).endswith("} not equal"):
-                raise ValueError(
-                    "Atom with the same atom-mapping in reactant and product is not equal"
-                )
+                raise ValueError("Atom with the same atom-mapping in reactant and product is not equal")
             else:
                 raise ValueError(f"Unknown problem with generating CGR: {err}")
 
@@ -58,10 +53,7 @@ class CondensedGraphReaction:
     @property
     def bonds_changed(self) -> int:
         """Returns the number of broken or formed bonds in the reaction"""
-        return sum(
-            bond.p_order is None or bond.order is None
-            for _, _, bond in self.cgr_container.bonds()
-        )
+        return sum(bond.p_order is None or bond.order is None for _, _, bond in self.cgr_container.bonds())
 
     @property
     def bonds_formed(self) -> int:
@@ -71,9 +63,7 @@ class CondensedGraphReaction:
     @property
     def total_centers(self) -> int:
         """Returns the number of atom and bond centers in the reaction"""
-        return len(self.cgr_container.center_atoms) + len(
-            self.cgr_container.center_bonds
-        )
+        return len(self.cgr_container.center_atoms) + len(self.cgr_container.center_bonds)
 
     def distance_to(self, other: "CondensedGraphReaction") -> int:
         """
@@ -104,14 +94,11 @@ class CondensedGraphReaction:
         # so this adds safe atom-mapping to un-mapped atoms
         renumbered_mols = []
         max_atom_map_numb = max(
-            max(atom_mapping_numbers(smi) or [0])
-            for smi in self.reaction.reactants_list + self.reaction.products_list
+            max(atom_mapping_numbers(smi) or [0]) for smi in self.reaction.reactants_list + self.reaction.products_list
         )
         for mol0 in self.reaction.reactants + self.reaction.products:
             if mol0 is None:
-                raise ValueError(
-                    "Cannot create CGR for this reaction, some molecules are None"
-                )
+                raise ValueError("Cannot create CGR for this reaction, some molecules are None")
             mol = Chem.rdchem.Mol(mol0)
             for atom in mol.GetAtoms():
                 if not atom.GetAtomMapNum():

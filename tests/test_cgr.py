@@ -1,7 +1,7 @@
 import pytest
 
-from rxnutils.chem.reaction import ChemicalReaction
 from rxnutils.chem.cgr import CondensedGraphReaction
+from rxnutils.chem.reaction import ChemicalReaction
 
 
 @pytest.fixture

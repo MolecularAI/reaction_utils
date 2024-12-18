@@ -1,6 +1,5 @@
 import pytest
-from rdkit import Chem
-from rdkit import RDLogger
+from rdkit import Chem, RDLogger
 
 from rxnutils.chem.template import TemplateMolecule
 
@@ -142,9 +141,7 @@ def test_hash_from_smarts(create_mol):
 
 
 def test_template_with_aromaticity():
-    rd_mol = Chem.MolFromSmarts(
-        "C-C-O-[C;H0;D3;+0:1](=[O;D1;H0:2])-[c:3](:[#7;a:4]):[#8;a:5]:[#7;a:6]"
-    )
+    rd_mol = Chem.MolFromSmarts("C-C-O-[C;H0;D3;+0:1](=[O;D1;H0:2])-[c:3](:[#7;a:4]):[#8;a:5]:[#7;a:6]")
     tmpl_mol = TemplateMolecule(rd_mol)
 
     assert tmpl_mol.fingerprint_bits() != {}
@@ -169,6 +166,4 @@ def test_template_equality_chiral():
     mol2 = TemplateMolecule(smarts="C-S(=O)(=O)-O-[C@H;D3;+0:1](-[C:2])-[C:3]")
 
     assert mol1.fingerprint_bits() != mol2.fingerprint_bits()
-    assert mol1.fingerprint_bits(use_chirality=False) == mol2.fingerprint_bits(
-        use_chirality=False
-    )
+    assert mol1.fingerprint_bits(use_chirality=False) == mol2.fingerprint_bits(use_chirality=False)

@@ -1,13 +1,61 @@
 """Module containing various chemical utility routines"""
+
 import functools
 import logging
-from typing import List, Tuple
+import re
+from collections import defaultdict
+from typing import List, Optional, Tuple
 
+import numpy as np
 import rdchiral.template_extractor
 from rdkit import Chem
-from rdkit.Chem import AllChem
+from rdkit.Chem import AllChem, Descriptors
 from rdkit.Chem.MolStandardize import rdMolStandardize
 from rdkit.Chem.SaltRemover import SaltRemover
+
+# Pattern for spliting Reaction SMILES should be '>' not prefixed by '-' (i.e. '->')
+rsmi_split_pattern = re.compile(r"(?<!-)>")
+
+
+def get_symmetric_sites(mol: Chem.rdchem.Mol, candidate_atoms: List[int]) -> List[List[int]]:
+    """
+    Get all symmetric sites (atoms) of each atom in the list of atoms defined by their
+    atomic index (not atom-map number). Symmetry is assessed with respect to the molecule.
+    Symmetric atoms will have different atom inds but the same rank index from
+    CanonicalRankAtoms.
+
+    :param mol: RdKit molecule
+    :param candidate_atoms: Indices of the atoms that will be checked for symmetry.
+    :return: A list of all symmetric sites (list of atom-ids) that include the candidate
+        atoms. Returns empty list if no atoms have symmetric sites.
+    """
+    n_atoms = mol.GetNumAtoms()
+    if any(atom_idx >= n_atoms for atom_idx in candidate_atoms):
+        raise ValueError(
+            f"At least one candidate atom-idx is out of bounds in molecule with {n_atoms} atoms: {candidate_atoms}"
+        )
+
+    sites = defaultdict(lambda: [])
+    for atom_idx, rank_idx in enumerate(list(Chem.CanonicalRankAtoms(mol, breakTies=False))):
+        sites[rank_idx].append(atom_idx)
+
+    symmetric_sites = [
+        atoms for atoms in sites.values() if len(atoms) > 1 and any(atom_idx in candidate_atoms for atom_idx in atoms)
+    ]
+    return symmetric_sites
+
+
+def get_mol_weight(smiles: str) -> Optional[float]:
+    """Calculate molecule's exact molecular weight.
+    :param smiles: Molecule's SMILES.
+    :return: Molecule's exact molecular weight.
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    if not mol:
+        return None
+    mol_weight = Descriptors.ExactMolWt(mol)
+
+    return np.round(mol_weight, 6)
 
 
 def get_special_groups(mol) -> List[Tuple[Tuple[int, ...], Tuple[int, ...]]]:
@@ -289,10 +337,8 @@ def get_special_groups(mol) -> List[Tuple[Tuple[int, ...], Tuple[int, ...]]]:
 
     # Build list
     groups = []
-    for (add_if_match, template) in group_templates:
-        matches = mol.GetSubstructMatches(
-            Chem.MolFromSmarts(template), useChirality=True
-        )
+    for add_if_match, template in group_templates:
+        matches = mol.GetSubstructMatches(Chem.MolFromSmarts(template), useChirality=True)
         for match in matches:
             add_if = []
             for pattern_idx, atom_idx in enumerate(match):
@@ -306,9 +352,7 @@ def get_special_groups(mol) -> List[Tuple[Tuple[int, ...], Tuple[int, ...]]]:
 rdchiral.template_extractor.get_special_groups = get_special_groups
 
 
-def has_atom_mapping(
-    smiles: str, is_smarts: bool = False, sanitize: bool = True
-) -> bool:
+def has_atom_mapping(smiles: str, is_smarts: bool = False, sanitize: bool = True) -> bool:
     """
     Returns True if a molecule has atom mapping, else False.
 
@@ -334,9 +378,59 @@ def has_atom_mapping(
     return False
 
 
-def remove_atom_mapping(
-    smiles: str, is_smarts: bool = False, sanitize: bool = True, canonical: bool = True
-) -> str:
+def canonicalize_tautomer(smiles: str) -> str:
+    """
+    Returns the canonical tautomeric form of the input SMILES.
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    if not mol:
+        return smiles
+    tautomer_enumerator = rdMolStandardize.TautomerEnumerator()
+    return Chem.MolToSmiles(tautomer_enumerator.Canonicalize(mol))
+
+
+def enumerate_tautomers(smiles: str) -> List[str]:
+    """
+    Returns (sorted) collection of tautomers for the input SMILES.
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    tautomer_enumerator = rdMolStandardize.TautomerEnumerator()
+    canonical_tautomer = tautomer_enumerator.Canonicalize(mol)
+
+    canonical_tautomer_smiles = Chem.MolToSmiles(canonical_tautomer)
+    tautomers = [canonical_tautomer_smiles]
+
+    mols = tautomer_enumerator.Enumerate(mol)
+    enumerated_smiles = [Chem.MolToSmiles(mol) for mol in mols if mol]
+
+    enumerated_smiles = sorted(smiles for smiles in enumerated_smiles if smiles != canonical_tautomer_smiles)
+
+    tautomers.extend(enumerated_smiles)
+    return tautomers
+
+
+def is_valid_mol(smiles: str) -> bool:
+    """Check if the molecule structure is valid.
+
+    :param smiles: Molecule in SMILES.
+    :return: Return True if molecule structure is valid, return False otherwise.
+    """
+    mol = Chem.MolFromSmiles(smiles)
+    if not mol:
+        return False
+
+    return True
+
+
+def remove_stereochemistry(smiles: str) -> str:
+    """Removing stereo-chemistry information from a SMILES."""
+    mol = Chem.MolFromSmiles(smiles)
+    if mol:
+        return Chem.MolToSmiles(mol, isomericSmiles=False)
+    return smiles
+
+
+def remove_atom_mapping(smiles: str, is_smarts: bool = False, sanitize: bool = True, canonical: bool = True) -> str:
     """
     Returns a molecule without atom mapping
 
@@ -414,11 +508,7 @@ def desalt_molecules(smiles_list: List[str], keep_something: bool = False) -> Li
     """
     remover = SaltRemover()  # use default saltremover
     mols = [Chem.MolFromSmiles(smi) for smi in smiles_list]
-    desalted_mols = [
-        remover.StripMol(mol, dontRemoveEverything=keep_something)
-        for mol in mols
-        if mol
-    ]
+    desalted_mols = [remover.StripMol(mol, dontRemoveEverything=keep_something) for mol in mols if mol]
     if len(mols) > len(desalted_mols):
         logging.warning(
             f"No. of desalted molecules ({len(desalted_mols)}) are less than No. of input molecules ({len(mols)})."
@@ -479,56 +569,56 @@ def reassign_rsmi_atom_mapping(rsmi: str, as_smiles: bool = False) -> str:
 
     # Get Product(s) Atom Maps
     products_atommaps = {
-        atom.GetAtomMapNum()
-        for product in rxn.GetProducts()
-        for atom in product.GetAtoms()
-        if atom.GetAtomMapNum()
+        atom.GetAtomMapNum() for product in rxn.GetProducts() for atom in product.GetAtoms() if atom.GetAtomMapNum()
     }
     logging.debug(f"Product atom maps:{products_atommaps}")
 
     # Reassign Atom Maps for Rectants
     for reactant in rxn.GetReactants():
         reactant_atommaps = {
-            atom.GetIdx(): atom.GetAtomMapNum()
-            for atom in reactant.GetAtoms()
-            if atom.GetAtomMapNum()
+            atom.GetIdx(): atom.GetAtomMapNum() for atom in reactant.GetAtoms() if atom.GetAtomMapNum()
         }
         logging.debug(f"Reactant atom maps:{reactant_atommaps}")
         for atom_idx, atom_map in reactant_atommaps.items():
             # If atom map exists then continue
             if atom_map in products_atommaps:
                 continue
-            logging.debug(
-                f"Atom {atom_idx} map num ({atom_map}) not found in product!!!"
-            )
+            logging.debug(f"Atom {atom_idx} map num ({atom_map}) not found in product!!!")
             atom = reactant.GetAtomWithIdx(atom_idx)
             atom.SetAtomMapNum(0)
         logging.debug(f"Updated reactant: {Chem.MolToSmiles(reactant)}")
     # Reassign Atom Maps for Reagents
     for reagent in rxn.GetAgents():
-        reagent_atommaps = {
-            atom.GetIdx(): atom.GetAtomMapNum()
-            for atom in reagent.GetAtoms()
-            if atom.GetAtomMapNum()
-        }
+        reagent_atommaps = {atom.GetIdx(): atom.GetAtomMapNum() for atom in reagent.GetAtoms() if atom.GetAtomMapNum()}
         logging.debug(f"Reagent atom maps: {reagent_atommaps}")
         for atom_idx, atom_map in reagent_atommaps.items():
             # If atom map exists then continue
             if atom_map in products_atommaps:
                 continue
-            logging.debug(
-                f"Atom {atom_idx} map num ({atom_map}) not found in product!!!"
-            )
+            logging.debug(f"Atom {atom_idx} map num ({atom_map}) not found in product!!!")
             atom = reagent.GetAtomWithIdx(atom_idx)
             atom.SetAtomMapNum(0)
         logging.debug(f"Updated reagent: {Chem.MolToSmiles(reagent)}")
     # Get updated rsmi
-    updated_rsmi = (
-        AllChem.ReactionToSmiles(rxn) if as_smiles else AllChem.ReactionToSmarts(rxn)
-    )
+    updated_rsmi = AllChem.ReactionToSmiles(rxn) if as_smiles else AllChem.ReactionToSmarts(rxn)
     logging.debug(f"Updated rsmi: {updated_rsmi}")
 
     return updated_rsmi
+
+
+def split_rsmi(rsmi: str) -> Tuple[str, str, str]:
+    """
+    Split a reaction SMILES into components SMILES
+
+    :param rsmi: the reaction SMILES
+    :return: the SMILES of the components
+    """
+    reaction_components = rsmi_split_pattern.split(rsmi)
+    num_reaction_components = len(reaction_components)
+    if num_reaction_components != 3:
+        raise ValueError(f"Expected 3 reaction components but got {num_reaction_components} for '{rsmi}'")
+
+    return tuple(reaction_components)
 
 
 def join_smiles_from_reaction(smiles_list: List[str]) -> str:
@@ -583,6 +673,24 @@ def split_smiles_from_reaction(smiles: str) -> List[str]:
     return components
 
 
+def recreate_rsmi(rsmi: str) -> str:
+    """
+    Recreate Reactions SMILES by removing intra-molecular complexes.
+
+    :param rsmi: the original reaction smiles
+    :return: the updated reaction smiles without intra-molecular complexes
+    """
+    reactants, reagents, products = split_rsmi(rsmi)
+    # Split and rejoin the components
+    reactants = ".".join(split_smiles_from_reaction(reactants))
+    reagents = ".".join(split_smiles_from_reaction(reagents))
+    products = ".".join(split_smiles_from_reaction(products))
+
+    new_rsmi = f"{reactants}>{reagents}>{products}"
+
+    return new_rsmi
+
+
 def reaction_centres(rxn: AllChem.ChemicalReaction) -> Tuple[List[int], ...]:
     """
     Return reaction centre atoms, provided that the bonding partners
@@ -608,9 +716,7 @@ def reaction_centres(rxn: AllChem.ChemicalReaction) -> Tuple[List[int], ...]:
             mapnum = ratm.GetAtomMapNum()
             numexplicitH_reactant = ratm.GetNumExplicitHs()
             neighbours = ratm.GetNeighbors()
-            map_neighbours = sorted(
-                [neighbour_atom.GetAtomMapNum() for neighbour_atom in neighbours]
-            )
+            map_neighbours = sorted([neighbour_atom.GetAtomMapNum() for neighbour_atom in neighbours])
             foundit = False
             for product in rxn.GetProducts():
                 for patom in product.GetAtoms():
@@ -618,10 +724,7 @@ def reaction_centres(rxn: AllChem.ChemicalReaction) -> Tuple[List[int], ...]:
                         neighbours_product = patom.GetNeighbors()
                         numexplicitH_product = patom.GetNumExplicitHs()
                         map_neighbours_product = sorted(
-                            [
-                                neighbour_atom.GetAtomMapNum()
-                                for neighbour_atom in neighbours_product
-                            ]
+                            [neighbour_atom.GetAtomMapNum() for neighbour_atom in neighbours_product]
                         )
                         # criterion: check if the map numbers of neighbours are the same in the reactant and the product
                         if map_neighbours == map_neighbours_product:

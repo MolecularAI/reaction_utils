@@ -5,6 +5,7 @@ and drawing the route
 """
 
 import warnings
+from collections import defaultdict
 from copy import deepcopy
 from operator import itemgetter
 from typing import Any, Callable, Dict, List, Set, Tuple, Union
@@ -14,11 +15,7 @@ from PIL.Image import Image as PilImage
 from rdkit import Chem
 
 from rxnutils.chem.augmentation import single_reactant_augmentation
-from rxnutils.chem.utils import (
-    atom_mapping_numbers,
-    join_smiles_from_reaction,
-    split_smiles_from_reaction,
-)
+from rxnutils.chem.utils import atom_mapping_numbers, join_smiles_from_reaction, split_rsmi, split_smiles_from_reaction
 from rxnutils.pipeline.actions.reaction_mod import NameRxn, RxnMapper
 from rxnutils.routes.image import RouteImageFactory
 from rxnutils.routes.utils.validation import validate_dict
@@ -62,11 +59,9 @@ class SynthesisRoute:
 
         first_reaction = self.reaction_tree["children"][0]
         if "mapped_reaction_smiles" not in first_reaction.get("metadata", {}):
-            raise ValueError(
-                "It appears that the route has no atom-mapping information"
-            )
+            raise ValueError("It appears that the route has no atom-mapping information")
 
-        return first_reaction["metadata"]["mapped_reaction_smiles"].split(">")[-1]
+        return split_rsmi(first_reaction["metadata"]["mapped_reaction_smiles"])[-1]
 
     @property
     def nsteps(self) -> int:
@@ -81,12 +76,10 @@ class SynthesisRoute:
         _collect_atom_mapped_smiles(self.reaction_tree, smiles)
         return smiles
 
-    def assign_atom_mapping(
-        self, overwrite: bool = False, only_rxnmapper: bool = False
-    ) -> None:
+    def assign_atom_mapping(self, overwrite: bool = False, only_rxnmapper: bool = False) -> None:
         """
         Assign atom-mapping to each reaction in the route and
-        ensure that it is consistent from root compound and throughout
+        ensure that is is consistent from root compound and throughout
         the route.
 
         It will use NameRxn to assign classification and possiblty atom-mapping,
@@ -100,9 +93,7 @@ class SynthesisRoute:
         max_atomnum = max(atom_mapping_numbers(self.mapped_root_smiles))
         _inherit_atom_mapping(self.reaction_tree, max_atomnum + 100)
 
-    def chains(
-        self, complexity_func: Callable[[str], float]
-    ) -> List[List[Dict[str, Any]]]:
+    def chains(self, complexity_func: Callable[[str], float]) -> List[List[Dict[str, Any]]]:
         """
         Returns linear sequences or chains extracted from the route.
 
@@ -150,9 +141,7 @@ class SynthesisRoute:
                     mol["chain"] = "sub1"
         return chains
 
-    def image(
-        self, show_atom_mapping: bool = False, factory_kwargs: Dict[str, Any] = None
-    ) -> PilImage:
+    def image(self, show_atom_mapping: bool = False, factory_kwargs: Dict[str, Any] = None) -> PilImage:
         """
         Depict the route.
 
@@ -166,6 +155,28 @@ class SynthesisRoute:
         else:
             dict_ = self.reaction_tree
         return RouteImageFactory(dict_, **factory_kwargs).image
+
+    def intermediate_counts(self) -> Dict[str, int]:
+        """
+        Extract the counts of all intermediates
+
+        return: the counts
+        """
+        intermediates = defaultdict(int)
+        children = self.reaction_tree.get("children", [])
+        if children:
+            _collect_intermediates(children[0], intermediates)
+        return intermediates
+
+    def intermediates(
+        self,
+    ) -> Set[str]:
+        """
+        Extract a set with the SMILES of all the intermediates nodes
+
+        :return: a set of SMILES strings
+        """
+        return set(self.intermediate_counts().keys())
 
     def is_solved(self) -> bool:
         """
@@ -181,6 +192,16 @@ class SynthesisRoute:
             return False
         return True
 
+    def leaf_counts(self) -> Dict[str, int]:
+        """
+        Extract the counts of all leaf nodes, i.e. starting material
+
+        return: the counts
+        """
+        leaves = defaultdict(int)
+        _collect_leaves(self.reaction_tree, leaves)
+        return leaves
+
     def leaves(
         self,
     ) -> Set[str]:
@@ -190,9 +211,7 @@ class SynthesisRoute:
 
         :return: a set of SMILES strings
         """
-        leaves = set()
-        _collect_leaves(self.reaction_tree, leaves)
-        return leaves
+        return set(self.leaf_counts().keys())
 
     def reaction_data(self) -> List[Dict[str, Any]]:
         """
@@ -249,9 +268,7 @@ class SynthesisRoute:
         if isinstance(other, SynthesisRoute):
             if len(self.reaction_smiles()) == 0 or len(other.reaction_smiles()) == 0:
                 return
-            mapping_dict = _find_remapping(
-                other.mapped_root_smiles, self.mapped_root_smiles
-            )
+            mapping_dict = _find_remapping(other.mapped_root_smiles, self.mapped_root_smiles)
         elif isinstance(other, str):
             if len(self.reaction_smiles()) == 0:
                 return
@@ -262,9 +279,7 @@ class SynthesisRoute:
             raise ValueError(f"Cannot perform re-mapping using a {type(other)}")
         _remap_reactions(self.reaction_tree, mapping_dict)
 
-    def _assign_mapping(
-        self, overwrite: bool = False, only_rxnmapper: bool = False
-    ) -> None:
+    def _assign_mapping(self, overwrite: bool = False, only_rxnmapper: bool = False) -> None:
         if not overwrite:
             try:
                 self.atom_mapped_reaction_smiles()
@@ -283,9 +298,7 @@ class SynthesisRoute:
             # Raised by nextmove_action if namerxn not in path
             except FileNotFoundError:
                 df = df.assign(NMC=["0.0"] * len(df), mapped_smiles=[""] * len(df))
-                warnings.warn(
-                    "namerxn does not appear to be in $PATH. Run failed and proceeding with rxnmapper only"
-                )
+                warnings.warn("namerxn does not appear to be in $PATH. Run failed and proceeding with rxnmapper only")
         else:
             df = df.assign(NMC=["0.0"] * len(df), mapped_smiles=[""] * len(df))
         df = rxnmapper_action(df)
@@ -293,7 +306,7 @@ class SynthesisRoute:
             df["mapped_smiles"] = df["RxnmapperRxnSmiles"]
         else:
             sel = df["NMC"] == "0.0"
-            df["mapped_smiles"].mask(sel, df["RxnmapperRxnSmiles"], inplace=True)
+            df.loc[sel, "mapped_smiles"] = df.loc[sel, "RxnmapperRxnSmiles"]
         datamap = df.set_index("smiles").to_dict("index")
         _copy_mapping_from_datamap(self.reaction_tree, datamap)
 
@@ -322,12 +335,9 @@ def _apply_remapping(
     :param keep_original: determines the behavior of atoms not in `remapping`
     :return: the remapped reaction SMILES
     """
-    reactants_smiles, reagent_smiles, product_smiles = reaction_smiles.split(">")
+    reactants_smiles, reagent_smiles, product_smiles = split_rsmi(reaction_smiles)
     product_mol = Chem.MolFromSmiles(product_smiles)
-    reactant_mols = [
-        Chem.MolFromSmiles(smiles)
-        for smiles in split_smiles_from_reaction(reactants_smiles)
-    ]
+    reactant_mols = [Chem.MolFromSmiles(smiles) for smiles in split_smiles_from_reaction(reactants_smiles)]
     atoms_to_renumber = list(product_mol.GetAtoms())
     for mol in reactant_mols:
         atoms_to_renumber.extend(mol.GetAtoms())
@@ -430,9 +440,7 @@ def smiles2inchikey(smiles: str, ignore_stereo: bool = False) -> str:
 # Recursive functions acting on reaction trees
 
 
-def _assign_atom_mapped_smiles(
-    tree_dict: Dict[str, Any], reactants_smiles: List[str] = None
-) -> None:
+def _assign_atom_mapped_smiles(tree_dict: Dict[str, Any], reactants_smiles: List[str] = None) -> None:
     """
     Used to copy the atom-mapped SMILES from the reaction metadata
     to the SMILES property of each molecule node. This is used to
@@ -458,15 +466,13 @@ def _assign_atom_mapped_smiles(
     else:
         reaction_dict = tree_dict["children"][0]
         reaction_smiles = reaction_dict["metadata"]["mapped_reaction_smiles"]
-        tree_dict["smiles"] = reaction_smiles.split(">")[-1]
-        reactants_smiles = split_smiles_from_reaction(reaction_smiles.split(">")[0])
+        reactants, _, tree_dict["smiles"] = split_rsmi(reaction_smiles)
+        reactants_smiles = split_smiles_from_reaction(reactants)
         for grandchild in reaction_dict["children"]:
             _assign_atom_mapped_smiles(grandchild, reactants_smiles)
 
 
-def _assign_forward_step(
-    tree_dict: Dict[str, Any], max_depth: int, depth: int = 1
-) -> None:
+def _assign_forward_step(tree_dict: Dict[str, Any], max_depth: int, depth: int = 1) -> None:
     """
     Assign the forward_step property of each reaction node.
     The forward step is defined as "maximum depth - node depth + 1"
@@ -520,19 +526,32 @@ def _collect_atom_mapped_smiles(tree_dict: Dict[str, Any], smiles: List[str]) ->
         _collect_atom_mapped_smiles(grandchild, smiles)
 
 
-def _collect_leaves(tree_dict: Dict[str, Any], leaves: Set[str]) -> None:
+def _collect_intermediates(tree_dict: Dict[str, Any], intermediates: Dict[str, int]) -> None:
+    """
+    Traverse the tree and collect SMILES of molecule nodes that has children
+
+    :param tree_dict: the current molecule node
+    :param intermediates: the list of collected leaves and their counts
+    """
+    if tree_dict["type"] == "mol" and tree_dict.get("children"):
+        intermediates[tree_dict["smiles"]] += 1
+    for child in tree_dict.get("children", []):
+        _collect_intermediates(child, intermediates)
+
+
+def _collect_leaves(tree_dict: Dict[str, Any], leaves: Dict[str, int]) -> None:
     """
     Traverse the tree and collect SMILES of molecule nodes that has no children
 
     :param tree_dict: the current molecule node
-    :param leaves: the list of collected leaves
+    :param leaves: the list of collected leaves and their counts
     """
     children = tree_dict.get("children", [])
     if children:
         for child in children:
             _collect_leaves(child, leaves)
     else:
-        leaves.add(tree_dict["smiles"])
+        leaves[tree_dict["smiles"]] += 1
 
 
 def _collect_ngrams(
@@ -554,9 +573,7 @@ def _collect_ngrams(
     """
     accumulation = accumulation or []
     if tree_dict["type"] == "mol":
-        raise ValueError(
-            "Found _collect_ngrams at molecule node. This should not happen."
-        )
+        raise ValueError("Found _collect_ngrams at molecule node. This should not happen.")
 
     data = tree_dict.get("metadata", {}).get(metadata_key)
     accumulation.append(data)
@@ -567,14 +584,10 @@ def _collect_ngrams(
 
     for mol_child in tree_dict["children"]:
         for rxn_grandchild in mol_child.get("children", []):
-            _collect_ngrams(
-                rxn_grandchild, nitems, metadata_key, result, list(accumulation)
-            )
+            _collect_ngrams(rxn_grandchild, nitems, metadata_key, result, list(accumulation))
 
 
-def _collect_reaction_data(
-    tree_dict: Dict[str, Any], data: List[Dict[str, Any]]
-) -> None:
+def _collect_reaction_data(tree_dict: Dict[str, Any], data: List[Dict[str, Any]]) -> None:
     """
     Save the reaction metadata to a list and augment it
     with the un-mapped reaction SMILES and reaction depth
@@ -586,9 +599,7 @@ def _collect_reaction_data(
     if children is None:
         return
     grandchildren = children[0]["children"]
-    reactants = join_smiles_from_reaction(
-        [grandchild["smiles"] for grandchild in grandchildren]
-    )
+    reactants = join_smiles_from_reaction([grandchild["smiles"] for grandchild in grandchildren])
     metadata = deepcopy(children[0]["metadata"])
     metadata["reaction_smiles"] = f"{reactants}>>{tree_dict['smiles']}"
     data.append(metadata)
@@ -607,17 +618,13 @@ def _collect_reaction_smiles(tree_dict: Dict[str, Any], smiles: List[str]) -> No
     if children is None:
         return
     grandchildren = children[0]["children"]
-    reactants = join_smiles_from_reaction(
-        [grandchild["smiles"] for grandchild in grandchildren]
-    )
+    reactants = join_smiles_from_reaction([grandchild["smiles"] for grandchild in grandchildren])
     smiles.append(f"{reactants}>>{tree_dict['smiles']}")
     for grandchild in grandchildren:
         _collect_reaction_smiles(grandchild, smiles)
 
 
-def _copy_mapping_from_datamap(
-    tree_dict: Dict[str, Any], datamap: Dict[str, Dict[str, str]]
-) -> None:
+def _copy_mapping_from_datamap(tree_dict: Dict[str, Any], datamap: Dict[str, Dict[str, str]]) -> None:
     """
     Store the generated atom-mapping and classification to the reaction
     metadata.
@@ -631,9 +638,7 @@ def _copy_mapping_from_datamap(
     if children is None:
         return
     grandchildren = children[0]["children"]
-    reactants = join_smiles_from_reaction(
-        [grandchild["smiles"] for grandchild in grandchildren]
-    )
+    reactants = join_smiles_from_reaction([grandchild["smiles"] for grandchild in grandchildren])
     rxnsmi = f"{reactants}>>{tree_dict['smiles']}"
     metadata = children[0].get("metadata", {})
     metadata["classification"] = datamap[rxnsmi]["NMC"]
@@ -684,9 +689,7 @@ def _extract_chain_molecules(
         mol_dict["reaction_id"] = metadata.get("id", metadata.get("ID"))
         mol_dict["hash"] = hash((mol_dict["smiles"], mol_dict["step"]))
         for grandchild in children[0]["children"]:
-            _extract_chain_molecules(
-                grandchild, chain_molecules, step - 1, mol_dict["hash"]
-            )
+            _extract_chain_molecules(grandchild, chain_molecules, step - 1, mol_dict["hash"])
     chain_molecules.append(mol_dict)
 
 
@@ -704,9 +707,7 @@ def _find_leaves_not_in_stock(tree_dict: Dict[str, Any]) -> None:
             _find_leaves_not_in_stock(child)
 
 
-def _inherit_atom_mapping(
-    tree_dict: Dict[str, Any], new_atomnum: int, parent_smiles: str = ""
-) -> None:
+def _inherit_atom_mapping(tree_dict: Dict[str, Any], new_atomnum: int, parent_smiles: str = "") -> None:
     """
     Replace atom-mapping in the route so that it keeps the atom-mapping
     from the root node, i.e. the target molecule
@@ -732,7 +733,7 @@ def _inherit_atom_mapping(
     if parent_smiles == "":
         mapped_rsmi = mapped_rsmi0
     else:
-        _, _, product0 = mapped_rsmi0.split(">")
+        _, _, product0 = split_rsmi(mapped_rsmi0)
         remapping = _find_remapping(parent_smiles, product0)
         product_mol = Chem.MolFromSmiles(product0)
         for atom in product_mol.GetAtoms():
@@ -746,11 +747,13 @@ def _inherit_atom_mapping(
     # Recursing to reactants
     inchi2mapped = {
         smiles2inchikey(smiles, ignore_stereo=True): smiles
-        for smiles in split_smiles_from_reaction(mapped_rsmi.split(">>")[0])
+        for smiles in split_smiles_from_reaction(split_rsmi(mapped_rsmi)[0])
     }
     for grandchild in reaction_dict["children"]:
-        inchi = smiles2inchikey(grandchild["smiles"], ignore_stereo=True)
-        _inherit_atom_mapping(grandchild, new_atomnum, inchi2mapped[inchi])
+        # When a molecule is a complex use each part to inherit atom mapping
+        for smiles in split_smiles_from_reaction(grandchild["smiles"]):
+            inchi = smiles2inchikey(smiles, ignore_stereo=True)
+            _inherit_atom_mapping(grandchild, new_atomnum, inchi2mapped[inchi])
 
 
 def _remap_reactions(tree_dict: Dict[str, Any], remapping: Dict[int, int]) -> None:
@@ -764,8 +767,6 @@ def _remap_reactions(tree_dict: Dict[str, Any], remapping: Dict[int, int]) -> No
     if children is None:
         return
     reaction_smiles = children[0]["metadata"]["mapped_reaction_smiles"]
-    children[0]["metadata"]["mapped_reaction_smiles"] = _apply_remapping(
-        reaction_smiles, remapping, keep_original=True
-    )
+    children[0]["metadata"]["mapped_reaction_smiles"] = _apply_remapping(reaction_smiles, remapping, keep_original=True)
     for grandchild in children[0]["children"]:
         _remap_reactions(grandchild, remapping)

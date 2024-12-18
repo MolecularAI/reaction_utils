@@ -3,13 +3,9 @@ import json
 import pytest
 
 from rxnutils.routes.base import SynthesisRoute
-from rxnutils.routes.ted.utils import (
-    AptedConfig,
-    TreeContent,
-    StandardFingerprintFactory,
-)
-from rxnutils.routes.ted.reactiontree import ReactionTreeWrapper
 from rxnutils.routes.ted.distances_calculator import ted_distances_calculator
+from rxnutils.routes.ted.reactiontree import ReactionTreeWrapper
+from rxnutils.routes.ted.utils import AptedConfig, StandardFingerprintFactory, TreeContent
 
 
 def collect_smiles(tree, query_type, smiles_list):
@@ -143,9 +139,7 @@ def test_create_one_tree_of_reactions(load_reaction_tree):
     tree = load_reaction_tree("example_routes.json", 0)
     route = SynthesisRoute(tree)
 
-    wrapper = ReactionTreeWrapper(
-        route, content=TreeContent.REACTIONS, exhaustive_limit=1
-    )
+    wrapper = ReactionTreeWrapper(route, content=TreeContent.REACTIONS, exhaustive_limit=1)
 
     assert wrapper.info["tree count"] == 1
     assert len(wrapper.trees) == 1
@@ -314,10 +308,7 @@ def test_route_distances_longer_routes(load_reaction_tree):
 
 
 def test_distance_matrix(load_reaction_tree):
-    routes = [
-        SynthesisRoute(load_reaction_tree("example_routes.json", idx))
-        for idx in range(3)
-    ]
+    routes = [SynthesisRoute(load_reaction_tree("example_routes.json", idx)) for idx in range(3)]
 
     dist_mat = ted_distances_calculator(routes, content="molecules")
 
@@ -328,10 +319,7 @@ def test_distance_matrix(load_reaction_tree):
 
 
 def test_distance_matrix_timeout(load_reaction_tree):
-    routes = [
-        SynthesisRoute(load_reaction_tree("example_routes.json", idx))
-        for idx in range(3)
-    ]
+    routes = [SynthesisRoute(load_reaction_tree("example_routes.json", idx)) for idx in range(3)]
 
     with pytest.raises(ValueError):
         ted_distances_calculator(routes, content="molecules", timeout=0)
@@ -339,9 +327,7 @@ def test_distance_matrix_timeout(load_reaction_tree):
 
 def test_fingerprint_calculations():
     example_route = SynthesisRoute(example_tree)
-    wrapper = ReactionTreeWrapper(
-        example_route, content="both", fp_factory=StandardFingerprintFactory(nbits=128)
-    )
+    wrapper = ReactionTreeWrapper(example_route, content="both", fp_factory=StandardFingerprintFactory(nbits=128))
 
     fp = wrapper.first_tree["sort_key"]
     mol1 = "1000010000000000000010001000100101000101100000010000010000100001"

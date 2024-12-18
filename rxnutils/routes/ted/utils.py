@@ -1,4 +1,5 @@
 """ Module containing utilities for TED calculations """
+
 from __future__ import annotations
 
 import random
@@ -77,9 +78,7 @@ class StandardFingerprintFactory:
     def __call__(self, tree: StrDict, parent: StrDict = None) -> None:
         if tree["type"] == "reaction":
             if parent is None:
-                raise ValueError(
-                    "Must specify parent when making Morgan fingerprints for reaction nodes"
-                )
+                raise ValueError("Must specify parent when making Morgan fingerprints for reaction nodes")
             self._add_rxn_fingerprint(tree, parent)
         else:
             self._add_mol_fingerprints(tree)

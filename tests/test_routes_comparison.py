@@ -5,10 +5,10 @@ import pytest
 
 from rxnutils.routes.base import SynthesisRoute
 from rxnutils.routes.comparison import (
-    simple_route_similarity,
-    simple_bond_forming_similarity,
     atom_matching_bonanza_similarity,
     route_distances_calculator,
+    simple_bond_forming_similarity,
+    simple_route_similarity,
 )
 
 

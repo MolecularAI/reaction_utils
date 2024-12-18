@@ -1,4 +1,5 @@
 """ Module contain method to compute distance matrix using TED """
+
 import time
 from typing import Sequence
 

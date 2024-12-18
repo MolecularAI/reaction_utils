@@ -4,10 +4,8 @@ import sys
 import pytest
 from requests.exceptions import HTTPError
 
-from rxnutils.chem.rinchi.download_rinchi import (
-    main as download_rinchi,
-    PLATFORM2FOLDER,
-)
+from rxnutils.chem.rinchi.download_rinchi import PLATFORM2FOLDER
+from rxnutils.chem.rinchi.download_rinchi import main as download_rinchi
 from rxnutils.chem.rinchi.rinchi_api import generate_rinchi
 
 
@@ -45,11 +43,5 @@ def test_generate_rinchi(rinchi_download):
 
     resp = generate_rinchi(rsmi)
 
-    assert (
-        resp.long_rinchikey
-        == "Long-RInChIKey=SA-BUHFF-MSQCQINLJMEVNJ-UHFFFAOYSA-N--VEXZGXHMUGYJMC-UHFFFAOYSA-N"
-    )
-    assert (
-        resp.short_rinchikey
-        == "Short-RInChIKey=SA-BUHFF-MSQCQINLJM-VEXZGXHMUG-UHFFFADPSC-NUHFF-NUHFF-NUHFF-ZZZ"
-    )
+    assert resp.long_rinchikey == "Long-RInChIKey=SA-BUHFF-MSQCQINLJMEVNJ-UHFFFAOYSA-N--VEXZGXHMUGYJMC-UHFFFAOYSA-N"
+    assert resp.short_rinchikey == "Short-RInChIKey=SA-BUHFF-MSQCQINLJM-VEXZGXHMUG-UHFFFADPSC-NUHFF-NUHFF-NUHFF-ZZZ"

@@ -3,6 +3,7 @@ Module containing helper classes to compute the distance between to reaction tre
 Since APTED is based on ordered trees and the reaction trees are unordered, plenty of
 heuristics are implemented to deal with this.
 """
+
 from __future__ import annotations
 
 import itertools
@@ -15,11 +16,7 @@ import numpy as np
 from apted import APTED as Apted
 
 from rxnutils.routes.base import SynthesisRoute
-from rxnutils.routes.ted.utils import (
-    AptedConfig,
-    StandardFingerprintFactory,
-    TreeContent,
-)
+from rxnutils.routes.ted.utils import AptedConfig, StandardFingerprintFactory, TreeContent
 
 StrDict = Dict[str, Any]
 _FloatIterator = Iterable[float]
@@ -37,9 +34,7 @@ class ReactionTreeWrapper:
     :param dist_func: the distance function to use when renaming nodes
     """
 
-    _index_permutations = {
-        n: list(itertools.permutations(range(n), n)) for n in range(1, 8)
-    }
+    _index_permutations = {n: list(itertools.permutations(range(n), n)) for n in range(1, 8)}
 
     def __init__(
         self,
@@ -51,9 +46,7 @@ class ReactionTreeWrapper:
     ) -> None:
         single_node_tree = not bool(route.reaction_smiles())
         if single_node_tree and content == TreeContent.REACTIONS:
-            raise ValueError(
-                "Cannot create wrapping with content = reactions for a tree without reactions"
-            )
+            raise ValueError("Cannot create wrapping with content = reactions for a tree without reactions")
 
         self._logger = getLogger()
         # Will convert string input automatically
@@ -69,9 +62,7 @@ class ReactionTreeWrapper:
         if self._content == TreeContent.MOLECULES:
             self._base_tree = self._remove_children_nodes(self._base_tree)
         elif not single_node_tree and self._content == TreeContent.REACTIONS:
-            self._base_tree = self._remove_children_nodes(
-                self._base_tree["children"][0]
-            )
+            self._base_tree = self._remove_children_nodes(self._base_tree["children"][0])
 
         self._trees = []
         self._tree_count, self._node_index_list = self._inspect_tree()
@@ -103,9 +94,7 @@ class ReactionTreeWrapper:
         """Return a list of all created ordered trees"""
         return self._trees
 
-    def distance_iter(
-        self, other: "ReactionTreeWrapper", exhaustive_limit: int = 20
-    ) -> _FloatIterator:
+    def distance_iter(self, other: "ReactionTreeWrapper", exhaustive_limit: int = 20) -> _FloatIterator:
         """
         Iterate over all distances computed between this and another tree
 
@@ -133,9 +122,7 @@ class ReactionTreeWrapper:
         else:
             yield from self._distance_iter_random(other, exhaustive_limit)
 
-    def distance_to(
-        self, other: "ReactionTreeWrapper", exhaustive_limit: int = 20
-    ) -> float:
+    def distance_to(self, other: "ReactionTreeWrapper", exhaustive_limit: int = 20) -> float:
         """
         Calculate the minimum distance from this route to another route
 
@@ -147,9 +134,7 @@ class ReactionTreeWrapper:
         """
         min_dist = 1e6
         min_iter = -1
-        for iteration, distance in enumerate(
-            self.distance_iter(other, exhaustive_limit)
-        ):
+        for iteration, distance in enumerate(self.distance_iter(other, exhaustive_limit)):
             if distance < min_dist:
                 min_iter = iteration
                 min_dist = distance
@@ -187,9 +172,7 @@ class ReactionTreeWrapper:
         self._trees = []
         # Iterate over all possible combinations of child order
         for order_list in itertools.product(*self._node_index_list):
-            self._trees.append(
-                self._create_tree_recursively(self._base_tree, list(order_list))
-            )
+            self._trees.append(self._create_tree_recursively(self._base_tree, list(order_list)))
 
     def _create_tree_recursively(
         self,
@@ -201,41 +184,27 @@ class ReactionTreeWrapper:
         if children:
             child_order = order_list.pop(0)
             assert len(child_order) == len(children)
-            new_children = [
-                self._create_tree_recursively(child, order_list) for child in children
-            ]
+            new_children = [self._create_tree_recursively(child, order_list) for child in children]
             new_tree["children"] = [new_children[idx] for idx in child_order]
         return new_tree
 
     def _distance_iter_exhaustive(self, other: "ReactionTreeWrapper") -> _FloatIterator:
-        self._logger.debug(
-            f"APTED: Exhaustive search. {len(self.trees)} {len(other.trees)}"
-        )
+        self._logger.debug(f"APTED: Exhaustive search. {len(self.trees)} {len(other.trees)}")
         config = AptedConfig(randomize=False, dist_func=self._dist_func)
         for tree1, tree2 in itertools.product(self.trees, other.trees):
             yield Apted(tree1, tree2, config).compute_edit_distance()
 
-    def _distance_iter_random(
-        self, other: "ReactionTreeWrapper", ntimes: int
-    ) -> _FloatIterator:
-        self._logger.debug(
-            f"APTED: Heuristic search. {len(self.trees)} {len(other.trees)}"
-        )
+    def _distance_iter_random(self, other: "ReactionTreeWrapper", ntimes: int) -> _FloatIterator:
+        self._logger.debug(f"APTED: Heuristic search. {len(self.trees)} {len(other.trees)}")
         config = AptedConfig(randomize=False, dist_func=self._dist_func)
         yield Apted(self.first_tree, other.first_tree, config).compute_edit_distance()
 
         config = AptedConfig(randomize=True, dist_func=self._dist_func)
         for _ in range(ntimes):
-            yield Apted(
-                self.first_tree, other.first_tree, config
-            ).compute_edit_distance()
+            yield Apted(self.first_tree, other.first_tree, config).compute_edit_distance()
 
-    def _distance_iter_semi_exhaustive(
-        self, other: "ReactionTreeWrapper"
-    ) -> _FloatIterator:
-        self._logger.debug(
-            f"APTED: Semi-exhaustive search. {len(self.trees)} {len(other.trees)}"
-        )
+    def _distance_iter_semi_exhaustive(self, other: "ReactionTreeWrapper") -> _FloatIterator:
+        self._logger.debug(f"APTED: Semi-exhaustive search. {len(self.trees)} {len(other.trees)}")
         if len(self.trees) < len(other.trees):
             first_wrapper = self
             second_wrapper = other
@@ -245,9 +214,7 @@ class ReactionTreeWrapper:
 
         config = AptedConfig(randomize=False, dist_func=self._dist_func)
         for tree1 in first_wrapper.trees:
-            yield Apted(
-                tree1, second_wrapper.first_tree, config
-            ).compute_edit_distance()
+            yield Apted(tree1, second_wrapper.first_tree, config).compute_edit_distance()
 
     def _inspect_tree(self) -> Tuple[int, List[List[int]]]:
         """
@@ -293,9 +260,6 @@ class ReactionTreeWrapper:
             new_tree["children"] = []
             for child in tree["children"]:
                 new_tree["children"].extend(
-                    [
-                        ReactionTreeWrapper._remove_children_nodes(grandchild)
-                        for grandchild in child.get("children", [])
-                    ]
+                    [ReactionTreeWrapper._remove_children_nodes(grandchild) for grandchild in child.get("children", [])]
                 )
         return new_tree

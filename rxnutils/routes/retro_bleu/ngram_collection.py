@@ -46,9 +46,7 @@ class NgramCollection:
         return NgramCollection(dict_["nitems"], dict_["metadata_key"], ngrams)
 
     @classmethod
-    def from_tree_collection(
-        cls, filename: str, nitems: int, metadata_key: str
-    ) -> "NgramCollection":
+    def from_tree_collection(cls, filename: str, nitems: int, metadata_key: str) -> "NgramCollection":
         """
         Make a n-gram collection by extracting them from a collection of
         synthesis routes.
@@ -85,24 +83,16 @@ class NgramCollection:
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(
-        "Tool for making n-gram collections from a set of synthesis routes"
-    )
-    parser.add_argument(
-        "--filename", nargs="+", help="the path to the synthesis routes"
-    )
+    parser = argparse.ArgumentParser("Tool for making n-gram collections from a set of synthesis routes")
+    parser.add_argument("--filename", nargs="+", help="the path to the synthesis routes")
     parser.add_argument("--output", help="the path to the n-gram collection")
     parser.add_argument("--nitems", type=int, help="the length of the gram")
-    parser.add_argument(
-        "--metadata", help="the reaction metadata to extract for making the n-grams"
-    )
+    parser.add_argument("--metadata", help="the reaction metadata to extract for making the n-grams")
     args = parser.parse_args()
 
     collection = None
     for filename in args.filename:
-        temp = NgramCollection.from_tree_collection(
-            filename, args.nitems, args.metadata
-        )
+        temp = NgramCollection.from_tree_collection(filename, args.nitems, args.metadata)
         if collection is None:
             collection = temp
         else:

@@ -2,19 +2,84 @@ import pytest
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
+from rxnutils.chem.augmentation import single_reactant_augmentation
 from rxnutils.chem.utils import (
+    atom_mapping_numbers,
+    canonicalize_tautomer,
+    get_mol_weight,
+    get_special_groups,
+    get_symmetric_sites,
     has_atom_mapping,
+    is_valid_mol,
+    neutralize_molecules,
+    reaction_centres,
+    reassign_rsmi_atom_mapping,
+    recreate_rsmi,
     remove_atom_mapping,
     remove_atom_mapping_template,
-    neutralize_molecules,
+    remove_stereochemistry,
     same_molecule,
-    atom_mapping_numbers,
+    split_rsmi,
     split_smiles_from_reaction,
-    reassign_rsmi_atom_mapping,
-    get_special_groups,
-    reaction_centres,
 )
-from rxnutils.chem.augmentation import single_reactant_augmentation
+
+
+def test_canonicalize_tautomer():
+    input_smiles = ["c1nc2cncnc2[nH]1", "c1ncc2[nH]cnc2n1", "c1cc[nH]cn1"]
+    expected_outputs = ["c1ncc2[nH]cnc2n1", "c1ncc2[nH]cnc2n1", "c1cc[nH]cn1"]
+
+    for smiles, expected in zip(input_smiles, expected_outputs):
+        assert canonicalize_tautomer(smiles) == expected
+
+
+def test_remove_stereochemistry() -> None:
+    input_smiles = ["C[C@@H]CCO[C@H]", "CC(=O)C", "C[C@H]CCO[C@@H]", "C[C@H]CCOC"]
+
+    expected_output = [
+        "[CH]OCC[CH]C",
+        "CC(C)=O",
+        "[CH]OCC[CH]C",
+        "C[CH]CCOC",
+    ]
+    for smiles, expected in zip(input_smiles, expected_output):
+        output = remove_stereochemistry(smiles)
+        assert output == expected
+
+    smiles_invalid = "not-a-smiles"
+    assert smiles_invalid == remove_stereochemistry(smiles_invalid)
+
+
+def test_is_valid_mol():
+    assert is_valid_mol("CCO")
+    assert not is_valid_mol("C!O")
+
+
+def test_get_mol_weight():
+    smiles = "CCCCCC(=O)CCCC"
+    smiles_invalid = "not-a-smiles"
+    assert round(get_mol_weight(smiles), 2) == 156.15
+    assert get_mol_weight(smiles_invalid) is None
+
+
+@pytest.mark.parametrize(
+    ("smiles", "atoms_inds", "expected"),
+    [
+        ("Oc1cccc(O)c1", [0], [[0, 6]]),
+        ("Oc1cccc(O)c1", [2], [[2, 4]]),
+        ("Oc1cccc(O)c1", [0, 2], [[0, 6], [2, 4]]),
+        ("Oc1cccc(O)c1", [0, 2, 6], [[0, 6], [2, 4]]),
+        ("Oc1cccc(O)c1", [3], []),
+    ],
+)
+def test_get_symmetric_sites(smiles, atoms_inds, expected):
+    mol = Chem.MolFromSmiles(smiles)
+    assert get_symmetric_sites(mol, atoms_inds) == expected
+
+
+def test_get_symmetric_sites_error():
+    mol = Chem.MolFromSmiles("Oc1cccc(O)c1")
+    with pytest.raises(ValueError, match="At least one candidate atom-idx is out of bounds"):
+        get_symmetric_sites(mol, [13])
 
 
 @pytest.mark.parametrize(
@@ -175,3 +240,68 @@ def test_reaction_centers(smiles, expected):
 )
 def test_single_reactant_agumentation(smiles, classification, expected):
     assert single_reactant_augmentation(smiles, classification) == expected
+
+
+@pytest.mark.parametrize(
+    ("rsmi", "expected_components"),
+    [
+        (
+            "A.B>>C",
+            ("A.B", "", "C"),
+        ),
+        (
+            "A>B>C",
+            ("A", "B", "C"),
+        ),
+        (
+            "A->B>>C",
+            ("A->B", "", "C"),
+        ),
+        (
+            "A>B->C>D",
+            ("A", "B->C", "D"),
+        ),
+    ],
+)
+def test_split_rsmi(rsmi, expected_components):
+    reaction_components = split_rsmi(rsmi)
+    assert reaction_components == expected_components
+
+
+def test_split_rsmi_error():
+    with pytest.raises(ValueError, match="Expected 3 reaction components but got 4 for 'A>B>C>D'"):
+        _ = split_rsmi("A>B>C>D")
+
+    with pytest.raises(ValueError, match="Expected 3 reaction components but got 2 for 'A>B'"):
+        _ = split_rsmi("A>B")
+
+
+@pytest.mark.parametrize(
+    ("rsmi", "expected_rsmi"),
+    [
+        (
+            "A.B>>C",
+            "A.B>>C",
+        ),
+        (
+            "(A.B).C>>D",
+            "A.B.C>>D",
+        ),
+        (
+            "(A->B.C).D>E.F>G",
+            "A->B.C.D>E.F>G",
+        ),
+        (
+            "A.(B.C).D>(E.F)>G",
+            "A.B.C.D>E.F>G",
+        ),
+        (
+            "(A.B).C>(E.F)>(D.G)",
+            "A.B.C>E.F>D.G",
+        ),
+    ],
+)
+def test_recreate_rsmi(rsmi, expected_rsmi):
+    new_rsmi = recreate_rsmi(rsmi)
+
+    assert new_rsmi == expected_rsmi
