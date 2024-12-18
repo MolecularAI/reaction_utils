@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## Version 1.8.0 - 2024-12-18
+
+### Features
+
+- DeepSet route scoring routines
+- SCScore featurizer for molecules
+- Routine for identifying symmetric sites on molecules
+- Batch utilities for numpy arrays
+- Reader for synthesis route from aizynthfinder dictionary
+
+### Trivial changes
+
+- Update dependencies
+
 ## Version 1.7.0 - 2024-10-15
 
 ### Features
