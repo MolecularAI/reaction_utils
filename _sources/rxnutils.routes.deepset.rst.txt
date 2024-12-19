@@ -1,0 +1,29 @@
+rxnutils.routes.deepset package
+===============================
+
+Submodules
+----------
+
+rxnutils.routes.deepset.featurizers module
+------------------------------------------
+
+.. automodule:: rxnutils.routes.deepset.featurizers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.routes.deepset.scoring module
+--------------------------------------
+
+.. automodule:: rxnutils.routes.deepset.scoring
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.routes.deepset
+   :members:
+   :undoc-members:
+   :show-inheritance:

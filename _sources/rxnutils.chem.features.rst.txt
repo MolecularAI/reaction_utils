@@ -1,0 +1,29 @@
+rxnutils.chem.features package
+==============================
+
+Submodules
+----------
+
+rxnutils.chem.features.rxnfp\_runner module
+-------------------------------------------
+
+.. automodule:: rxnutils.chem.features.rxnfp_runner
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.features.sc\_score module
+---------------------------------------
+
+.. automodule:: rxnutils.chem.features.sc_score
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.chem.features
+   :members:
+   :undoc-members:
+   :show-inheritance:
