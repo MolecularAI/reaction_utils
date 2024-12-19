@@ -114,6 +114,9 @@ Please use ``black`` package for formatting, and follow ``pep8`` style guide.
 * [@CBA087](https://www.github.com/CBA087) 
 * [@EBjerrum](https://www.github.com/EBjerrum)
 * [@A-Thakkar](https://www.github.com/A-Thakkar)
+* [@marcosfelt](https://github.com/marcosfelt)
+* [@asiomchen](https://github.com/asiomchen)
+* [@yujiag21](https://github.com/yujiag21/)
 
 The contributors have limited time for support questions, but please do not hesitate to submit an issue (see above).
 
