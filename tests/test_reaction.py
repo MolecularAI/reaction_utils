@@ -2,8 +2,7 @@ import json
 
 import pytest
 
-from rxnutils.chem.reaction import ChemicalReaction
-from rxnutils.chem.reaction import ReactionException
+from rxnutils.chem.reaction import ChemicalReaction, ReactionException
 
 
 @pytest.fixture
@@ -156,17 +155,10 @@ def test_template_creation(make_template_dataframe):
         rxn.generate_reaction_template()
 
         if record["retrotemplate"] != rxn.retro_template.smarts:
-            failures.append(
-                (record["rsmi"], rxn.retro_template.smarts, record["retrotemplate"])
-            )
+            failures.append((record["rsmi"], rxn.retro_template.smarts, record["retrotemplate"]))
 
     if failures:
-        print(
-            "\n"
-            + "\n\n".join(
-                f"{failed[0]}\t{failed[1]}\t{failed[2]}" for failed in failures
-            )
-        )
+        print("\n" + "\n\n".join(f"{failed[0]}\t{failed[1]}\t{failed[2]}" for failed in failures))
     assert len(failures) == 0
 
 
@@ -241,9 +233,7 @@ def test_timedout_template_creation():
     )
     rxn = ChemicalReaction(rsmi)
     # Capture ReactionException
-    with pytest.raises(
-        ReactionException, match="Template generation failed with message: Timed out"
-    ):
+    with pytest.raises(ReactionException, match="Template generation failed with message: Timed out"):
         rxn.generate_reaction_template()
 
 
@@ -254,18 +244,14 @@ def test_ringbreaker_template_creation():
     )
     rxn = ChemicalReaction(rsmi, clean_smiles=False)
 
-    _, retro_template = rxn.generate_reaction_template(
-        radius=0, expand_ring=True, expand_hetero=True
-    )
+    _, retro_template = rxn.generate_reaction_template(radius=0, expand_ring=True, expand_hetero=True)
     expected = (
         "[Cl;H0;D1;+0:3]-[c;H0;D3;+0:2]1:[cH;D2;+0:1]:[c;H0;D3;+0:4]:[nH;D2;+0:5]:[n;H0;D2;+0:6]:1>>"
         "[CH;D1;+0:1]#[C;H0;D2;+0:2]-[Cl;H0;D1;+0:3].[CH;D2;+0:4]=[N+;H0;D2:5]=[N-;H0;D1:6]"
     )
     assert retro_template.smarts == expected
 
-    _, retro_template = rxn.generate_reaction_template(
-        radius=0, expand_ring=True, expand_hetero=False
-    )
+    _, retro_template = rxn.generate_reaction_template(radius=0, expand_ring=True, expand_hetero=False)
     expected = (
         "[c;H0;D3;+0:1]1:[cH;D2;+0:2]:[c;H0;D3;+0:3]:[nH;D2;+0:4]:[n;H0;D2;+0:5]:1"
         ">>[C;H0;D2;+0:1]#[CH;D1;+0:2].[CH;D2;+0:3]=[N+;H0;D2:4]=[N-;H0;D1:5]"

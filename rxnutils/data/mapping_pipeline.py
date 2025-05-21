@@ -2,9 +2,10 @@
 Module containing pipeline for mapping with rxnmapper
 This needs to be run in an environment with rxnmapper installed
 """
+
 from pathlib import Path
 
-from metaflow import step, Parameter
+from metaflow import Parameter, step
 
 from rxnutils.data.base_pipeline import DataBaseFlow
 from rxnutils.data.mapping import main as map_data
@@ -29,9 +30,7 @@ class RxnMappingFlow(DataBaseFlow):
     def do_mapping(self):
         """Perform atom-mapping of reactions"""
         idx, start, end = self.input
-        output_filename = (
-            Path(self.folder) / f"{self.data_prefix}_data_mapped.csv.{idx}"
-        )
+        output_filename = Path(self.folder) / f"{self.data_prefix}_data_mapped.csv.{idx}"
         if idx > -1 and not output_filename.exists():
             map_data(
                 [

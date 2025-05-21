@@ -2,13 +2,14 @@
 Module containing pipeline for downloading, transforming and cleaning USPTO data
 This needs to be run in an environment with rxnutils installed
 """
+
 from pathlib import Path
 
 from metaflow import step
 
 from rxnutils.data.base_pipeline import DataPreparationBaseFlow
-from rxnutils.data.uspto.download import main as download_uspto
 from rxnutils.data.uspto.combine import main as combine_uspto
+from rxnutils.data.uspto.download import main as download_uspto
 
 
 class UsptoDataPreparationFlow(DataPreparationBaseFlow):
@@ -54,9 +55,7 @@ class UsptoDataPreparationFlow(DataPreparationBaseFlow):
     @step
     def end(self):
         """Final step, just print information"""
-        print(
-            f"Processed file is locate here: {Path(self.folder) / 'uspto_data_cleaned.csv'}"
-        )
+        print(f"Processed file is locate here: {Path(self.folder) / 'uspto_data_cleaned.csv'}")
 
 
 if __name__ == "__main__":

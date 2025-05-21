@@ -1,5 +1,52 @@
 # CHANGELOG
 
+## Version 1.8.0 - 2024-12-18
+
+### Features
+
+- DeepSet route scoring routines
+- SCScore featurizer for molecules
+- Routine for identifying symmetric sites on molecules
+- Batch utilities for numpy arrays
+- Reader for synthesis route from aizynthfinder dictionary
+
+### Trivial changes
+
+- Update dependencies
+
+## Version 1.7.0 - 2024-10-15
+
+### Features
+
+- Support for novel route comparison metric
+- Support for tree edit distance (TED) calculations previously in the `route_distances` package
+- Support for Retro-BLEU and Badowski et al. route scoring
+- Update to USPTO pre-processing pipeline to support extracting yields
+- Extended route methods taken from `route_distances`
+- Support for augmenting single-reactant reactions
+
+### Trivial changes
+
+- Updates to reaction tagging routines
+
+## Version 1.6.0 - 2024-06-13
+
+### Trivial changes
+
+- rdkit version requirements have been updated to versions above 2023.9.1.
+
+## Version 1.5.0 - 2024-05-27
+
+### Features
+
+- Adding support for tagging reaction sites in SMILES
+- Adding more options for re-mapping routes
+
+### Miscellaneous
+
+- Improving batch routines
+- Updating InChI tools download URL
+
 ## Version 1.4.0 - 2024-03-12
 
 ### Features

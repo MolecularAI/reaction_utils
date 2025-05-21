@@ -1,16 +1,16 @@
 """Module containing routines for the validation framework"""
+
 from __future__ import annotations
-from typing import Any
-from typing import Callable
-from typing import Dict, Optional, Tuple, List
+
 from collections import defaultdict
 from dataclasses import fields
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import pandas as pd
 import swifter  # noqa #pylint: disable=unused-import
 from tqdm import tqdm
 
-from rxnutils.chem.utils import split_smiles_from_reaction, join_smiles_from_reaction
+from rxnutils.chem.utils import join_smiles_from_reaction, split_rsmi, split_smiles_from_reaction
 
 ActionType = Callable[[pd.DataFrame], pd.DataFrame]
 
@@ -148,4 +148,4 @@ class ReactionActionMixIn:
         :param row: the row with the SMILES
         :return: the SMILES of the components
         """
-        return row[self.in_column].split(">")
+        return split_rsmi(row[self.in_column])

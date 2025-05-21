@@ -2,11 +2,12 @@
 Module containing pipeline for extracting, transforming and cleaning Open reaction database data
 This needs to be run in an environment with rxnutils installed
 """
+
 import glob
 import os
 from pathlib import Path
 
-from metaflow import step, Parameter
+from metaflow import Parameter, step
 
 from rxnutils.data.base_pipeline import DataPreparationBaseFlow
 from rxnutils.data.ord.import_ord_dataset import main as import_data
@@ -56,9 +57,7 @@ class OrdDataPreparationFlow(DataPreparationBaseFlow):
     @step
     def end(self):
         """Final step, just print information"""
-        print(
-            f"Processed file is locate here: {Path(self.folder) / 'ord_data_cleaned.csv'}"
-        )
+        print(f"Processed file is locate here: {Path(self.folder) / 'ord_data_cleaned.csv'}")
 
 
 if __name__ == "__main__":

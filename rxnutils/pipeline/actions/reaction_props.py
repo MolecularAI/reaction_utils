@@ -1,11 +1,11 @@
 """Module containing actions on reactions that doesn't modify the reactions only compute properties of them"""
+
 from __future__ import annotations
 
 import json
-import os
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import ClassVar, List, Set, Tuple, Optional
+from typing import ClassVar, List, Optional, Set, Tuple
 
 import pandas as pd
 from rdkit import Chem, RDLogger
@@ -14,20 +14,16 @@ from rdkit.Chem.MolKey.InchiInfo import InchiInfo
 from rdkit.Chem.rdMolDescriptors import CalcNumRings
 from rdkit.Chem.rdmolops import FindPotentialStereo
 
-from rxnutils.pipeline.base import (
-    action,
-    global_apply,
-    ReactionActionMixIn,
-)
+from rxnutils.chem.cgr import CondensedGraphReaction
+from rxnutils.chem.reaction import ChemicalReaction
 from rxnutils.chem.utils import (
     atom_mapping_numbers,
     has_atom_mapping,
-    join_smiles_from_reaction,
     reaction_centres,
+    split_rsmi,
     split_smiles_from_reaction,
 )
-from rxnutils.chem.reaction import ChemicalReaction
-from rxnutils.chem.cgr import CondensedGraphReaction
+from rxnutils.pipeline.base import ReactionActionMixIn, action, global_apply
 
 rd_logger = RDLogger.logger()
 rd_logger.setLevel(RDLogger.CRITICAL)
@@ -55,9 +51,7 @@ class CountComponents(ReactionActionMixIn):
         def _process_smiles(smiles_list: List[str]) -> Tuple[int, int]:
             if not smiles_list:
                 return 0, 0
-            smiles_list_mapped = [
-                smi for smi in smiles_list if has_atom_mapping(smi, sanitize=False)
-            ]
+            smiles_list_mapped = [smi for smi in smiles_list if has_atom_mapping(smi, sanitize=False)]
             return len(smiles_list), len(smiles_list_mapped)
 
         reactants_list, reagents_list, products_list = self.split_lists(row)
@@ -93,9 +87,7 @@ class CountElements:
         return data.assign(**{self.out_column: hash_col})
 
     def __str__(self) -> str:
-        return (
-            f"{self.pretty_name} (calculate the occurence of elements in the reactants)"
-        )
+        return f"{self.pretty_name} (calculate the occurence of elements in the reactants)"
 
     def _row_action(self, row: pd.Series) -> str:
         def count_elements(smiles, counts):
@@ -106,7 +98,7 @@ class CountElements:
                 counts[atom.GetAtomicNum()] += 1
 
         counts = defaultdict(int)
-        reactants, _, _ = row[self.in_column].split(">")
+        reactants, _, _ = split_rsmi(row[self.in_column])
         for smiles in split_smiles_from_reaction(reactants):
             count_elements(smiles, counts)
 
@@ -151,7 +143,7 @@ class HasUnmappedRadicalAtom:
         return f"{self.pretty_name} (detect if there is an unmapped radical in the reaction SMILES)"
 
     def _row_action(self, row: pd.Series) -> str:
-        reactants, _, product = row["rsmi_processed"].split(">")
+        reactants, _, product = split_rsmi(row["rsmi_processed"])
 
         react_mol = Chem.MolFromSmiles(reactants)
         if Descriptors.NumRadicalElectrons(react_mol) == 0:
@@ -206,7 +198,7 @@ class HasUnsanitizableReactants:
         if not unsanitize_atom_map_num:
             return False
 
-        _, _, product = row[self.rsmi_column].split(">")
+        _, _, product = split_rsmi(row[self.rsmi_column])
         prod_atom_map_num = set(atom_mapping_numbers(product))
         return bool(prod_atom_map_num.intersection(unsanitize_atom_map_num))
 
@@ -217,9 +209,7 @@ class HasUnsanitizableReactants:
             mol = Chem.MolFromSmiles(smiles, sanitize=False)
             if not mol:
                 continue
-            unsanitize_atom_map_num |= {
-                atom.GetAtomMapNum() for atom in mol.GetAtoms() if atom.GetAtomMapNum()
-            }
+            unsanitize_atom_map_num |= {atom.GetAtomMapNum() for atom in mol.GetAtoms() if atom.GetAtomMapNum()}
         return unsanitize_atom_map_num
 
 
@@ -291,7 +281,7 @@ class ProductAtomMappingStats:
         return f"{self.pretty_name} (count number of number of unmapped and widow product atoms)"
 
     def _row_action(self, row: pd.Series) -> str:
-        reactants, _, products = row[self.in_column].split(">")
+        reactants, _, products = split_rsmi(row[self.in_column])
         prod_mol = Chem.MolFromSmiles(products)
         nprod_atoms = prod_mol.GetNumAtoms() if prod_mol else 0
 
@@ -326,7 +316,7 @@ class ProductSize:
         return f"{self.pretty_name} (number of heavy atoms in product)"
 
     def _row_action(self, row: pd.Series) -> str:
-        _, _, products = row[self.in_column].split(">")
+        _, _, products = split_rsmi(row[self.in_column])
         products_mol = Chem.MolFromSmiles(products)
 
         if products_mol:
@@ -356,20 +346,14 @@ class PseudoReactionHash:
 
     def _row_action(self, row: pd.Series) -> str:
         def components_to_inchi(smiles):
-            mols = [
-                Chem.MolFromSmiles(smi) for smi in split_smiles_from_reaction(smiles)
-            ]
+            mols = [Chem.MolFromSmiles(smi) for smi in split_smiles_from_reaction(smiles)]
             return ".".join(sorted([Chem.MolToInchiKey(mol) for mol in mols if mol]))
 
         if self.no_reagents:
-            reactants, _, products = row[self.in_column].split(">")
-            return ">>".join(
-                [components_to_inchi(smi) for smi in [reactants, products]]
-            )
+            reactants, _, products = split_rsmi(row[self.in_column])
+            return ">>".join([components_to_inchi(smi) for smi in [reactants, products]])
 
-        return ">".join(
-            components_to_inchi(smi) for smi in row[self.in_column].split(">")
-        )
+        return ">".join(components_to_inchi(smi) for smi in split_rsmi(row[self.in_column]))
 
 
 @action
@@ -390,9 +374,7 @@ class PseudoSmilesHash:
 
     def _row_action(self, row: pd.Series) -> str:
         def components_to_inchi(smiles):
-            mols = [
-                Chem.MolFromSmiles(smi) for smi in split_smiles_from_reaction(smiles)
-            ]
+            mols = [Chem.MolFromSmiles(smi) for smi in split_smiles_from_reaction(smiles)]
             return ".".join(sorted([Chem.MolToInchiKey(mol) for mol in mols if mol]))
 
         return components_to_inchi(row[self.in_column])
@@ -415,7 +397,7 @@ class ReactantProductAtomBalance:
         return f"{self.pretty_name} (product atom count minus reactants atom count)"
 
     def _row_action(self, row: pd.Series) -> str:
-        reactants, _, products = row[self.in_column].split(">")
+        reactants, _, products = split_rsmi(row[self.in_column])
 
         reactants_mol = Chem.MolFromSmiles(reactants)
         if reactants_mol:
@@ -449,7 +431,7 @@ class ReactantSize:
         return f"{self.pretty_name} (number of heavy atoms in reactant)"
 
     def _row_action(self, row: pd.Series) -> str:
-        reactants, _, _ = row[self.in_column].split(">")
+        reactants, _, _ = split_rsmi(row[self.in_column])
         reactants_mol = Chem.MolFromSmiles(reactants)
 
         if reactants_mol:
@@ -480,7 +462,7 @@ class MaxRingNumber:
         return f"{self.pretty_name} (maximum number of rings)"
 
     def _row_action(self, row: pd.Series) -> str:
-        reactants, _, products = row[self.in_column].split(">")
+        reactants, _, products = split_rsmi(row[self.in_column])
 
         reactants_mols = [Chem.MolFromSmiles(smi) for smi in reactants.split(".")]
         nrings_reactants = [CalcNumRings(mol) for mol in reactants_mols if mol]
@@ -515,7 +497,7 @@ class RingNumberChange:
         return f"{self.pretty_name} (ring change based on number of rings)"
 
     def _row_action(self, row: pd.Series) -> str:
-        reactants, _, products = row[self.in_column].split(">")
+        reactants, _, products = split_rsmi(row[self.in_column])
         prod_mol = Chem.MolFromSmiles(products)
 
         if not prod_mol:
@@ -544,7 +526,7 @@ class RingBondMade:
         return f"{self.pretty_name} (ring change based on ring bond made)"
 
     def _row_action(self, row: pd.Series) -> str:
-        reactants, _, products = row[self.in_column].split(">")
+        reactants, _, products = split_rsmi(row[self.in_column])
 
         prod_mol = Chem.MolFromSmiles(products)
         if not prod_mol:
@@ -579,11 +561,7 @@ class RingBondMade:
 
     @staticmethod
     def _mapping_to_index(mol):
-        return {
-            atom.GetAtomMapNum(): atom.GetIdx()
-            for atom in mol.GetAtoms()
-            if atom.GetAtomMapNum()
-        }
+        return {atom.GetAtomMapNum(): atom.GetIdx() for atom in mol.GetAtoms() if atom.GetAtomMapNum()}
 
 
 @action
@@ -603,7 +581,7 @@ class RingMadeSize:
         return f"{self.pretty_name} (largest ring made)"
 
     def _row_action(self, row: pd.Series) -> str:
-        reactants, _, products = row[self.in_column].split(">")
+        reactants, _, products = split_rsmi(row[self.in_column])
 
         prod_mol = Chem.MolFromSmiles(products)
         if not prod_mol:
@@ -702,15 +680,13 @@ class StereoInvention:
         return data.assign(**{self.out_column: smiles_col})
 
     def __str__(self) -> str:
-        return (
-            f"{self.pretty_name} (Reactants with no stereo, turn into stereo compounds)"
-        )
+        return f"{self.pretty_name} (Reactants with no stereo, turn into stereo compounds)"
 
     def _has_stereo(self, smiles: str) -> bool:
         return "@" in smiles
 
     def _row_action(self, row: pd.Series) -> bool:
-        reactants, _, products = row[self.in_column].split(">")
+        reactants, _, products = split_rsmi(row[self.in_column])
 
         return self._has_stereo(products) and not self._has_stereo(reactants)
 
@@ -765,9 +741,7 @@ class StereoCentreChanges:
             product_chirality = product_chiral_flags.get(atom_map, None)
             if product_chirality != reactant_chirality:
                 output[atom_map] = (reactant_chirality, product_chirality)
-        return pd.Series(
-            {self.out_column: True, self.stereo_changes_column: json.dumps(output)}
-        )
+        return pd.Series({self.out_column: True, self.stereo_changes_column: json.dumps(output)})
 
 
 @action
@@ -792,7 +766,7 @@ class StereoHasChiralReagent:
 
     def _row_action(self, row: pd.Series) -> bool:
         smiles = row[self.in_column]
-        return "@" in smiles.split(">")[1]
+        return "@" in split_rsmi(smiles)[1]
 
 
 @action
@@ -893,8 +867,7 @@ class StereoCenterInReactantPotential:
             if any(
                 not str(info.type).startswith("Bond")
                 and info.centeredOn in centers
-                and str(reactant.GetAtomWithIdx(info.centeredOn).GetChiralTag())
-                == "CHI_UNSPECIFIED"
+                and str(reactant.GetAtomWithIdx(info.centeredOn).GetChiralTag()) == "CHI_UNSPECIFIED"
                 for info in stereo_info
             ):
                 return True
@@ -908,8 +881,7 @@ class StereoCenterInReactantPotential:
         if any(
             not str(info.type).startswith("Bond")
             and product0.GetAtomWithIdx(info.centeredOn).GetAtomMapNum() in atom_maps
-            and str(product.GetAtomWithIdx(info.centeredOn).GetChiralTag())
-            == "CHI_UNSPECIFIED"
+            and str(product.GetAtomWithIdx(info.centeredOn).GetChiralTag()) == "CHI_UNSPECIFIED"
             for info in stereo_info
         ):
             return True

@@ -29,6 +29,8 @@ Setup your python environment and then run
 
 Consult the documentation for further information.
 
+For some tasks such as atom-mapping with `rxnmapper` you need to setup additional environment and packages, see [here](https://molecularai.github.io/reaction_utils/uspto.html)
+
 ### For developers
 
 First clone the repository using Git.
@@ -37,7 +39,7 @@ Then execute the following commands in the root of the repository
 
     conda env create -f env-dev.yml
     conda activate rxn-env
-    poetry install
+    poetry install --with dev
 
 the `rxnutils` package is now installed in editable mode.
 
@@ -107,10 +109,14 @@ Please use ``black`` package for formatting, and follow ``pep8`` style guide.
 
 * [@ckannas](https://github.com/ckannas)
 * [@SGenheden](https://www.github.com/SGenheden)
-* [@anniewesterlund](https://www.github.com/anniewesterlund) 
+* [@anniewesterlund](https://www.github.com/anniewesterlund)
+* [@Lakshidaa](https://github.com/Lakshidaa) 
 * [@CBA087](https://www.github.com/CBA087) 
 * [@EBjerrum](https://www.github.com/EBjerrum)
 * [@A-Thakkar](https://www.github.com/A-Thakkar)
+* [@marcosfelt](https://github.com/marcosfelt)
+* [@asiomchen](https://github.com/asiomchen)
+* [@yujiag21](https://github.com/yujiag21/)
 
 The contributors have limited time for support questions, but please do not hesitate to submit an issue (see above).
 

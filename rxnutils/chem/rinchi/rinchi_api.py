@@ -1,20 +1,18 @@
 """Module containing an API to the Reaction InChI program"""
+
 import logging
 import os
-import sys
 import subprocess
+import sys
 import tempfile
 from collections import namedtuple
 
 from rdkit.Chem import AllChem
 
 from rxnutils.chem.rinchi import download_rinchi
-from rxnutils.chem.rinchi.download_rinchi import RInChIError, PLATFORM2FOLDER
+from rxnutils.chem.rinchi.download_rinchi import PLATFORM2FOLDER, RInChIError
 
-
-RInChIStructure = namedtuple(
-    "RInChI", "rinchi rauxinfo long_rinchikey short_rinchikey web_rinchikey"
-)
+RInChIStructure = namedtuple("RInChI", "rinchi rauxinfo long_rinchikey short_rinchikey web_rinchikey")
 
 
 def generate_rinchi(reaction_smiles: str) -> RInChIStructure:
@@ -92,6 +90,4 @@ def _rinchi_cli(rxn_file: str, options: str = None) -> RInChIStructure:
 
 
 if __name__ == "__main__":
-    import sys
-
     print(generate_rinchi(sys.argv[1]))

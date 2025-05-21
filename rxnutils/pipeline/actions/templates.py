@@ -1,16 +1,17 @@
 """Module containing template validation actions"""
+
 from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import ClassVar, Set, Sequence
+from typing import ClassVar, Sequence, Set
 
 import pandas as pd
-from rdkit import RDLogger
-from rdkit import Chem
+from rdkit import Chem, RDLogger
 from rdkit.Chem import AllChem
 
-from rxnutils.pipeline.base import action, global_apply
 from rxnutils.chem.template import ReactionTemplate
-from rxnutils.chem.utils import split_smiles_from_reaction
+from rxnutils.chem.utils import split_rsmi, split_smiles_from_reaction
+from rxnutils.pipeline.base import action, global_apply
 
 rd_logger = RDLogger.logger()
 rd_logger.setLevel(RDLogger.CRITICAL)
@@ -51,9 +52,7 @@ class CountTemplateComponents:
         )
 
     def __str__(self) -> str:
-        return (
-            f"{self.pretty_name} (counting reactants, reagents, products in template)"
-        )
+        return f"{self.pretty_name} (counting reactants, reagents, products in template)"
 
 
 @action
@@ -83,15 +82,11 @@ class RetroTemplateReproduction:
         if not isinstance(row[self.template_column], str):
             return no_oututcome_response
 
-        reactants, _, products = row[self.smiles_column].split(">")
+        reactants, _, products = split_rsmi(row[self.smiles_column])
         # Flattening the list of SMILES, i.e. intramolecular -> intermolecular,
         # because all produced templates will be intermolecular
         expected_reactants = self._smiles_to_inchiset(
-            [
-                smi
-                for reactant in split_smiles_from_reaction(reactants)
-                for smi in reactant.split(".")
-            ]
+            [smi for reactant in split_smiles_from_reaction(reactants) for smi in reactant.split(".")]
         )
         template = ReactionTemplate(row[self.template_column], direction="retro")
 

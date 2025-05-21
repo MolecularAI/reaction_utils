@@ -1,19 +1,17 @@
 """Module containing a class to handle chemical reactions"""
+
 import hashlib
-from typing import List, Tuple, Optional, Dict, Any
+from typing import Any, Dict, List, Optional, Tuple
 
 import wrapt_timeout_decorator
+from rdchiral import template_extractor as extractor
 from rdkit import Chem
 from rdkit.Chem import AllChem
-from rdchiral import template_extractor as extractor
 
-from rxnutils.chem.rinchi import rinchi_api
 from rxnutils.chem import utils
+from rxnutils.chem.rinchi import rinchi_api
 from rxnutils.chem.template import ReactionTemplate
-from rxnutils.chem.utils import (
-    reassign_rsmi_atom_mapping,
-    split_smiles_from_reaction,
-)
+from rxnutils.chem.utils import reassign_rsmi_atom_mapping, split_rsmi, split_smiles_from_reaction
 
 
 class ReactionException(Exception):
@@ -43,15 +41,9 @@ class ChemicalReaction:
         else:
             self._split_reaction()
 
-        self.reactants: List[Chem.rdchem.Mol] = extractor.mols_from_smiles_list(
-            self.reactants_list
-        )
-        self.agents: List[Chem.rdchem.Mol] = extractor.mols_from_smiles_list(
-            self.agents_list
-        )
-        self.products: List[Chem.rdchem.Mol] = extractor.mols_from_smiles_list(
-            self.products_list
-        )
+        self.reactants: List[Chem.rdchem.Mol] = extractor.mols_from_smiles_list(self.reactants_list)
+        self.agents: List[Chem.rdchem.Mol] = extractor.mols_from_smiles_list(self.agents_list)
+        self.products: List[Chem.rdchem.Mol] = extractor.mols_from_smiles_list(self.products_list)
 
         self._pseudo_rinchi: Optional[str] = None
         self._pseudo_rinchi_key: Optional[str] = None
@@ -143,15 +135,9 @@ class ChemicalReaction:
         extra_reactant_fragment = ""
         for product in self.products:
             # Get unmapped atoms
-            unmapped_ids = [
-                atom.GetIdx()
-                for atom in product.GetAtoms()
-                if not atom.HasProp("molAtomMapNumber")
-            ]
+            unmapped_ids = [atom.GetIdx() for atom in product.GetAtoms() if not atom.HasProp("molAtomMapNumber")]
             if len(unmapped_ids) > extractor.MAXIMUM_NUMBER_UNMAPPED_PRODUCT_ATOMS:
-                raise ReactionException(
-                    f"Template generation failed: too many unmapped atoms ({len(unmapped_ids)})"
-                )
+                raise ReactionException(f"Template generation failed: too many unmapped atoms ({len(unmapped_ids)})")
             # Define new atom symbols for fragment with atom maps, generalizing fully
             atom_symbols = [f"[{atom.GetSymbol()}]" for atom in product.GetAtoms()]
             # And bond symbols...
@@ -172,9 +158,7 @@ class ChemicalReaction:
         if extra_reactant_fragment:
             extra_reactant_fragment = extra_reactant_fragment[:-1]
         # Consolidate repeated fragments (stoichometry)
-        extra_reactant_fragment = ".".join(
-            sorted(list(set(extra_reactant_fragment.split("."))))
-        )
+        extra_reactant_fragment = ".".join(sorted(list(set(extra_reactant_fragment.split(".")))))
         return extra_reactant_fragment
 
     def generate_reaction_template(
@@ -198,28 +182,20 @@ class ChemicalReaction:
         :returns: the canonical and retrosynthetic templates
         """
         if not self.sanitization_check():
-            raise ReactionException(
-                "Template generation failed: sanitation check failed"
-            )
+            raise ReactionException("Template generation failed: sanitation check failed")
 
         reactants = self.reactants
         products = self.products
 
         for product in products:
-            nunmapped = sum(
-                int(not atom.HasProp("molAtomMapNumber")) for atom in product.GetAtoms()
-            )
+            nunmapped = sum(int(not atom.HasProp("molAtomMapNumber")) for atom in product.GetAtoms())
             if nunmapped > extractor.MAXIMUM_NUMBER_UNMAPPED_PRODUCT_ATOMS:
-                raise ReactionException(
-                    f"Template generation failed: too many unmapped atoms ({nunmapped})"
-                )
+                raise ReactionException(f"Template generation failed: too many unmapped atoms ({nunmapped})")
 
         if self.no_change():
             raise ReactionException("Template generation failed: no change in reaction")
         if None in reactants + products:
-            raise ReactionException(
-                "Template generation failed: None in reactants or products"
-            )
+            raise ReactionException("Template generation failed: None in reactants or products")
 
         extra_atoms = {}
         if expand_ring:
@@ -246,19 +222,13 @@ class ChemicalReaction:
             self._canonical_template = ReactionTemplate(canonical_smarts)
 
             # Retro ReactionTemplate
-            reactants_string = canonical_smarts.split(">>")[0]
-            products_string = canonical_smarts.split(">>")[1]
+            reactants_string, _, products_string = split_rsmi(canonical_smarts)
             retro_smarts = products_string + ">>" + reactants_string
             self._retro_template = ReactionTemplate(retro_smarts, "retro")
 
             # Validate ReactionTemplates
-            if not (
-                self._retro_template.rdkit_validation()
-                and self._canonical_template.rdkit_validation()
-            ):
-                raise ReactionException(
-                    "Template generation failed: RDkit validation of extracted templates failed"
-                )
+            if not (self._retro_template.rdkit_validation() and self._canonical_template.rdkit_validation()):
+                raise ReactionException("Template generation failed: RDkit validation of extracted templates failed")
         except Exception as err:
             raise ReactionException(f"Template generation failed with message: {err}")
 
@@ -288,9 +258,7 @@ class ChemicalReaction:
         :raises ReactionException: Template generation failed: Timed out
         :return: Canonical reaction template
         """
-        changed_atoms, changed_atom_tags, err = extractor.get_changed_atoms(
-            reactants=reactants, products=products
-        )
+        changed_atoms, changed_atom_tags, err = extractor.get_changed_atoms(reactants=reactants, products=products)
 
         if expand_hetero:
             for atom in changed_atoms:
@@ -305,14 +273,16 @@ class ChemicalReaction:
                 changed_atom_tags.append(atom_num)
 
         if err:
-            raise ReactionException(
-                "Template generation failed: could not obtained changed atoms"
-            )
+            raise ReactionException("Template generation failed: could not obtained changed atoms")
         if not changed_atom_tags:
             raise ReactionException("Template generation failed: no atoms changes")
 
         # Get fragments for reactants
-        (reactant_fragments, _, _,) = extractor.get_fragments_for_changed_atoms(
+        (
+            reactant_fragments,
+            _,
+            _,
+        ) = extractor.get_fragments_for_changed_atoms(
             reactants,
             changed_atom_tags,
             radius=radius,
@@ -335,11 +305,11 @@ class ChemicalReaction:
         rxn_string = f"{reactant_fragments}>>{product_fragments}"
         canonical_template = extractor.canonicalize_transform(rxn_string)
         # Change from inter-molecular to intra-molecular
-        canonical_template_split = canonical_template.split(">>")
+        canonical_template_split = split_rsmi(canonical_template)
         canonical_smarts = (
             canonical_template_split[0][1:-1].replace(").(", ".")
             + ">>"
-            + canonical_template_split[1][1:-1].replace(").(", ".")
+            + canonical_template_split[-1][1:-1].replace(").(", ".")
         )
 
         return canonical_smarts
@@ -347,9 +317,7 @@ class ChemicalReaction:
     def has_partial_mapping(self) -> bool:
         """Check product atom mapping."""
         for product in self.products:
-            sum_with = sum(
-                atom.HasProp("molAtomMapNumber") for atom in product.GetAtoms()
-            )
+            sum_with = sum(atom.HasProp("molAtomMapNumber") for atom in product.GetAtoms())
             if sum_with < product.GetNumAtoms():
                 return True
         return False
@@ -386,9 +354,7 @@ class ChemicalReaction:
 
         :return: True if all the molecule objects were successfully created, else False
         """
-        return all(
-            mol is not None for mol in self.reactants + self.agents + self.products
-        )
+        return all(mol is not None for mol in self.reactants + self.agents + self.products)
 
     def canonical_template_generate_outcome(self) -> bool:
         """Checks whether the canonical template produces"""
@@ -433,14 +399,10 @@ class ChemicalReaction:
         for outcome_set in retro_outcomes:
             if not extractor.USE_STEREOCHEMISTRY:
                 outcome_set_inchi = [
-                    Chem.MolToInchi(Chem.MolFromSmiles(outcome.replace("@", "")))
-                    for outcome in outcome_set
+                    Chem.MolToInchi(Chem.MolFromSmiles(outcome.replace("@", ""))) for outcome in outcome_set
                 ]
             else:
-                outcome_set_inchi = [
-                    Chem.MolToInchi(Chem.MolFromSmiles(outcome))
-                    for outcome in outcome_set
-                ]
+                outcome_set_inchi = [Chem.MolToInchi(Chem.MolFromSmiles(outcome)) for outcome in outcome_set]
             precursor_set.append(outcome_set_inchi)
 
         assessment = []
@@ -489,14 +451,12 @@ class ChemicalReaction:
             num_atoms_ = 0
             num_mapped_atoms_ = 0
             if mol:
-                num_mapped_atoms_ = sum(
-                    atom.HasProp("molAtomMapNumber") for atom in mol.GetAtoms()
-                )
+                num_mapped_atoms_ = sum(atom.HasProp("molAtomMapNumber") for atom in mol.GetAtoms())
                 num_atoms_ = mol.GetNumAtoms()
 
             return num_atoms_, num_mapped_atoms_
 
-        split_reaction = self.rsmi.split(">")
+        split_reaction = split_rsmi(self.rsmi)
         self.reactants_smiles = extractor.replace_deuterated(split_reaction[0])
         self.agents_smiles = extractor.replace_deuterated(split_reaction[1])
         self.products_smiles = extractor.replace_deuterated(split_reaction[2])
@@ -525,15 +485,11 @@ class ChemicalReaction:
 
         # Update reactants with molecules from agents
         if add_reactants:
-            self.reactants_smiles = ".".join(
-                [self.reactants_smiles, self._join_components(add_reactants)]
-            )
+            self.reactants_smiles = ".".join([self.reactants_smiles, self._join_components(add_reactants)])
         # Update agents with molecules from reactants
         if add_agents:
             if self.agents_smiles:
-                self.agents_smiles = ".".join(
-                    [self.agents_smiles, self._join_components(add_agents)]
-                )
+                self.agents_smiles = ".".join([self.agents_smiles, self._join_components(add_agents)])
             else:
                 self.agents_smiles = self._join_components(add_agents)
 
@@ -546,9 +502,7 @@ class ChemicalReaction:
         self.products_smiles = self._join_components(neutral_products)
 
         # Reaction SMILES
-        self.rsmi = ">".join(
-            [self.reactants_smiles, self.agents_smiles, self.products_smiles]
-        )
+        self.rsmi = ">".join([self.reactants_smiles, self.agents_smiles, self.products_smiles])
 
         # Clean Reaction SMILES by RDKit
         reaction = AllChem.ReactionFromSmarts(self.rsmi)
@@ -569,11 +523,7 @@ class ChemicalReaction:
         def find_ring_atom_maps(mol):
             ring_atoms_sets = []
             for ring in mol.GetRingInfo().AtomRings():
-                ring_atoms_sets.append(
-                    tuple(
-                        sorted(mol.GetAtomWithIdx(idx).GetAtomMapNum() for idx in ring)
-                    )
-                )
+                ring_atoms_sets.append(tuple(sorted(mol.GetAtomWithIdx(idx).GetAtomMapNum() for idx in ring)))
             return ring_atoms_sets
 
         reactant_ring_atom_sets = []
@@ -595,13 +545,11 @@ class ChemicalReaction:
         Stores:
             rsmi (str): Reaction SMILES in the form mapped_reactants>unmapped_reagents>products
         """
-        split_reaction = self.rsmi.split(">")
+        split_reaction = split_rsmi(self.rsmi)
         self.reactants_smiles = extractor.replace_deuterated(split_reaction[0])
         self.agents_smiles = extractor.replace_deuterated(split_reaction[1])
         self.products_smiles = extractor.replace_deuterated(split_reaction[2])
-        self.rsmi = ">".join(
-            [self.reactants_smiles, self.agents_smiles, self.products_smiles]
-        )
+        self.rsmi = ">".join([self.reactants_smiles, self.agents_smiles, self.products_smiles])
         self.clean_rsmi = self.rsmi
 
     def _make_pseudo_rinchi(self) -> str:
@@ -611,16 +559,12 @@ class ChemicalReaction:
         :rtype: str
         """
         reactant_inchi = (
-            Chem.MolToInchi(
-                Chem.MolFromSmiles(utils.remove_atom_mapping(self.reactants_smiles))
-            )
+            Chem.MolToInchi(Chem.MolFromSmiles(utils.remove_atom_mapping(self.reactants_smiles)))
             if self.reactants_smiles
             else ""
         )
         product_inchi = (
-            Chem.MolToInchi(
-                Chem.MolFromSmiles(utils.remove_atom_mapping(self.products_smiles))
-            )
+            Chem.MolToInchi(Chem.MolFromSmiles(utils.remove_atom_mapping(self.products_smiles)))
             if self.products_smiles
             else ""
         )
@@ -633,11 +577,7 @@ class ChemicalReaction:
         :return: Pseudo Reaction InChI-Key
         :rtype: str
         """
-        reactant_inchi_key = Chem.MolToInchiKey(
-            Chem.MolFromSmiles(utils.remove_atom_mapping(self.reactants_smiles))
-        )
-        product_inchi_key = Chem.MolToInchiKey(
-            Chem.MolFromSmiles(utils.remove_atom_mapping(self.products_smiles))
-        )
+        reactant_inchi_key = Chem.MolToInchiKey(Chem.MolFromSmiles(utils.remove_atom_mapping(self.reactants_smiles)))
+        product_inchi_key = Chem.MolToInchiKey(Chem.MolFromSmiles(utils.remove_atom_mapping(self.products_smiles)))
         concatenated_rinchi_key = "++".join([reactant_inchi_key, product_inchi_key])
         return concatenated_rinchi_key

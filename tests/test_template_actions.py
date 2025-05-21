@@ -1,10 +1,7 @@
 import pandas as pd
 import pytest
 
-from rxnutils.pipeline.actions.templates import (
-    CountTemplateComponents,
-    RetroTemplateReproduction,
-)
+from rxnutils.pipeline.actions.templates import CountTemplateComponents, RetroTemplateReproduction
 from rxnutils.pipeline.base import global_apply
 
 global_apply.max_workers = 1
@@ -26,9 +23,7 @@ def test_count_components(make_template_dataframe):
 
 
 def test_template_reproduction(make_template_dataframe):
-    action = RetroTemplateReproduction(
-        template_column="retrotemplate", smiles_column="rsmi"
-    )
+    action = RetroTemplateReproduction(template_column="retrotemplate", smiles_column="rsmi")
     df = make_template_dataframe
 
     df2 = action(df)

@@ -1,13 +1,14 @@
 """Routines for reading routes from various formats"""
+
 import copy
-from typing import Sequence, List, Dict, Any
+from typing import Any, Dict, List, Sequence
 
 import pandas as pd
 from rdkit import Chem
+from rdkit.Chem import AllChem
 
-from rxnutils.routes.base import SynthesisRoute
-from rxnutils.routes.base import smiles2inchikey
-from rxnutils.chem.utils import split_smiles_from_reaction, join_smiles_from_reaction
+from rxnutils.chem.utils import join_smiles_from_reaction, split_rsmi, split_smiles_from_reaction
+from rxnutils.routes.base import SynthesisRoute, smiles2inchikey
 
 
 def read_reaction_lists(filename: str) -> List[SynthesisRoute]:
@@ -51,12 +52,21 @@ def read_aizynthcli_dataframe(data: pd.DataFrame) -> pd.Series:
     """
 
     def read_row(row: pd.Series) -> List[SynthesisRoute]:
-        trees = [copy.deepcopy(tree) for tree in row.trees]
-        for tree in trees:
-            _transform_retrosynthesis_atom_mapping(tree)
-        return [SynthesisRoute(tree) for tree in trees]
+        return [read_aizynthfinder_dict(tree) for tree in row.trees]
 
     return data.apply(read_row, axis=1)
+
+
+def read_aizynthfinder_dict(tree: Dict[str, Any]) -> SynthesisRoute:
+    """
+    Read a single aizynthfinder dictionary
+
+    :param tree: the aizynthfinder structure
+    :return: the created routes
+    """
+    dict_ = copy.deepcopy(tree)
+    _transform_retrosynthesis_atom_mapping(dict_)
+    return SynthesisRoute(dict_)
 
 
 def read_reactions_dataframe(
@@ -96,12 +106,11 @@ def read_reactions_dataframe(
         return route
 
     metadata_columns = metadata_columns or []
-    return data.groupby(group_by).apply(reaction_dataframe2routes)
+    grouped = data.groupby(group_by)[data.columns.to_list()]
+    return grouped.apply(reaction_dataframe2routes)
 
 
-def reactions2route(
-    reactions: Sequence[str], metadata: Sequence[Dict[str, Any]] = None
-) -> SynthesisRoute:
+def reactions2route(reactions: Sequence[str], metadata: Sequence[Dict[str, Any]] = None) -> SynthesisRoute:
     """
     Convert a list of reactions into a retrosynthesis tree
 
@@ -121,11 +130,7 @@ def reactions2route(
         reaction = product2reaction.get(product_inchi)
         if reaction is not None:
             metadata = dict(reaction["metadata"])
-            metadata["reaction_smiles"] = (
-                join_smiles_from_reaction(reaction["reactants"])
-                + ">>"
-                + reaction["product"]
-            )
+            metadata["reaction_smiles"] = join_smiles_from_reaction(reaction["reactants"]) + ">>" + reaction["product"]
             dict_["children"] = [
                 {
                     "type": "reaction",
@@ -140,7 +145,7 @@ def reactions2route(
     product2reaction = {}
     inchi_map = {}
     for reaction, meta in zip(reactions, metadata):
-        reactants_smiles, _, product_smiles = reaction.split(">")
+        reactants_smiles, _, product_smiles = split_rsmi(reaction)
         product_smiles = Chem.CanonSmiles(product_smiles)
         partial_product_inchi = smiles2inchikey(product_smiles, ignore_stereo=True)
         inchi_map[partial_product_inchi] = product_smiles
@@ -149,9 +154,7 @@ def reactions2route(
             reactants = [Chem.CanonSmiles(smi) for smi in reactants]
         except:
             raise ValueError(f"Cannot canonicalize SMILES: {reactants_smiles}")
-        all_reactants = all_reactants.union(
-            [smiles2inchikey(smi, ignore_stereo=True) for smi in reactants]
-        )
+        all_reactants = all_reactants.union([smiles2inchikey(smi, ignore_stereo=True) for smi in reactants])
         product2reaction[partial_product_inchi] = {
             "smiles": reaction,
             "product": product_smiles,
@@ -161,17 +164,48 @@ def reactions2route(
 
     only_products = set(product2reaction.keys()) - all_reactants
     if len(only_products) != 1:
-        raise ValueError(
-            f"Could not identify one and only one target product: {only_products}"
-        )
+        raise ValueError(f"Could not identify one and only one target product: {only_products}")
 
     target_inchi = list(only_products)[0]
     return SynthesisRoute(make_dict(inchi_map[target_inchi]))
 
 
+def read_rdf_file(filename: str) -> SynthesisRoute:
+    def finish_reaction():
+        if not rxnblock:
+            return
+        rxn = AllChem.ReactionFromRxnBlock("\n".join(rxnblock), sanitize=False, strictParsing=False)
+        reactions.append(AllChem.ReactionToSmiles(rxn))
+
+    with open(filename, "r") as fileobj:
+        lines = fileobj.read().splitlines()
+
+    reactions = []
+    rxnblock = []
+    read_rxn = skip_entry = False
+    for line in lines:
+        if line.startswith("$RFMT"):
+            read_rxn = skip_entry = False
+            finish_reaction()
+            rxnblock = []
+        elif line.startswith(("$MFMT", "$DATUM")):
+            # Ignore MFMT and DATUM entries for now
+            skip_entry = True
+        elif skip_entry:
+            continue
+        elif line.startswith("$RXN"):
+            rxnblock = [line]
+            read_rxn = True
+        elif read_rxn:
+            rxnblock.append(line)
+    finish_reaction()
+
+    return reactions2route(reactions)
+
+
 def _transform_retrosynthesis_atom_mapping(tree_dict: Dict[str, Any]) -> None:
     """
-    Routes output from AiZynth have atom-mapping from the template-based model,
+    Routes output from AiZynth has atom-mapping from the template-based model,
     but it needs to be processed
     1. Remove atom-mapping from reactants not in product
     2. Reverse reaction SMILES
@@ -182,11 +216,9 @@ def _transform_retrosynthesis_atom_mapping(tree_dict: Dict[str, Any]) -> None:
     reaction_dict = tree_dict["children"][0]
     mapped_rsmi = reaction_dict["metadata"]["mapped_reaction_smiles"]
 
-    product, _, reactants = mapped_rsmi.split(">")
+    product, _, reactants = split_rsmi(mapped_rsmi)
     product_mol = Chem.MolFromSmiles(product)
-    product_maps = {
-        atom.GetAtomMapNum() for atom in product_mol.GetAtoms() if atom.GetAtomMapNum()
-    }
+    product_maps = {atom.GetAtomMapNum() for atom in product_mol.GetAtoms() if atom.GetAtomMapNum()}
     reactant_mols = []
     for smiles in reactants.split("."):
         mol = Chem.MolFromSmiles(smiles)

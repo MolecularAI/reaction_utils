@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from typing import Any, List, Optional, Tuple
 
+import numpy as np
 import pandas as pd
 from scipy import sparse
 
@@ -56,6 +57,27 @@ def combine_csv_batches(filename: str, nbatches: int) -> None:
     combine_batches(filename, nbatches, _read_csv, _write_csv, _combine_csv)
 
 
+def combine_numpy_array_batches(filename: str, nbatches: int) -> None:
+    """
+    Combine numpy array batches to one master file
+    The batch files are removed from disc
+    :param filename: the filename of the master file
+    :param nbatches: the number of batches
+    """
+
+    def _read_array(filename: str, idx: int) -> Any:
+        filename2 = filename.replace(".npz", f".{idx}.npz")
+        return np.load(filename2)["arr_0"], filename2
+
+    def _write_array(data: np.ndarray, filename: str) -> None:
+        np.savez(filename, data, compressed=True)
+
+    def _combine_array(data: np.ndarray, temp_data: np.ndarray) -> np.ndarray:
+        return np.hstack([data, temp_data])
+
+    return combine_batches(filename, nbatches, _read_array, _write_array, _combine_array)
+
+
 def combine_sparse_matrix_batches(filename: str, nbatches: int) -> None:
     """
     Combine sparse matrix batches to one master file
@@ -98,9 +120,8 @@ def create_csv_batches(
     if output_filename and Path(output_filename).exists():
         return [(-1, None, None)]
 
-    file_size = (
-        nlines(filename) - 1
-    )  # Header should not be counted for batch size calculations
+    file_size = nlines(filename) - 1  # Header should not be counted for batch size calculations
+    nbatches = min(file_size, nbatches)  # Adjust the number of batches to the size of the file
     batch_size, remainder = divmod(file_size, nbatches)
     stop = 1  # 1-indexed to account for header in the .csv file
     batches = []
@@ -111,9 +132,7 @@ def create_csv_batches(
     return batches
 
 
-def read_csv_batch(
-    filename: str, batch: Tuple[int, ...] = None, **kwargs: Any
-) -> pd.DataFrame:
+def read_csv_batch(filename: str, batch: Tuple[int, ...] = None, **kwargs: Any) -> pd.DataFrame:
     """
     Read parts of a CSV file as specified by a batch
 

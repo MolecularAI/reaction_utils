@@ -1,4 +1,5 @@
 """Module containing actions on reactions that modify the reaction in some way"""
+
 from __future__ import annotations
 
 import os
@@ -14,13 +15,17 @@ import pandas as pd
 from rdkit import Chem, RDLogger
 from rdkit.Chem import RDConfig
 
+from rxnutils.chem.disconnection_sites.atom_map_tagging import atom_map_tag_products
+from rxnutils.chem.disconnection_sites.tag_converting import convert_atom_map_tag
 from rxnutils.chem.utils import (
     atom_mapping_numbers,
-    neutralize_molecules,
-    remove_atom_mapping,
     desalt_molecules,
-    split_smiles_from_reaction,
     join_smiles_from_reaction,
+    neutralize_molecules,
+    recreate_rsmi,
+    remove_atom_mapping,
+    split_rsmi,
+    split_smiles_from_reaction,
 )
 from rxnutils.pipeline.base import ReactionActionMixIn, action, global_apply
 
@@ -28,12 +33,9 @@ CONTRIB_INSTALLED = os.path.exists(RDConfig.RDContribDir)
 if CONTRIB_INSTALLED:
     # RDKit contrib is not default part of PYTHONPATH
     sys.path.append(RDConfig.RDContribDir)
-    sys.path.append(
-        f"{RDConfig.RDContribDir}/RxnRoleAssignment"
-    )  # to make Nadines code import "utils"
+    sys.path.append(f"{RDConfig.RDContribDir}/RxnRoleAssignment")  # to make Nadines code import "utils"
     # fmt: off
-    from RxnRoleAssignment.identifyReactants import \
-        reassignReactionRoles  # pylint: disable=all # noqa
+    from RxnRoleAssignment.identifyReactants import reassignReactionRoles  # pylint: disable=all # noqa
 
     # fmt: on
 
@@ -57,16 +59,10 @@ class DesaltMolecules(ReactionActionMixIn):
 
     def _apply_row(self, row: pd.Series) -> pd.Series:
         reactants_list, reagents_list, products_list = self.split_lists(row)
-        reactants_list = desalt_molecules(
-            reactants_list, keep_something=self.keep_something
-        )
+        reactants_list = desalt_molecules(reactants_list, keep_something=self.keep_something)
         if reagents_list:
-            reagents_list = desalt_molecules(
-                reagents_list, keep_something=self.keep_something
-            )
-        products_list = desalt_molecules(
-            products_list, keep_something=self.keep_something
-        )
+            reagents_list = desalt_molecules(reagents_list, keep_something=self.keep_something)
+        products_list = desalt_molecules(products_list, keep_something=self.keep_something)
         return self.join_lists(reactants_list, reagents_list, products_list)
 
     def __str__(self) -> str:
@@ -90,11 +86,13 @@ class NameRxn:
         data[self.in_column].to_csv(infile, index=False, header=False)
         subprocess.call(["namerxn"] + self.options.split() + [infile, outfile])
         if not os.path.exists(outfile) or os.path.getsize(outfile) == 0:
-            raise FileNotFoundError(
-                "Could not produce namerxn output. Make sure 'namerxn' program is in path"
-            )
+            raise FileNotFoundError("Could not produce namerxn output. Make sure 'namerxn' program is in path")
+        # Set the data types to 'str' classification id must be a string
         namerxn_data = pd.read_csv(
-            outfile, sep=" ", names=[self.nm_rxn_column, self.nmc_column]
+            outfile,
+            sep=" ",
+            names=[self.nm_rxn_column, self.nmc_column],
+            dtype=str,
         )
         return data.assign(**{col: namerxn_data[col] for col in namerxn_data.columns})
 
@@ -146,16 +144,12 @@ class ReactantsToReagents(ReactionActionMixIn):
     def _row_action(self, row: pd.Series) -> str:
         reactants_list_old, reagents_list, products_list = self.split_lists(row)
 
-        product_indices = {
-            idx for smi in products_list for idx in atom_mapping_numbers(smi)
-        }
+        product_indices = {idx for smi in products_list for idx in atom_mapping_numbers(smi)}
 
         reactants_list = []
         for reactant in reactants_list_old:
             reactant_indices = atom_mapping_numbers(reactant)
-            if not reactant_indices or not any(
-                idx in product_indices for idx in reactant_indices
-            ):
+            if not reactant_indices or not any(idx in product_indices for idx in reactant_indices):
                 reagents_list.append(reactant)
             else:
                 reactants_list.append(reactant)
@@ -179,7 +173,7 @@ class ReagentsToReactants:
         return f"{self.pretty_name} (putting all reagents to reactants)"
 
     def _row_action(self, row: pd.Series) -> str:
-        reactants, reagents, products = row[self.in_column].split(">")
+        reactants, reagents, products = split_rsmi(row[self.in_column])
         if reagents:
             reactants = ".".join([reactants, reagents])
         return reactants + ">>" + products
@@ -203,15 +197,9 @@ class RemoveAtomMapping(ReactionActionMixIn):
 
     def _row_action(self, row: pd.Series) -> str:
         reactants_list, reagents_list, products_list = self.split_lists(row)
-        reactants_list = [
-            remove_atom_mapping(smi, sanitize=False) for smi in reactants_list
-        ]
-        reagents_list = [
-            remove_atom_mapping(smi, sanitize=False) for smi in reagents_list
-        ]
-        products_list = [
-            remove_atom_mapping(smi, sanitize=False) for smi in products_list
-        ]
+        reactants_list = [remove_atom_mapping(smi, sanitize=False) for smi in reactants_list]
+        reagents_list = [remove_atom_mapping(smi, sanitize=False) for smi in reagents_list]
+        products_list = [remove_atom_mapping(smi, sanitize=False) for smi in products_list]
 
         return self.join_lists(reactants_list, reagents_list, products_list)
 
@@ -269,18 +257,16 @@ class IsotopeInfo:
     in_column: str
     isotope_column: str = "Isotope"
     out_column: str = "RxnSmilesWithoutIsotopes"
-    match_regex: str = (
-        r"\[(?P<mass>[0-9]+)(?P<symbol>[A-Za-z][a-z]*)(?P<spec>[^\]]+)*\]"
-    )
+    match_regex: str = r"\[(?P<mass>[0-9]+)(?P<symbol>[A-Za-z][a-z]*)(?P<spec>[^\]]+)*\]"
     sub_regex: str = r"[\g<symbol>\g<spec>]"
 
     def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
         isotop_info = data[self.in_column].str.extract(self.match_regex)
-        isotop_col = isotop_info.mass + isotop_info.symbol
-        rsmi_col = data[self.in_column].str.replace(self.match_regex, self.sub_regex)
-        return data.assign(
-            **{self.isotope_column: isotop_col, self.out_column: rsmi_col}
+        isotop_col = isotop_info["mass"] + isotop_info["symbol"]
+        rsmi_col = data[self.in_column].str.replace(
+            self.match_regex, self.sub_regex, regex=True
         )
+        return data.assign(**{self.isotope_column: isotop_col, self.out_column: rsmi_col})
 
     def __str__(self) -> str:
         return f"{self.pretty_name} (extract and remove isotope information from reactions)"
@@ -314,9 +300,7 @@ class RemoveExtraAtomMapping(ReactionActionMixIn):
 
         reactants_list, reagents_list, products_list = self.split_lists(row)
 
-        product_indices = {
-            idx for smi in products_list for idx in atom_mapping_numbers(smi)
-        }
+        product_indices = {idx for smi in products_list for idx in atom_mapping_numbers(smi)}
 
         reactants_list = [reassign_atom_mapping(smi) for smi in reactants_list]
         reagents_list = [reassign_atom_mapping(smi) for smi in reagents_list]
@@ -352,9 +336,7 @@ class RemoveUnchangedProducts(ReactionActionMixIn):
 
         new_products = []
         for product, product_smi in zip(products_mols, products_list):
-            matches = [
-                self._is_equal(product, r) for r in reactants_mols + reagents_mols
-            ]
+            matches = [self._is_equal(product, r) for r in reactants_mols + reagents_mols]
             if not any(matches):
                 new_products.append(product_smi)
 
@@ -420,9 +402,7 @@ class RemoveUnsanitizable(ReactionActionMixIn):
         return pd.Series({"rxn_smi": rxn_smi, "bad_smiles": bad_smiles})
 
     def __str__(self) -> str:
-        return (
-            f"{self.pretty_name} (removing molecules that is not sanitizable by RDKit)"
-        )
+        return f"{self.pretty_name} (removing molecules that is not sanitizable by RDKit)"
 
 
 @action
@@ -436,15 +416,11 @@ class RDKitRxnRoles:
 
     def __post_init__(self):
         if not CONTRIB_INSTALLED:
-            raise ImportError(
-                "This action cannot be used because the RDKit Contrib folder is not installed"
-            )
+            raise ImportError("This action cannot be used because the RDKit Contrib folder is not installed")
 
     def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
 
-        smiles_col = global_apply(
-            data, lambda row: reassignReactionRoles(row[self.in_column]), axis=1
-        )
+        smiles_col = global_apply(data, lambda row: reassignReactionRoles(row[self.in_column]), axis=1)
         return data.assign(**{self.out_column: smiles_col})
 
     def __str__(self) -> str:
@@ -464,9 +440,7 @@ class RxnMapper:
     pretty_name: ClassVar[str] = "rxnmapper"
     in_column: str
     out_column: str = "RxnmapperRxnSmiles"
-    rxnmapper_command: str = "conda run -p ${RXNMAPPER_ENV_PATH} python " + str(
-        _MAP_SCRIPT
-    )
+    rxnmapper_command: str = "conda run -p ${RXNMAPPER_ENV_PATH} python " + str(_MAP_SCRIPT)
 
     def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
         new_column = self._do_action(data[self.in_column])
@@ -475,7 +449,9 @@ class RxnMapper:
     def _do_action(self, column: pd.Series) -> pd.Series:
         input_handle, input_path = tempfile.mkstemp(suffix=".csv")
         output_handle, output_path = tempfile.mkstemp(suffix=".csv")
-        column.to_csv(input_path, sep="\t", index=False)
+        # Recreate Reaction SMILES by removing intra-molecular complexes
+        tmp_column = column.apply(recreate_rsmi)
+        tmp_column.to_csv(input_path, sep="\t", index=False)
 
         cmd = self.rxnmapper_command
         if "CONDA_PATH" in os.environ:
@@ -529,18 +505,72 @@ class SplitReaction(ReactionActionMixIn):
                     self.out_columns[2]: new_columns.products,
                 }
             )
-        raise ValueError(
-            f"Don't know what to return with {len(self.out_columns)} output columns"
-        )
+        raise ValueError(f"Don't know what to return with {len(self.out_columns)} output columns")
 
     def __str__(self) -> str:
         return f"{self.pretty_name} (rxn => reactants, [reagents], products)"
 
     def _apply_row(self, row: pd.Series) -> pd.Series:
         reactants, reagents, products = self.split_smiles(row)
-        return pd.Series(
-            {"reactants": reactants, "reagents": reagents, "products": products}
+        return pd.Series({"reactants": reactants, "reagents": reagents, "products": products})
+
+
+@action
+@dataclass
+class AtomMapTagDisconnectionSite(ReactionActionMixIn):
+    """Action for tagging disconnection site in products with atom-map '[<atom>:1]'."""
+
+    pretty_name: ClassVar[str] = "atom_map_tag_disconnection_site"
+    in_column: str = "RxnSmilesClean"
+    out_column: str = "products_atom_map_tagged"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        smiles_col = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{self.out_column: smiles_col})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (tag disconnection sites in products with '[<atom>:1]')"
+
+    def _row_action(self, row: pd.Series) -> str:
+        return atom_map_tag_products(row[self.in_column])
+
+
+@action
+@dataclass
+class ConvertAtomMapDisconnectionTag(ReactionActionMixIn):
+    """Action for converting atom-map tagging to exclamation mark tagging.
+
+    yaml example:
+
+    convert_atom_map_disconnection_tag:
+        in_column_tagged: products_atom_map_tagged
+        in_column_untagged: products
+        out_column_tagged: products_tagged
+        out_column_reconstructed: products_reconstructed
+    """
+
+    pretty_name: ClassVar[str] = "convert_atom_map_disconnection_tag"
+    in_column: str = "products_atom_map_tagged"
+    out_column_tagged: str = "products_tagged"
+    out_column_reconstructed: str = "products_reconstructed"
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        smiles_tagged_col = global_apply(data, self._row_action, axis=1)
+        smiles_reconstructed_col = smiles_tagged_col.str.replace("!", "")
+
+        return data.assign(
+            **{
+                self.out_column_tagged: smiles_tagged_col,
+                self.out_column_reconstructed: smiles_reconstructed_col,
+            }
         )
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (convert disconnection tagging '[<atom>:1]' to '<atom>!')"
+
+    def _row_action(self, row: pd.Series) -> str:
+        product_tagged = convert_atom_map_tag(row[self.in_column])
+        return product_tagged
 
 
 @action

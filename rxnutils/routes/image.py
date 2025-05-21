@@ -1,5 +1,6 @@
 """ This module contains a collection of routines to produce pretty images
 """
+
 from __future__ import annotations
 
 import io
@@ -11,24 +12,14 @@ from rdkit.Chem import Draw
 
 if TYPE_CHECKING:
     # pylint: disable=ungrouped-imports
-    from typing import (
-        Any,
-        Optional,
-        Dict,
-        List,
-        Sequence,
-        Tuple,
-        Union,
-    )
+    from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 
     PilColor = Union[str, Tuple[int, int, int]]
     FrameColors = Optional[Dict[bool, PilColor]]
     from PIL.Image import Image as PilImage
 
 
-def molecule_to_image(
-    mol: Chem.rdchem.Mol, frame_color: PilColor, size: int = 300
-) -> PilImage:
+def molecule_to_image(mol: Chem.rdchem.Mol, frame_color: PilColor, size: int = 300) -> PilImage:
     """
     Create a pretty image of a molecule,
     with a colored frame around it
@@ -47,6 +38,7 @@ def molecules_to_images(
     mols: Sequence[Chem.rdchem.Mol],
     frame_colors: Sequence[PilColor],
     size: int = 300,
+    draw_kwargs: Dict[str, Any] = None,
 ) -> List[PilImage]:
     """
     Create pretty images of molecules with a colored frame around each one of them.
@@ -56,13 +48,11 @@ def molecules_to_images(
     :param smiles_list: the molecules
     :param frame_colors: the color of the frame for each molecule
     :param size: the sub-image size
+    :param draw_kwargs: additional keyword-arguments sent to `MolsToGridImage`
     :return: the produced images
     """
-    all_mols = Draw.MolsToGridImage(
-        mols,
-        molsPerRow=len(mols),
-        subImgSize=(size, size),
-    )
+    draw_kwargs = draw_kwargs or {}
+    all_mols = Draw.MolsToGridImage(mols, molsPerRow=len(mols), subImgSize=(size, size), **draw_kwargs)
     if not hasattr(all_mols, "crop"):  # Is not a PIL image
         fileobj = io.BytesIO(all_mols.data)
         all_mols = Image.open(fileobj)
@@ -116,9 +106,7 @@ def crop_image(img: PilImage, margin: int = 20) -> PilImage:
     return out
 
 
-def draw_rounded_rectangle(
-    img: PilImage, color: PilColor, arc_size: int = 20
-) -> PilImage:
+def draw_rounded_rectangle(img: PilImage, color: PilColor, arc_size: int = 20) -> PilImage:
     """
     Draw a rounded rectangle around an image
 
@@ -153,6 +141,9 @@ class RouteImageFactory:
     :param in_stock_colors: the colors around molecules, defaults to {True: "green", False: "orange"}
     :param show_all: if True, also show nodes that are marked as hidden
     :param margin: the margin between images
+    :param mol_size: the size of the molecule
+    :param mol_draw_kwargs: additional arguments sent to the drawing routine
+    :param replace_mol_func: an optional function to replace molecule images
     """
 
     def __init__(
@@ -161,6 +152,9 @@ class RouteImageFactory:
         in_stock_colors: FrameColors = None,
         show_all: bool = True,
         margin: int = 100,
+        mol_size: int = 300,
+        mol_draw_kwargs: Dict[str, Any] = None,
+        replace_mol_func: Callable[[Dict[str, Any]], None] = None,
     ) -> None:
         in_stock_colors = in_stock_colors or {
             True: "green",
@@ -172,9 +166,13 @@ class RouteImageFactory:
         self._stock_lookup: Dict[str, Any] = {}
         self._mol_lookup: Dict[str, Any] = {}
         self._extract_molecules(route)
+        if replace_mol_func is not None:
+            replace_mol_func(self._mol_lookup)
         images = molecules_to_images(
             list(self._mol_lookup.values()),
             [in_stock_colors[val] for val in self._stock_lookup.values()],
+            size=mol_size,
+            draw_kwargs=mol_draw_kwargs or {},
         )
         self._image_lookup = dict(zip(self._mol_lookup.keys(), images))
 
@@ -183,8 +181,7 @@ class RouteImageFactory:
 
         pos0 = (
             self._mol_tree["eff_width"] - self._mol_tree["image"].width + self.margin,
-            int(self._mol_tree["eff_height"] * 0.5)
-            - int(self._mol_tree["image"].height * 0.5),
+            int(self._mol_tree["eff_height"] * 0.5) - int(self._mol_tree["image"].height * 0.5),
         )
         self._add_pos(self._mol_tree, pos0)
 
@@ -202,13 +199,9 @@ class RouteImageFactory:
         for child in children:
             self._add_effective_size(child)
         if children:
-            tree_dict["eff_height"] = sum(
-                child["eff_height"] for child in children
-            ) + self.margin * (len(children) - 1)
+            tree_dict["eff_height"] = sum(child["eff_height"] for child in children) + self.margin * (len(children) - 1)
             tree_dict["eff_width"] = (
-                max(child["eff_width"] for child in children)
-                + tree_dict["image"].size[0]
-                + self.margin
+                max(child["eff_width"] for child in children) + tree_dict["image"].size[0] + self.margin
             )
         else:
             tree_dict["eff_height"] = tree_dict["image"].size[1]
@@ -221,15 +214,9 @@ class RouteImageFactory:
         if not children:
             return
 
-        mid_y = pos[1] + int(
-            tree_dict["image"].height * 0.5
-        )  # Mid-point of image along y
-        children_height = sum(
-            child["eff_height"] for child in children
-        ) + self.margin * (len(children) - 1)
-        childen_leftmost = min(
-            pos[0] - self.margin - child["image"].width for child in children
-        )
+        mid_y = pos[1] + int(tree_dict["image"].height * 0.5)  # Mid-point of image along y
+        children_height = sum(child["eff_height"] for child in children) + self.margin * (len(children) - 1)
+        childen_leftmost = min(pos[0] - self.margin - child["image"].width for child in children)
         child_y = mid_y - int(children_height * 0.5)  # Top-most edge of children
         child_ys = []
         # Now compute first guess of y-pos for children
@@ -245,9 +232,7 @@ class RouteImageFactory:
             if not child.get("children") and idx == 0 and len(children) > 1:
                 child_y = child_ys[idx + 1] - self.margin - child["image"].height
             elif not child.get("children") and idx > 0:
-                child_y = (
-                    child_ys[idx - 1] + self.margin + children[idx - 1]["image"].height
-                )
+                child_y = child_ys[idx - 1] + self.margin + children[idx - 1]["image"].height
             self._add_pos(child, (child_x, child_y))
 
     def _extract_mol_tree(self, tree_dict: Dict[str, Any]) -> Dict[str, Any]:
@@ -266,9 +251,7 @@ class RouteImageFactory:
     def _extract_molecules(self, tree_dict: Dict[str, Any]) -> None:
         if tree_dict["type"] == "mol":
             self._stock_lookup[tree_dict["smiles"]] = tree_dict.get("in_stock", False)
-            self._mol_lookup[tree_dict["smiles"]] = Chem.MolFromSmiles(
-                tree_dict["smiles"]
-            )
+            self._mol_lookup[tree_dict["smiles"]] = Chem.MolFromSmiles(tree_dict["smiles"])
         for child in tree_dict.get("children", []):
             self._extract_molecules(child)
 
@@ -297,6 +280,4 @@ class RouteImageFactory:
                 ),
                 fill="black",
             )
-        self._draw.ellipse(
-            (mid_x - 8, mid_y - 8, mid_x + 8, mid_y + 8), fill="black", outline="black"
-        )
+        self._draw.ellipse((mid_x - 8, mid_y - 8, mid_x + 8, mid_y + 8), fill="black", outline="black")
