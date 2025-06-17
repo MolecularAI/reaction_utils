@@ -6,10 +6,20 @@ from typing import Any, Callable, Dict, List, Tuple
 import numpy as np
 
 from rxnutils.routes.base import SynthesisRoute
-from rxnutils.routes.deepset.scoring import DeepsetModelClient  # noqa
-from rxnutils.routes.deepset.scoring import deepset_route_score
-from rxnutils.routes.retro_bleu.scoring import ngram_overlap_score  # noqa
-from rxnutils.routes.retro_bleu.scoring import retro_bleu_score
+from rxnutils.routes.chemformer_feasibility import (
+    reaction_feasibility_score,
+)  # noqa # pylint: disable=unused-import
+from rxnutils.routes.chemformer_feasibility import (  # noqa # pylint: disable=unused-import
+    ChemformerReactionFeasibilityCalculator,
+)
+from rxnutils.routes.deepset.scoring import (  # noqa # pylint: disable=unused-import
+    DeepsetModelClient,
+    deepset_route_score,
+)
+from rxnutils.routes.retro_bleu.scoring import (  # noqa # pylint: disable=unused-import
+    ngram_overlap_score,
+    retro_bleu_score,
+)
 
 
 def route_sorter(
@@ -78,7 +88,9 @@ def badowski_route_score(
         if not reactions:
             return mol_cost[tree_dict.get("in_stock", True)]
 
-        child_sum = sum(1 / average_yield * traverse(child) for child in reactions[0]["children"])
+        child_sum = sum(
+            1 / average_yield * traverse(child) for child in reactions[0]["children"]
+        )
         return reaction_cost + child_sum
 
     return traverse(route.reaction_tree)
@@ -130,6 +142,9 @@ def reaction_class_rank_score(
             score += min(child_scores)
 
         return score
+
+    if route.nsteps == 0:
+        return 1.0
 
     min_rank = min(reaction_class_ranks.values())
     max_step_weight = sum(range(1, route.max_depth + 1))

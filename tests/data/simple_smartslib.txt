@@ -1,0 +1,12 @@
+# Comment
+
+X	Y	AcidAliphatic		[O;$([O;D1]C(=O)[A]):1][C;$(C(=O)O):2][C:3]	clip
+
+Ester	Ester	EsterAcyclic		[O;D2;!R;$(O[C;D3;!$(C[N,S]);!$(C(O)O)](=O));$(O(C)C):1][C;$(C(=O)O):2]	clip
+
+Amide	Amide	AmideCyclic_1		[N,n;R;D1,$([N,n;!$(N([C]=[O,S])C=[O,S])]),$([N;!$(N(C=[O,S])C=[O,S])])][C,c;D3;R](=O)	clip
+
+Others	Others	Ammonia	[N;$([N;H3])]	[N;$([N;H3])]	label
+
+X	Z	X-Chloride	[Cl;$([Cl;*])]	[Cl;$([Cl;*])]	clip
+X	Z	X-Bromide	[Br;$([Br;*])]	[Br;$([Br;*])]	clip

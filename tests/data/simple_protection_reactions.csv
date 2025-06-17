@@ -1,0 +1,7 @@
+functional_group	protection_group	primary_reaction	secondary_reaction
+AcidAliphaticAlphaCarbon	tBu	[O;$([O;D1]C(=O)[A]);$(OC(=O)C[N]):99].[C;$(C(C)(C)(C)):55]>>[*:99][*:55]
+AlcoholHetero6Aromatic	allyl	[O;D1;$(O[c;$(c1*****1);!$(c1ccccc1)]):99].[C;$(C(C=C)):55]>>[*:99][*:55]	
+Aromatic6nH	DNP	[n;H1;$(n1*****1):99].[c;$(c1c([N+]([O-])=O)cc([N+]([O-])=O)cc1):55]>>[*:99][*:55]	
+AmineConjugatedSecondary	DNP	[N;R;H1;D2;$(N(c)),$(N[C,c]=[N,n]):99].[c;$(c1c([N+]([O-])=O)cc([N+]([O-])=O)cc1):55]>>[*:99][*:55]
+AmineHetero6AromaticSecondary	DNP	[ND2;!+;$(N[C]);$(N[c;$(c1*****1);!$(c1ccccc1)]);!$(N=*);!$(N*=*):99].[c;$(c1c([N+]([O-])=O)cc([N+]([O-])=O)cc1):55]>>[*:99][*:55]	
+AcidAliphatic	allyl	[O;$([O;D1]C(=O)[A]);!$(OC(=O)C[ND1]):99].[C;$(C(C=C)):55]>>[*:99][*:55]	

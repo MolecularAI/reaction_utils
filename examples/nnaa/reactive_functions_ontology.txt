@@ -1,0 +1,79 @@
+#############################################################################################################
+# AROMATIC ACID
+#############################################################################################################
+Aromatic_acid	Phenyl_acid	AcidPhenyl	[O;$([OD1]C(=O)[c;$(c1ccccc1)])]	[O;$([OD1]C(=O)[c;$(c1ccccc1)]):1][C;$(C(=O)O):2][c:3]	clip
+Aromatic_acid	Phenyl_acid	AcidPhenylThio_3	[O;$([O;D1]S(=O)[c;$(c1ccccc1)])]	[O;$([O;D1]S(=O)[c;$(c1ccccc1)]):1][S;$(S(=O)O):2][c:3]	clip
+
+Aromatic_acid	HeteroAromatic_6_acid	AcidHerero6Aromatic	[O;$([O;D1]C(=O)[c;$(c1*****1);!$(c1ccccc1)])]	[O;$([OD1]C(=O)[c;$(c1*****1);!$(c1ccccc1)]):1][C;$(C(=O)O):2][c:3]	clip
+
+Aromatic_acid	HeteroAromatic_5_acid	AcidHerero5Aromatic	[O;$([O;D1]C(=O)[c;$(c1****1);!$(c1cccc1)])]	[O;$([O;D1]C(=O)[c;$(c1****1);!$(c1cccc1)]):1][C;$(C(=O)O):2][c:3]	clip
+
+#############################################################################################################
+# ALIPHATIC ACID
+#############################################################################################################
+Aliphatic_acid	Aliphatic_acid	AcidAliphaticAlphaCarbon	[O;$([O;D1]C(=O)[A]);$(OC(=O)C[N])]	[O;$([O;D1]C(=O)[A]);$(OC(=O)C[N]):1][C;$(C(=O)O):2][C:3]	clip
+Aliphatic_acid	Aliphatic_acid	AcidAliphatic	[O;$([O;D1]C(=O)[A]);!$(OC(=O)C[ND1])]	[O;$([O;D1]C(=O)[A]);!$(OC(=O)C[ND1]):1][C;$(C(=O)O):2][C:3]	clip
+Aliphatic_acid	Aliphatic_Thioacid	AcidAliphaticThio_3	[O;$([O;D1]S(=O)[A])]	[O;$([O;D1]S(=O)[A]):1][S;$(S(=O)O):2][C:3]	clip
+
+#############################################################################################################
+# Aromatic amines
+#############################################################################################################
+Aromatic_amine	Phenyl_amine	AminePhenylPrimary	[ND1;!+;$(N[c;$(c1ccccc1)])]	[ND1;!+;$(N[c;$(c1ccccc1)]):1][c;$(cN):2]	label
+Aromatic_amine	Phenyl_amine	AminePhenylSecondary	[ND2;!+;$(N[C]);$(N[c;$(c1ccccc1)]);!$(N=*);!$(N*=*)]	[ND2;!+;$(N[C]);$(N[c;$(c1ccccc1)]);!$(N=*);!$(N*=*):1][c;$(cN):2]	label
+Aromatic_amine	HeteroAromatic_6_amine	AmineHetero6AromaticPrimary	[ND1;!+;$(N[c;$(c1*****1);!$(c1ccccc1)]);!$(N*=*)]	[ND1;!+;$(N[c;$(c1*****1);!$(c1ccccc1)]);!$(N*=*):1][c;$(cN):2]	label
+Aromatic_amine	HeteroAromatic_6_amine	AmineHetero6AromaticSecondary	[ND2;!+;$(N[C]);$(N[c;$(c1*****1);!$(c1ccccc1)]);!$(N=*);!$(N*=*)]	[ND2;!+;$(N[C]);$(N[c;$(c1*****1);!$(c1ccccc1)]);!$(N=*);!$(N*=*):1][c;$(cN):2]	label
+Aromatic_amine	HeteroAromatic_5_amine	AmineHetero5AromaticPrimary	[ND1;!+;$(N[c;$(c1****1);!$(c1cccc1)]);!$(N*=*)]	[ND1;!+;$(N[c;$(c1****1);!$(c1cccc1)]);!$(N*=*):1][c;$(cN):2]	label
+Aromatic_amine	HeteroAromatic_5_amine	AmineHetero5AromaticSecondary	[ND2;!+;$(N[C]);$(N[c;$(c1****1);!$(c1cccc1)]);!$(N=*);!$(N*=*)]	[ND2;!+;$(N[C]);$(N[c;$(c1****1);!$(c1cccc1)]);!$(N=*);!$(N*=*):1][c;$(cN):2]	label
+
+
+#############################################################################################################
+# Aliphatic amines
+#############################################################################################################
+Aliphatic_amine	Benzyl_amine	AmineBenzylPrimaryAlphaCarbon	[ND1;!+;$(NCc);$(NCC(=O)O);!$(N*=*);!$(Nc)]	[ND1;!+;$(NCc);$(NCC(=O)O);!$(N*=*);!$(Nc):1][C;$(C([N;D1])c):2]	label
+Aliphatic_amine	Benzyl_amine	AmineBenzylPrimary	[ND1;!+;$(NCc);!$(N*=*);!$(Nc);!$(NCC(=O)O)]	[ND1;!+;$(NCc);!$(N*=*);!$(Nc);!$(NCC(=O)O):1][C;$(C([N;D1])c):2]	label
+Aliphatic_amine	Benzyl_amine	AmineBenzylSecondary	[ND2;!+;!R;$(N(C)Cc);!$(N=*);!$(N*=*);!$(Nc)]	[ND2;!+;$(N(C)Cc);!$(N*=*);!$(N=*);!$(Nc):1][C;$(C([N;D2])c):2]	label
+
+Aliphatic_amine	Aliphatic_primary_amine	AmineAliphaticPrimaryAlphaCarbon	[ND1;!+;!$(NCc);$(NCC(=O)O);!$(N*=*)]	[ND1;!+;!$(NCc);$(NCC(=O)O);!$(N*=*):1][C;$(C[N;D1]):2]	label
+Aliphatic_amine	Aliphatic_primary_amine	AmineAliphaticPrimary	[ND1;!+;!$(NCc);$(N[C]);!$(N*=*);!$(NCC(=O)O)]	[ND1;!+;!$(NCc);$(N[C]);!$(N*=*);!$(NCC(=O)O):1][C;$(C[N;D1]):2]	label
+Aliphatic_amine	Aliphatic_secondary_amine	AmineAliphaticAcyclicSecondary	[ND2;!R;!+;!$(NCc);$(N[C]);!$(N=*);!$(N*=*);!$(Nc)]	[ND2;!R;!+;!$(NCc);$(N[C]);!$(NO);!$(N=*);!$(N*=*);!$(Nc):1][C;$(C[N;D2]):2]	label
+Aliphatic_amine	Aliphatic_secondary_amine	AmineAliphaticCyclicSecondary	[ND2;R;!+;!$(NCc);$(N[C]);!$(N=*);!$(N*=*);!$(Nc)]	[ND2;R;!+;!$(NCc);$(N[C]);!$(NO);!$(N=*);!$(N*=*);!$(Nc):1][C;$(C[N;D2]):2]	label
+
+
+
+#############################################################################################################
+# Aromatic alcohol and thiol
+#############################################################################################################A
+Alcohol	Phenyl_alcohol	AlcoholPhenyl	[O;D1;$(O[c;$(c1ccccc1)])]	[O;D1;$(O[c;$(c1ccccc1)])][c;$(cO)]	label
+Thiol	Phenyl_thiol	ThiolPhenyl	[S;D1;$(S[c;$(c1ccccc1)])]	[S;D1;$(S[c;$(c1ccccc1)])][c;$(cS)]	label
+Alcohol	HeteroAromatic_6_alcohol	AlcoholHetero6Aromatic	[O;D1;$(O[c;$(c1*****1);!$(c1ccccc1)])]	[O;D1;$(O[c;$(c1*****1);!$(c1ccccc1)])][c;$(cO)]	label
+Thiol	HeteroAromatic_6_thiol	ThiolHetero6Aromatic	[S;D1;$(S[c;$(c1*****1);!$(c1ccccc1)])]	[S;D1;$(S[c;$(c1*****1);!$(c1ccccc1)])][c;$(cS)]	label
+Alcohol	HeteroAromatic_5_alcohol	AlcoholHetero5Aromatic	[O;D1;$(O[c;$(c1****1);!$(c1cccc1)])]	[O;D1;$(O[c;$(c1****1);!$(c1cccc1)])][c;$(cO)]	label
+Thiol	HeteroAromatic_5_thiol	ThiolHetero5Aromatic	[S;D1;$(S[c;$(c1****1);!$(c1cccc1)])]	[S;D1;$(S[c;$(c1****1);!$(c1cccc1)])][c;$(cS)]	label
+
+#############################################################################################################
+# Aliphatic alcohol and thiol
+#############################################################################################################
+Alcohol	Aliphatic_alcohol	AlcoholAliphaticPrimary	[OD1;$(O[C;D2,D1]);!$(O*=*)]	[OD1;$(O[C;D2,D1]);!$(O*=*):1][C;$(CO):2]	label
+Alcohol	Aliphatic_alcohol	AlcoholAliphaticSecondary	[OD1;$(O[C;H1]);!$(OC=*)]	[OD1;$(O[C;H1]);!$(OC=*):1][C;$(CO):2]	label
+Alcohol	Aliphatic_alcohol	AlcoholAliphaticTertiary	[OD1;$(O[C;H0]);$(OC(C)(C)C)]	[OD1;$(O[C;H0]);$(OC(C)(C)C):1][C;$(CO):2]	label
+
+
+#############################################################################################################
+# Heterocycle
+#############################################################################################################
+Heterocycle	Heterocycle_5	Aromatic5nH	[n;H1;$(n1****1)]	[n;H1;$(n1****1)]	label
+Heterocycle	Heterocycle_6	Aromatic6nH	[n;H1;$(n1*****1)]	[n;H1;$(n1*****1)]	label
+Heterocycle	Heterocycle	AmineConjugatedSecondary	[N;R;H1;D2;$(N(c)),$(N[C,c]=[N,n])]	[N;R;H1;D2;$(N(c)),$(N[C,c]=[N,n])]	label
+
+#############################################################################################################
+# Imine
+#############################################################################################################
+Imine	Imine	Imine_2	[N;D1;$(N=[C;$(C[O,S,N])])]	[N;D1;$(N=[C;$(C[O,S,N])])]	label
+Imine	Imine	ImineAcyclicAlcohol	[OD1;$(O([ND2]));!$(O(N(n)=C));!$(O(NOC));$(O(N=[C;!$(C[O,S,N])]))]	[OD1;$(O([ND2]));!$(O(N(n)=C));!$(O(NOC));$(O(N=[C;!$(C[O,S,N])]))]	label
+Amidine	Amidine	Amidine	[N;D1,D2;$(N[C;$(C=N);!$(C=[ND3]);!$(C(N)N)])]	[N;D1,D2;$(N[C;$(C=N);!$(C=[ND3]);!$(C(N)N)])]	label
+
+
+#############################################################################################################
+# Others
+#############################################################################################################
+Others	Others	Carbamicacid	[O;$([O;D1][C;D3](N)(=O))]	[O;$([O;D1][C;D3](N)(=O))][C]	clip

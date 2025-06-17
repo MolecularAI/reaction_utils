@@ -3,32 +3,33 @@ import json
 import pandas as pd
 
 from rxnutils.chem.utils import split_rsmi
-from rxnutils.pipeline.actions.reaction_mod import RemoveUnsanitizable
 from rxnutils.pipeline.actions.reaction_props import (
-    CgrCreated,
-    CgrNumberOfDynamicBonds,
     CountComponents,
     CountElements,
     HasUnsanitizableReactants,
-    MaxRingNumber,
     ProductAtomMappingStats,
     ProductSize,
     PseudoReactionHash,
     ReactantProductAtomBalance,
     ReactantSize,
+    SmilesLength,
+    SmilesSanitizable,
     RingBondMade,
     RingMadeSize,
     RingNumberChange,
-    SmilesLength,
-    SmilesSanitizable,
-    StereoCenterInReactantPotential,
+    DetectReactiveFunctions,
+    StereoMesoProduct,
+    StereoCentreChanges,
     StereoCenterIsCreated,
     StereoCenterIsRemoved,
-    StereoCenterOutsideReaction,
-    StereoCentreChanges,
     StereoHasChiralReagent,
-    StereoMesoProduct,
+    StereoCenterInReactantPotential,
+    StereoCenterOutsideReaction,
+    CgrCreated,
+    CgrNumberOfDynamicBonds,
+    MaxRingNumber,
 )
+from rxnutils.pipeline.actions.reaction_mod import RemoveUnsanitizable
 from rxnutils.pipeline.base import global_apply
 
 global_apply.max_workers = 1
@@ -89,7 +90,8 @@ def test_pseudo_hash(make_reaction_dataframe):
     assert ">>" not in df2["PseudoHash"].iloc[0]
     assert df2["PseudoHash"].iloc[0].count(".") == 2
     assert (
-        df2["PseudoHash"].iloc[0] == "GWIBCCZNAYLLCD-UHFFFAOYSA-N.QAOWNCQODCNURD-UHFFFAOYSA-N>"
+        df2["PseudoHash"].iloc[0]
+        == "GWIBCCZNAYLLCD-UHFFFAOYSA-N.QAOWNCQODCNURD-UHFFFAOYSA-N>"
         "OFOBLEOULBTSOW-UHFFFAOYSA-L.UHOVQNZJYSORNB-UHFFFAOYSA-N>KOJXGMJOTRYLBD-UHFFFAOYSA-N"
     )
 
@@ -133,7 +135,9 @@ def test_smiles_sanitizable(make_reaction_dataframe):
 
 def test_unsanitizable_reactants(make_reaction_dataframe):
     action1 = RemoveUnsanitizable(in_column="rsmi")
-    action2 = HasUnsanitizableReactants(rsmi_column="rsmi", bad_columns=["BadMolecules"])
+    action2 = HasUnsanitizableReactants(
+        rsmi_column="rsmi", bad_columns=["BadMolecules"]
+    )
     df = make_reaction_dataframe
 
     df2 = action1(df)
@@ -166,6 +170,22 @@ def test_ring_actions_no_rings(make_reaction_dataframe):
     assert df2["NRingChange"].to_list() == [0, 0]
     assert df2["RingBondMade"].to_list() == [False, False]
     assert df2["RingMadeSize"].to_list() == [0, 0]
+
+
+def test_reactive_function(shared_datadir):
+    lib_path = str(shared_datadir / "simple_smartslib.txt")
+    rsmi1 = "CC(=O)O>>CC(=O)N"
+    rsmi2 = "N.CC(=O)O>>CC(=O)N"
+    df = pd.DataFrame({"rsmi": [rsmi1, rsmi2]})
+    action = DetectReactiveFunctions(in_column="rsmi", smarts_lib=lib_path)
+
+    df = action(df)
+
+    assert df["ReactiveFunction"].to_list() == [
+        "AcidAliphatic",
+        "AcidAliphatic|Ammonia",
+    ]
+    assert df["RxnProcessed"].to_list() == ["CC(=O)O>>CC(=O)N", "CC(=O)O.N>>CC(=O)N"]
 
 
 def test_meso_products(shared_datadir):

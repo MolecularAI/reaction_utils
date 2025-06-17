@@ -8,6 +8,7 @@ import pandas as pd
 from rdkit import Chem
 
 from rxnutils.chem.utils import split_rsmi
+from rxnutils.chem.disconnection_sites.tag_converting import smiles_tokens
 
 
 def _get_atom_identifier(atom: Chem.rdchem.Atom) -> str:
@@ -23,7 +24,9 @@ def _get_atom_identifier(atom: Chem.rdchem.Atom) -> str:
     return str(atom_id)
 
 
-def _get_bond_environment_identifier(atoms: Sequence[Chem.rdchem.Atom], bond: Chem.rdchem.Bond) -> str:
+def _get_bond_environment_identifier(
+    atoms: Sequence[Chem.rdchem.Atom], bond: Chem.rdchem.Bond
+) -> str:
     """
     Get the environment of a specific bond.
 
@@ -65,6 +68,17 @@ def _get_atomic_neighborhoods(smiles: str) -> OrderedDict[int, List[str]]:
     return ordered_neighbor_dict
 
 
+def _strip_tokens(smiles: str) -> str:
+    """Remove brackets around single letter"""
+    tokens = smiles_tokens(smiles)
+    output_smiles = ""
+    for token in tokens:
+        if len(token) == 3 and token.startswith("[") and token.endswith("]"):
+            token = token[1]
+        output_smiles += token
+    return output_smiles
+
+
 def get_atom_list(reactants_smiles: str, product_smiles: str) -> List[int]:
     """
     Given two sets of SMILES strings corresponding to a set of reactants and products,
@@ -73,23 +87,47 @@ def get_atom_list(reactants_smiles: str, product_smiles: str) -> List[int]:
 
     :param reactants_smiles: Atom-mapped SMILES string for the reactant(s)
     :param product_smiles: Atom-mapped SMILES string for the product(s)
-    :return: List of atoms (atomIdx) for which the atomic environment has changed
+    :return: List of atoms (atom-map-nums) for which the atomic environment has changed
     """
 
     ordered_reactant_neighbor_dict = _get_atomic_neighborhoods(reactants_smiles)
     ordered_product_neighbor_dict = _get_atomic_neighborhoods(product_smiles)
 
-    all_indices = set(ordered_product_neighbor_dict.keys()) | set(ordered_reactant_neighbor_dict.keys())
+    all_indices = set(ordered_product_neighbor_dict.keys()) | set(
+        ordered_reactant_neighbor_dict.keys()
+    )
 
     # Checks to see equivlence of atomic enviroments.
     # If environment changed, then add atom to list
     atom_list = [
         atom_map
         for atom_map in all_indices
-        if ordered_reactant_neighbor_dict.get(atom_map, []) != ordered_product_neighbor_dict.get(atom_map, [])
+        if ordered_reactant_neighbor_dict.get(atom_map, [])
+        != ordered_product_neighbor_dict.get(atom_map, [])
     ]
 
     return atom_list
+
+
+def atom_map_tag_site(mapped_smiles: str, atom_maps: List[int]) -> str:
+    """
+    Remove atom-tagging on all atoms except those in atom_maps.
+    Tag atom_maps atoms as [<atom>:1] where <atom> is the atom.
+
+    :param mapped_smiles: SMILES with atom-mapping
+    :param atom_maps: atom-map nums in site that will be tagged
+    :return: atom-map tagged SMILES
+    """
+    mol = Chem.MolFromSmiles(mapped_smiles)
+
+    for atom in mol.GetAtoms():
+        if atom.GetAtomMapNum() in atom_maps:
+            atom.SetAtomMapNum(1)
+        else:
+            atom.SetAtomMapNum(0)
+
+    smiles = Chem.MolToSmiles(mol)
+    return _strip_tokens(smiles)
 
 
 def atom_map_tag_reactants(mapped_rxn: str) -> str:
