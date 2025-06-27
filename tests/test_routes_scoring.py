@@ -231,7 +231,7 @@ def test_reaction_feasibility_score_status_not_ok(
 
     with pytest.raises(ValueError, match="ERROR"):
         reaction_feasibility_score(synthesis_route, calculator)
-    assert api_mock.called_once()
+    assert api_mock.call_count == 1
 
 
 def test_read_and_write_ngram_collection(tmpdir):
