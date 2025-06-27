@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## Version 1.9.0 - 2025-06-27
+
+### Features
+
+- Add a library for matching SMARTS from a library
+- Add various fingerprints for featurizing reactions
+- Add protection strategy for non-natural amino acids
+- Add route scoring based on Chemformer reaction feasibility
+- Add tutorial for non-natural amino acids
+- Add tutorial for route scoring
+
 ## Version 1.8.0 - 2024-12-18
 
 ### Features

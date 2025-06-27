@@ -21,7 +21,6 @@ from rxnutils.chem.reaction import ChemicalReaction
 from rxnutils.chem.utils import (
     atom_mapping_numbers,
     has_atom_mapping,
-    join_smiles_from_reaction,
     reaction_centres,
     split_rsmi,
     split_smiles_from_reaction,
