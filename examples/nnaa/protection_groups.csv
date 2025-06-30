@@ -1,0 +1,16 @@
+name	smiles	smarts
+tBu	C(C)(C)(C)	[C;$(C(C)(C)(C)):55]
+FMOC	C(=O)(OCC3c1ccccc1c2c3cccc2)	[C;$(C(=O)(OCC3c1ccccc1c2c3cccc2)):55]
+TBDMS	CC(C)(C)[Si](C)(C)	[Si;$([Si](C(C)(C)C)(C)(C)):55]
+2ClZ	C(=O)OCc1ccccc1Cl	[C;$(C(=O));$(C(OCc1ccccc1Cl)):55]
+allyl	CC=C	[C;$(C(C=C)):55]
+DNP	c1ccc(cc1[N+]([O-])=O)[N+]([O-])=O	[c;$(c1c([N+]([O-])=O)cc([N+]([O-])=O)cc1):55]
+PMB	Cc1ccc(OC)cc1	[C;$(C(c1ccc(OC)cc1)):55]
+Bn	Cc1ccccc1	[C;$(C(c1ccccc1)):55]
+TMSE	CC[Si](C)(C)(C)	[C;$(C(C[Si](C)(C)(C))):55]
+DPSide	[Si](CC)(CC)(c1ccccc1)(c1ccccc1)	[C;$(C(C[Si]c1ccccc1)):55]
+MOM	COC	[C;$(C(OC)):55]
+tBuS	CC(C)(C)S	[S;$(S(C(C)(C)(C))):55]
+Boc	C(=O)OC(C)(C)C	[C;$(C(=O)(OC(C)(C)C)):55]
+Tos	Cc1ccc(cc1)S(=O)=O	[S;$(S(=O)(=O)c1ccc(C)cc1):55]
+	*	*

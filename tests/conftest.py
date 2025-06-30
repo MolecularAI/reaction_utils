@@ -99,6 +99,18 @@ def setup_mapper_no_namerxn(mocker, shared_datadir):
 
 
 @pytest.fixture
+def setup_mapper_no_namerxn_no_rxnmapper(mocker, shared_datadir):
+    df = pd.read_csv(shared_datadir / "mapped_tests_reactions.csv", sep="\t")
+    df["RxnmapperRxnSmiles"] = df["smiles"]
+    df["mapped_smiles"] = df["smiles"]
+    namerxn_mock = mocker.patch("rxnutils.routes.base.NameRxn")
+    namerxn_mock.return_value.side_effect = FileNotFoundError("No namerxn")
+    namerxn_mock = mocker.patch("rxnutils.routes.base.RxnMapper")
+    df["NMC"] = "0.0"
+    namerxn_mock.return_value.return_value = df
+
+
+@pytest.fixture
 def load_reaction_tree(shared_datadir):
     def wrapper(filename, index=0):
         filename = str(shared_datadir / filename)

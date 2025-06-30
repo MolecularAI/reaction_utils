@@ -1,0 +1,4 @@
+name	smiles	smarts
+tBu	C(C)(C)(C)	[C;$(C(C)(C)(C)):55]
+allyl	CC=C	[C;$(C(C=C)):55]
+DNP	c1ccc(cc1[N+]([O-])=O)[N+]([O-])=O	[c;$(c1c([N+]([O-])=O)cc([N+]([O-])=O)cc1):55]

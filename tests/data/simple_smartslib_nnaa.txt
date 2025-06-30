@@ -1,0 +1,6 @@
+Aliphatic_acid	Aliphatic_acid	AcidAliphaticAlphaCarbon	[O;$([O;D1]C(=O)[A]);$(OC(=O)C[N])]	[O;$([O;D1]C(=O)[A]);$(OC(=O)C[N]):1][C;$(C(=O)O):2][C:3]	clip
+Alcohol	HeteroAromatic_6_alcohol	AlcoholHetero6Aromatic	[O;D1;$(O[c;$(c1*****1);!$(c1ccccc1)])]	[O;D1;$(O[c;$(c1*****1);!$(c1ccccc1)])][c;$(cO)]	label
+Heterocycle	Heterocycle_6	Aromatic6nH	[n;H1;$(n1*****1)]	[n;H1;$(n1*****1)]	label
+Aromatic_amine	HeteroAromatic_6_amine	AmineHetero6AromaticSecondary	[ND2;!+;$(N[C]);$(N[c;$(c1*****1);!$(c1ccccc1)]);!$(N=*);!$(N*=*)]	[ND2;!+;$(N[C]);$(N[c;$(c1*****1);!$(c1ccccc1)]);!$(N=*);!$(N*=*):1][c;$(cN):2]	label
+Heterocycle	Heterocycle	AmineConjugatedSecondary	[N;R;H1;D2;$(N(c)),$(N[C,c]=[N,n])]	[N;R;H1;D2;$(N(c)),$(N[C,c]=[N,n])]	label
+Aliphatic_acid	Aliphatic_acid	AcidAliphatic	[O;$([O;D1]C(=O)[A]);!$(OC(=O)C[ND1])]	[O;$([O;D1]C(=O)[A]);!$(OC(=O)C[ND1]):1][C;$(C(=O)O):2][C:3]	clip

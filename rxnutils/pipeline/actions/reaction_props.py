@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import ClassVar, List, Optional, Set, Tuple
@@ -14,6 +15,7 @@ from rdkit.Chem.MolKey.InchiInfo import InchiInfo
 from rdkit.Chem.rdMolDescriptors import CalcNumRings
 from rdkit.Chem.rdmolops import FindPotentialStereo
 
+import rxnutils.chem.smartslib as smartslib
 from rxnutils.chem.cgr import CondensedGraphReaction
 from rxnutils.chem.reaction import ChemicalReaction
 from rxnutils.chem.utils import (
@@ -51,7 +53,9 @@ class CountComponents(ReactionActionMixIn):
         def _process_smiles(smiles_list: List[str]) -> Tuple[int, int]:
             if not smiles_list:
                 return 0, 0
-            smiles_list_mapped = [smi for smi in smiles_list if has_atom_mapping(smi, sanitize=False)]
+            smiles_list_mapped = [
+                smi for smi in smiles_list if has_atom_mapping(smi, sanitize=False)
+            ]
             return len(smiles_list), len(smiles_list_mapped)
 
         reactants_list, reagents_list, products_list = self.split_lists(row)
@@ -87,7 +91,9 @@ class CountElements:
         return data.assign(**{self.out_column: hash_col})
 
     def __str__(self) -> str:
-        return f"{self.pretty_name} (calculate the occurence of elements in the reactants)"
+        return (
+            f"{self.pretty_name} (calculate the occurence of elements in the reactants)"
+        )
 
     def _row_action(self, row: pd.Series) -> str:
         def count_elements(smiles, counts):
@@ -103,6 +109,56 @@ class CountElements:
             count_elements(smiles, counts)
 
         return json.dumps(counts)
+
+
+@action
+@dataclass
+class DetectReactiveFunctions:
+    """
+    Maps reactive SMART functions to reactants.
+    """
+
+    pretty_name: ClassVar[str] = "detect_reactive_functions"
+
+    in_column: str
+    func_column: str = "ReactiveFunction"
+    rsmi_column: str = "RxnProcessed"
+
+    smarts_lib: str = "ontology"
+    alphabetic_order: bool = True
+    add_none: bool = True
+    max_reactants: Optional[int] = None
+
+    def __call__(self, data: pd.DataFrame) -> pd.DataFrame:
+        try:
+            self.lib = smartslib.SmartsLibrary.load(self.smarts_lib)
+        except KeyError:
+            smarts_lib_path = self.smarts_lib
+            if smarts_lib_path.startswith("$"):
+                smarts_lib_path = os.environ[smarts_lib_path[2:-1]]
+            self.lib = smartslib.SmartsLibrary(smarts_lib_path)
+        new_data = global_apply(data, self._row_action, axis=1)
+        return data.assign(**{column: new_data[column] for column in new_data.columns})
+
+    def __str__(self) -> str:
+        return f"{self.pretty_name} (maps reactive functions to atoms in reactants)"
+
+    def _row_action(self, row: pd.Series) -> bool:
+        try:
+            reactive_functions, rsmi = self.lib.detect_reactive_functions(
+                ChemicalReaction(row[self.in_column], clean_smiles=False),
+                sort=self.alphabetic_order,
+                add_none=self.add_none,
+                target_size=None,
+                max_reactants=self.max_reactants,
+            )
+        except ValueError:
+            return pd.Series(
+                {self.func_column: None, self.rsmi_column: row[self.in_column]}
+            )
+        return pd.Series(
+            {self.func_column: "|".join(reactive_functions), self.rsmi_column: rsmi}
+        )
 
 
 @action
@@ -209,7 +265,9 @@ class HasUnsanitizableReactants:
             mol = Chem.MolFromSmiles(smiles, sanitize=False)
             if not mol:
                 continue
-            unsanitize_atom_map_num |= {atom.GetAtomMapNum() for atom in mol.GetAtoms() if atom.GetAtomMapNum()}
+            unsanitize_atom_map_num |= {
+                atom.GetAtomMapNum() for atom in mol.GetAtoms() if atom.GetAtomMapNum()
+            }
         return unsanitize_atom_map_num
 
 
@@ -346,14 +404,20 @@ class PseudoReactionHash:
 
     def _row_action(self, row: pd.Series) -> str:
         def components_to_inchi(smiles):
-            mols = [Chem.MolFromSmiles(smi) for smi in split_smiles_from_reaction(smiles)]
+            mols = [
+                Chem.MolFromSmiles(smi) for smi in split_smiles_from_reaction(smiles)
+            ]
             return ".".join(sorted([Chem.MolToInchiKey(mol) for mol in mols if mol]))
 
         if self.no_reagents:
             reactants, _, products = split_rsmi(row[self.in_column])
-            return ">>".join([components_to_inchi(smi) for smi in [reactants, products]])
+            return ">>".join(
+                [components_to_inchi(smi) for smi in [reactants, products]]
+            )
 
-        return ">".join(components_to_inchi(smi) for smi in split_rsmi(row[self.in_column]))
+        return ">".join(
+            components_to_inchi(smi) for smi in split_rsmi(row[self.in_column])
+        )
 
 
 @action
@@ -374,7 +438,9 @@ class PseudoSmilesHash:
 
     def _row_action(self, row: pd.Series) -> str:
         def components_to_inchi(smiles):
-            mols = [Chem.MolFromSmiles(smi) for smi in split_smiles_from_reaction(smiles)]
+            mols = [
+                Chem.MolFromSmiles(smi) for smi in split_smiles_from_reaction(smiles)
+            ]
             return ".".join(sorted([Chem.MolToInchiKey(mol) for mol in mols if mol]))
 
         return components_to_inchi(row[self.in_column])
@@ -561,7 +627,11 @@ class RingBondMade:
 
     @staticmethod
     def _mapping_to_index(mol):
-        return {atom.GetAtomMapNum(): atom.GetIdx() for atom in mol.GetAtoms() if atom.GetAtomMapNum()}
+        return {
+            atom.GetAtomMapNum(): atom.GetIdx()
+            for atom in mol.GetAtoms()
+            if atom.GetAtomMapNum()
+        }
 
 
 @action
@@ -680,7 +750,9 @@ class StereoInvention:
         return data.assign(**{self.out_column: smiles_col})
 
     def __str__(self) -> str:
-        return f"{self.pretty_name} (Reactants with no stereo, turn into stereo compounds)"
+        return (
+            f"{self.pretty_name} (Reactants with no stereo, turn into stereo compounds)"
+        )
 
     def _has_stereo(self, smiles: str) -> bool:
         return "@" in smiles
@@ -741,7 +813,9 @@ class StereoCentreChanges:
             product_chirality = product_chiral_flags.get(atom_map, None)
             if product_chirality != reactant_chirality:
                 output[atom_map] = (reactant_chirality, product_chirality)
-        return pd.Series({self.out_column: True, self.stereo_changes_column: json.dumps(output)})
+        return pd.Series(
+            {self.out_column: True, self.stereo_changes_column: json.dumps(output)}
+        )
 
 
 @action
@@ -867,7 +941,8 @@ class StereoCenterInReactantPotential:
             if any(
                 not str(info.type).startswith("Bond")
                 and info.centeredOn in centers
-                and str(reactant.GetAtomWithIdx(info.centeredOn).GetChiralTag()) == "CHI_UNSPECIFIED"
+                and str(reactant.GetAtomWithIdx(info.centeredOn).GetChiralTag())
+                == "CHI_UNSPECIFIED"
                 for info in stereo_info
             ):
                 return True
@@ -881,7 +956,8 @@ class StereoCenterInReactantPotential:
         if any(
             not str(info.type).startswith("Bond")
             and product0.GetAtomWithIdx(info.centeredOn).GetAtomMapNum() in atom_maps
-            and str(product.GetAtomWithIdx(info.centeredOn).GetChiralTag()) == "CHI_UNSPECIFIED"
+            and str(product.GetAtomWithIdx(info.centeredOn).GetChiralTag())
+            == "CHI_UNSPECIFIED"
             for info in stereo_info
         ):
             return True

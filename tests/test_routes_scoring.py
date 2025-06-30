@@ -7,19 +7,44 @@ import pytest
 import requests
 from rdkit import Chem
 
-from rxnutils.chem.features.sc_score import SCORE_SUPPORTED, SCScore
-from rxnutils.routes.deepset.featurizers import collect_reaction_features, default_reaction_featurizer, ecfp_fingerprint
-from rxnutils.routes.retro_bleu.ngram_collection import NgramCollection
 from rxnutils.routes.scoring import (
-    DeepsetModelClient,
-    badowski_route_score,
-    deepset_route_score,
-    ngram_overlap_score,
-    reaction_class_rank_score,
-    retro_bleu_score,
-    route_ranks,
     route_sorter,
+    route_ranks,
+    badowski_route_score,
+    reaction_class_rank_score,
+    reaction_feasibility_score,
+    retro_bleu_score,
+    ngram_overlap_score,
+    ChemformerReactionFeasibilityCalculator,
+    deepset_route_score,
+    DeepsetModelClient,
 )
+from rxnutils.routes.chemformer_feasibility.model_interface import ConnectionError
+from rxnutils.routes.retro_bleu.ngram_collection import NgramCollection
+from rxnutils.routes.deepset.featurizers import (
+    collect_reaction_features,
+    default_reaction_featurizer,
+    ecfp_fingerprint,
+)
+from rxnutils.chem.features.sc_score import SCScore, SCORE_SUPPORTED
+
+
+@pytest.fixture
+def mocked_chemformer_api(mocker):
+    def wrapper(return_values, resp_status=requests.codes.ok):
+        class ChemformerApiResponse:
+            status_code = resp_status
+            content = return_values
+
+            def json(self):
+                return return_values
+
+        return mocker.patch(
+            "rxnutils.routes.chemformer_feasibility.model_interface.requests.post",
+            return_value=ChemformerApiResponse(),
+        )
+
+    return wrapper
 
 
 def test_route_sorter(synthesis_route, setup_stock):
@@ -57,9 +82,156 @@ def test_badowski_score(synthesis_route, setup_stock):
 def test_class_rank_score(synthesis_route, setup_mapper):
     synthesis_route.assign_atom_mapping()
 
-    score = reaction_class_rank_score(synthesis_route, {"10.1.2": 15, "1.7.11": 2}, ["10.1.2"])
+    score = reaction_class_rank_score(
+        synthesis_route, {"10.1.2": 15, "1.7.11": 2}, ["10.1.2"]
+    )
 
     assert pytest.approx(score, abs=0.01) == 0.33
+
+
+def test_reaction_feasibility_score(mocked_chemformer_api, synthesis_route):
+    api_mock = mocked_chemformer_api(
+        [
+            {
+                "output": ["x", "COc1ccccc1"],
+                "lhs": [0.7, 0.3],
+            },
+            {
+                "output": ["Clc1ccccc1"],
+                "lhs": [0.5],
+            },
+        ]
+    )
+    calculator = ChemformerReactionFeasibilityCalculator("no_url")
+
+    score = reaction_feasibility_score(synthesis_route, calculator)
+
+    assert pytest.approx(score, abs=0.01) == 0.40
+    api_mock.assert_called_once()
+
+    score = reaction_feasibility_score(synthesis_route, calculator)
+
+    # Intentional code duplication to assert that the cache is used
+    # for repeated calls
+    assert pytest.approx(score, abs=0.01) == 0.40
+    api_mock.assert_called_once()
+
+
+def test_reaction_feasibility_score_not_use_heuristics(
+    mocked_chemformer_api, augmentable_sythesis_route
+):
+    mocked_chemformer_api(
+        [
+            {
+                "output": ["", "Clc1ccccc1"],
+                "lhs": [0.7, 0.3],
+            },
+            {
+                "output": ["C"],
+                "lhs": [0.5],
+            },
+            {
+                "output": ["Cc1ccccc1"],
+                "lhs": [0.5],
+            },
+        ]
+    )
+    calculator = ChemformerReactionFeasibilityCalculator("no_url")
+
+    score = reaction_feasibility_score(
+        augmentable_sythesis_route, calculator, use_reactant_heuristics=False
+    )
+
+    assert pytest.approx(score, abs=0.01) == 0.00
+
+
+def test_reaction_feasibility_score_use_heuristics(
+    mocked_chemformer_api, augmentable_sythesis_route
+):
+    mocked_chemformer_api(
+        [
+            {
+                "output": ["", "Clc1ccccc1"],
+                "lhs": [0.7, 0.3],
+            },
+            {
+                "output": ["Cc1ccccc1"],
+                "lhs": [0.5],
+            },
+        ]
+    )
+    calculator = ChemformerReactionFeasibilityCalculator("no_url")
+
+    score = reaction_feasibility_score(
+        augmentable_sythesis_route, calculator, use_reactant_heuristics=True
+    )
+    assert pytest.approx(score, abs=0.01) == 0.40
+
+
+def test_reaction_feasibility_score_batch_input(mocked_chemformer_api, synthesis_route):
+    api_mock = mocked_chemformer_api([])
+    calculator = ChemformerReactionFeasibilityCalculator("no_url")
+
+    df = pd.DataFrame(
+        {
+            "reactants": ["CO.Clc1ccccc1", "Cl.c1ccccc1"],
+            "target_smiles": ["COc1ccccc1", "Clc1ccccc1"],
+            "sampled_smiles1": ["", "Clc1ccccc1"],
+            "sampled_smiles2": ["COc1ccccc1", "x"],
+            "loglikelihood1": [0.7, 0.5],
+            "loglikelihood2": [0.3, 0.5],
+        }
+    )
+    calculator.load_batch_output(df)
+
+    score = reaction_feasibility_score(synthesis_route, calculator)
+
+    assert pytest.approx(score, abs=0.01) == 0.20
+    api_mock.assert_not_called()
+
+
+def test_reaction_feasibility_score_retry(mocked_chemformer_api, synthesis_route):
+    api_mock = mocked_chemformer_api(
+        [
+            {
+                "output": ["x", "COc1ccccc1"],
+                "lhs": [0.7, 0.3],
+            },
+            {
+                "output": ["Clc1ccccc1"],
+                "lhs": [0.5],
+            },
+        ]
+    )
+    original_resp = api_mock.return_value
+    api_mock.side_effect = [ConnectionError, ConnectionError, original_resp]
+    calculator = ChemformerReactionFeasibilityCalculator("no_url")
+
+    score = reaction_feasibility_score(synthesis_route, calculator)
+
+    assert pytest.approx(score, abs=0.01) == 0.40
+    assert api_mock.call_count == calculator.retries
+
+
+def test_reaction_feasibility_score_error(mocked_chemformer_api, synthesis_route):
+    api_mock = mocked_chemformer_api([])
+    api_mock.side_effect = ConnectionError
+    calculator = ChemformerReactionFeasibilityCalculator("no_url")
+
+    with pytest.raises(ConnectionError):
+        reaction_feasibility_score(synthesis_route, calculator)
+    assert api_mock.call_count == calculator.retries
+
+
+def test_reaction_feasibility_score_status_not_ok(
+    mocked_chemformer_api, synthesis_route
+):
+    api_mock = mocked_chemformer_api("ERROR", 512)
+    calculator = ChemformerReactionFeasibilityCalculator("no_url")
+
+    with pytest.raises(ValueError, match="ERROR"):
+        reaction_feasibility_score(synthesis_route, calculator)
+    assert api_mock.call_count == 3
 
 
 def test_read_and_write_ngram_collection(tmpdir):
@@ -140,7 +312,9 @@ def test_collect_reaction_features():
     class_ranks = {"5.1.1": 3}
     target_fp = ecfp_fingerprint(Chem.MolFromSmiles("CO"), 2, 10)
 
-    score, features = collect_reaction_features([reaction_data], target_fp, class_ranks, default_reaction_featurizer)
+    score, features = collect_reaction_features(
+        [reaction_data], target_fp, class_ranks, default_reaction_featurizer
+    )
 
     assert score == 3.0
     assert features.shape == (1, 78)
@@ -153,12 +327,16 @@ def test_collect_reaction_features():
 def test_deepsetscorer(mocker, shared_datadir, augmentable_sythesis_route):
     filename = str(shared_datadir / "scscore_dummy_model.onnx")
     scscorer = SCScore(filename, 5)
-    mocked_model = mocker.patch("rxnutils.routes.deepset.scoring.onnxruntime.InferenceSession")
+    mocked_model = mocker.patch(
+        "rxnutils.routes.deepset.scoring.onnxruntime.InferenceSession"
+    )
     mocked_model.return_value.run.return_value = [5.0]
     model = DeepsetModelClient("dummy")
     class_ranks = {"5.1.1": 3}
 
-    score = deepset_route_score(augmentable_sythesis_route, model, scscorer, class_ranks)
+    score = deepset_route_score(
+        augmentable_sythesis_route, model, scscorer, class_ranks
+    )
 
     model._deepnet.run.assert_called_once()
     assert score == 5.0
