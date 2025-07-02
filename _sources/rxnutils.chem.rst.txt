@@ -1,0 +1,71 @@
+rxnutils.chem package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   rxnutils.chem.features
+   rxnutils.chem.protection
+   rxnutils.chem.rinchi
+
+Submodules
+----------
+
+rxnutils.chem.augmentation module
+---------------------------------
+
+.. automodule:: rxnutils.chem.augmentation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.cgr module
+------------------------
+
+.. automodule:: rxnutils.chem.cgr
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.reaction module
+-----------------------------
+
+.. automodule:: rxnutils.chem.reaction
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.smartslib module
+------------------------------
+
+.. automodule:: rxnutils.chem.smartslib
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.template module
+-----------------------------
+
+.. automodule:: rxnutils.chem.template
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.utils module
+--------------------------
+
+.. automodule:: rxnutils.chem.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.chem
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,29 @@
+rxnutils.routes.chemformer\_feasibility package
+===============================================
+
+Submodules
+----------
+
+rxnutils.routes.chemformer\_feasibility.model\_interface module
+---------------------------------------------------------------
+
+.. automodule:: rxnutils.routes.chemformer_feasibility.model_interface
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.routes.chemformer\_feasibility.scoring module
+------------------------------------------------------
+
+.. automodule:: rxnutils.routes.chemformer_feasibility.scoring
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.routes.chemformer_feasibility
+   :members:
+   :undoc-members:
+   :show-inheritance:

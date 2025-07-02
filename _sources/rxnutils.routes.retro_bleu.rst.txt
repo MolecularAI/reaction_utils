@@ -1,0 +1,29 @@
+rxnutils.routes.retro\_bleu package
+===================================
+
+Submodules
+----------
+
+rxnutils.routes.retro\_bleu.ngram\_collection module
+----------------------------------------------------
+
+.. automodule:: rxnutils.routes.retro_bleu.ngram_collection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.routes.retro\_bleu.scoring module
+------------------------------------------
+
+.. automodule:: rxnutils.routes.retro_bleu.scoring
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.routes.retro_bleu
+   :members:
+   :undoc-members:
+   :show-inheritance:
