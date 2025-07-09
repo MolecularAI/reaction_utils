@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 1.9.2 - 2025-07-09
+
+### Trivial changes
+
+- Update dependencies
+
 ## Version 1.9.1 - 2025-07-02
 
 ### Trivial changes
