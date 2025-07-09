@@ -117,6 +117,7 @@ Please use ``black`` package for formatting, and follow ``pep8`` style guide.
 * [@marcosfelt](https://github.com/marcosfelt)
 * [@asiomchen](https://github.com/asiomchen)
 * [@yujiag21](https://github.com/yujiag21/)
+* [@uGokalp](https://github.com/uGokalp/)
 
 The contributors have limited time for support questions, but please do not hesitate to submit an issue (see above).
 
