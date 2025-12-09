@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 1.9.3 - 2025-12-09
+
+### Trivial changes
+
+- Change to CGRtool replacement
+
 ## Version 1.9.2 - 2025-07-09
 
 ### Trivial changes
