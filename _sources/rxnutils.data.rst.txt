@@ -1,0 +1,54 @@
+rxnutils.data package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   rxnutils.data.ord
+   rxnutils.data.uspto
+
+Submodules
+----------
+
+rxnutils.data.base\_pipeline module
+-----------------------------------
+
+.. automodule:: rxnutils.data.base_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.data.batch\_utils module
+---------------------------------
+
+.. automodule:: rxnutils.data.batch_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.data.mapping module
+----------------------------
+
+.. automodule:: rxnutils.data.mapping
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.data.mapping\_pipeline module
+--------------------------------------
+
+.. automodule:: rxnutils.data.mapping_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.data
+   :members:
+   :undoc-members:
+   :show-inheritance:

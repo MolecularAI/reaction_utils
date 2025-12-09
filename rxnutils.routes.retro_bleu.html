@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.routes.retro_bleu package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.routes.ted package" href="rxnutils.routes.ted.html" />
+    <link rel="prev" title="rxnutils.routes.deepset package" href="rxnutils.routes.deepset.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="rxnutils.routes.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.chemformer_feasibility.html">rxnutils.routes.chemformer_feasibility package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.deepset.html">rxnutils.routes.deepset package</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">rxnutils.routes.retro_bleu package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.retro_bleu.ngram_collection">rxnutils.routes.retro_bleu.ngram_collection module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection"><code class="docutils literal notranslate"><span class="pre">NgramCollection</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.nitems"><code class="docutils literal notranslate"><span class="pre">NgramCollection.nitems</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.metadata_key"><code class="docutils literal notranslate"><span class="pre">NgramCollection.metadata_key</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.ngrams"><code class="docutils literal notranslate"><span class="pre">NgramCollection.ngrams</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.from_file"><code class="docutils literal notranslate"><span class="pre">NgramCollection.from_file()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.from_tree_collection"><code class="docutils literal notranslate"><span class="pre">NgramCollection.from_tree_collection()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.save_to_file"><code class="docutils literal notranslate"><span class="pre">NgramCollection.save_to_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.retro_bleu.scoring">rxnutils.routes.retro_bleu.scoring module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.retro_bleu.scoring.ngram_overlap_score"><code class="docutils literal notranslate"><span class="pre">ngram_overlap_score()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.retro_bleu.scoring.retro_bleu_score"><code class="docutils literal notranslate"><span class="pre">retro_bleu_score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.retro_bleu">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.ted.html">rxnutils.routes.ted package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.utils.html">rxnutils.routes.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.base">rxnutils.routes.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.comparison">rxnutils.routes.comparison module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.image">rxnutils.routes.image module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.readers">rxnutils.routes.readers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.scoring">rxnutils.routes.scoring module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+  <li><a href="rxnutils.routes.html">rxnutils.routes package</a><ul>
+      <li>Previous: <a href="rxnutils.routes.deepset.html" title="previous chapter">rxnutils.routes.deepset package</a></li>
+      <li>Next: <a href="rxnutils.routes.ted.html" title="next chapter">rxnutils.routes.ted package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-routes-retro-bleu-package">
+<h1>rxnutils.routes.retro_bleu package<a class="headerlink" href="#rxnutils-routes-retro-bleu-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.routes.retro_bleu.ngram_collection">
+<span id="rxnutils-routes-retro-bleu-ngram-collection-module"></span><h2>rxnutils.routes.retro_bleu.ngram_collection module<a class="headerlink" href="#module-rxnutils.routes.retro_bleu.ngram_collection" title="Link to this heading">¶</a></h2>
+<p>Contains routines for creating, reading, and writing n-gram collections</p>
+<p>Can be run as a module to create a collection from a set of routes:</p>
+<blockquote>
+<div><p>python -m rxnutils.routes.retro_bleu.ngram_collection –filename routes.json –output ngrams.json –nitems 2 –metadata template_hash</p>
+</div></blockquote>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.retro_bleu.ngram_collection.</span></span><span class="sig-name descname"><span class="pre">NgramCollection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nitems</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ngrams</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to create, read, and write a collection of n-grams</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nitems</strong> (<em>int</em>) – the length of each n-gram</p></li>
+<li><p><strong>metadata_key</strong> (<em>str</em>) – the key used to extract the n-grams from the reactions</p></li>
+<li><p><strong>ngrams</strong> (<em>Set</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – the extracted n-grams</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.nitems">
+<span class="sig-name descname"><span class="pre">nitems</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.nitems" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.metadata_key">
+<span class="sig-name descname"><span class="pre">metadata_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.metadata_key" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.ngrams">
+<span class="sig-name descname"><span class="pre">ngrams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.ngrams" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.from_file">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.from_file" title="Link to this definition">¶</a></dt>
+<dd><p>Read an n-gram collection from a JSON-file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – the path to the file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the n-gram collection</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection" title="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection"><em>NgramCollection</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.from_tree_collection">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_tree_collection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nitems</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.from_tree_collection" title="Link to this definition">¶</a></dt>
+<dd><p>Make a n-gram collection by extracting them from a collection of
+synthesis routes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – the path to a file with a list of synthesis routes</p></li>
+<li><p><strong>nitems</strong> (<em>int</em>) – the length of the gram</p></li>
+<li><p><strong>metadata_key</strong> (<em>str</em>) – the metadata to extract</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the n-gram collection</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection" title="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection"><em>NgramCollection</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.save_to_file">
+<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection.save_to_file" title="Link to this definition">¶</a></dt>
+<dd><p>Save an n-gram collection to a JSON-file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – the path to the file</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.retro_bleu.scoring">
+<span id="rxnutils-routes-retro-bleu-scoring-module"></span><h2>rxnutils.routes.retro_bleu.scoring module<a class="headerlink" href="#module-rxnutils.routes.retro_bleu.scoring" title="Link to this heading">¶</a></h2>
+<p>Contains routine to score routes according to Retro-BLEU paper</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.retro_bleu.scoring.ngram_overlap_score">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.retro_bleu.scoring.</span></span><span class="sig-name descname"><span class="pre">ngram_overlap_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.retro_bleu.scoring.ngram_overlap_score" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the fractional n-gram overlap of the n-grams in the given
+route and the reference n-gram collection</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> (<a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute" title="rxnutils.routes.base.SynthesisRoute"><em>SynthesisRoute</em></a>) – the route to score</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection" title="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection"><em>NgramCollection</em></a>) – the reference n-gram collection</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the calculated score</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.retro_bleu.scoring.retro_bleu_score">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.retro_bleu.scoring.</span></span><span class="sig-name descname"><span class="pre">retro_bleu_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ideal_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.retro_bleu.scoring.retro_bleu_score" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the Retro-BLEU score according to the paper:</p>
+<p>Li, Junren, Lei Fang, och Jian-Guang Lou.
+”Retro-BLEU: quantifying chemical plausibility of retrosynthesis routes through reaction template sequence analysis”.
+Digital Discovery 3, nr 3 (2024): 482–90. <a class="reference external" href="https://doi.org/10.1039/D3DD00219E">https://doi.org/10.1039/D3DD00219E</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> (<a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute" title="rxnutils.routes.base.SynthesisRoute"><em>SynthesisRoute</em></a>) – the route to score</p></li>
+<li><p><strong>ref</strong> (<a class="reference internal" href="#rxnutils.routes.retro_bleu.ngram_collection.NgramCollection" title="rxnutils.routes.retro_bleu.ngram_collection.NgramCollection"><em>NgramCollection</em></a>) – the reference n-gram collection</p></li>
+<li><p><strong>ideal_steps</strong> (<em>int</em>) – a length-penalization hyperparameter (see Eq 2 in ref)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the calculated score</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.retro_bleu">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.routes.retro_bleu" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.routes.retro_bleu.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.chem package" href="rxnutils.chem.html" />
+    <link rel="prev" title="Routes" href="routes.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">rxnutils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="routes.html" title="previous chapter">Routes</a></li>
+      <li>Next: <a href="rxnutils.chem.html" title="next chapter">rxnutils.chem package</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-package">
+<h1>rxnutils package<a class="headerlink" href="#rxnutils-package" title="Link to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.features.html">rxnutils.chem.features package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features.reaction_centre_fp">rxnutils.chem.features.reaction_centre_fp module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features.rxnfp_runner">rxnutils.chem.features.rxnfp_runner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features.sc_score">rxnutils.chem.features.sc_score module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features.simple_rdkit">rxnutils.chem.features.simple_rdkit module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.protection.html">rxnutils.chem.protection package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.protection.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.protection.html#module-rxnutils.chem.protection.amino_acids">rxnutils.chem.protection.amino_acids module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.protection.html#module-rxnutils.chem.protection">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.rinchi.html">rxnutils.chem.rinchi package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.rinchi.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.rinchi.html#module-rxnutils.chem.rinchi.download_rinchi">rxnutils.chem.rinchi.download_rinchi module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.rinchi.html#module-rxnutils.chem.rinchi.rinchi_api">rxnutils.chem.rinchi.rinchi_api module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.rinchi.html#module-rxnutils.chem.rinchi">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.augmentation">rxnutils.chem.augmentation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.augmentation.single_reactant_augmentation"><code class="docutils literal notranslate"><span class="pre">single_reactant_augmentation()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.cgr">rxnutils.chem.cgr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.cgr.CondensedGraphReaction"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.cgr.CondensedGraphReaction.bonds_broken"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.bonds_broken</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.cgr.CondensedGraphReaction.bonds_changed"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.bonds_changed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.cgr.CondensedGraphReaction.bonds_formed"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.bonds_formed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.cgr.CondensedGraphReaction.total_centers"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.total_centers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.cgr.CondensedGraphReaction.distance_to"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.distance_to()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.reaction">rxnutils.chem.reaction module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ReactionException"><code class="docutils literal notranslate"><span class="pre">ReactionException</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.agents_list"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.agents_list</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.canonical_template"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.canonical_template</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.products_list"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.products_list</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.pseudo_rinchi"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.pseudo_rinchi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.pseudo_rinchi_key"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.pseudo_rinchi_key</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.hashed_rid"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.hashed_rid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.reactants_list"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.reactants_list</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.retro_template"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.retro_template</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.rinchi"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.rinchi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.rinchi_key_long"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.rinchi_key_long</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.rinchi_key_short"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.rinchi_key_short</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.generate_coreagent"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.generate_coreagent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.generate_reaction_template"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.generate_reaction_template()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.has_partial_mapping"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.has_partial_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.is_complete"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.is_complete()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.no_change"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.no_change()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.is_fuzzy"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.is_fuzzy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.sanitization_check"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.sanitization_check()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.canonical_template_generate_outcome"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.canonical_template_generate_outcome()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.retro_template_generate_outcome"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.retro_template_generate_outcome()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction.retro_template_selectivity"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.retro_template_selectivity()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.smartslib">rxnutils.chem.smartslib module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.smartslib.SmartsHit"><code class="docutils literal notranslate"><span class="pre">SmartsHit</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.smartslib.SmartsHit.number_of_hits"><code class="docutils literal notranslate"><span class="pre">SmartsHit.number_of_hits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.smartslib.SmartsHit.match"><code class="docutils literal notranslate"><span class="pre">SmartsHit.match</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.smartslib.SmartsHit.atoms"><code class="docutils literal notranslate"><span class="pre">SmartsHit.atoms</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.smartslib.SmartsHit.smarts_mol"><code class="docutils literal notranslate"><span class="pre">SmartsHit.smarts_mol</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.smartslib.SmartsLibrary"><code class="docutils literal notranslate"><span class="pre">SmartsLibrary</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.smartslib.SmartsLibrary.load"><code class="docutils literal notranslate"><span class="pre">SmartsLibrary.load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.smartslib.SmartsLibrary.detect_reactive_functions"><code class="docutils literal notranslate"><span class="pre">SmartsLibrary.detect_reactive_functions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.smartslib.SmartsLibrary.match_smarts"><code class="docutils literal notranslate"><span class="pre">SmartsLibrary.match_smarts()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.template">rxnutils.chem.template module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.atoms"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.atoms()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.atom_invariants"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.atom_invariants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.atom_properties"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.atom_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.fingerprint_bits"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.fingerprint_bits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.fingerprint_vector"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.fingerprint_vector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.fix_atom_properties"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.fix_atom_properties()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.hash_from_smiles"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.hash_from_smiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.hash_from_smarts"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.hash_from_smarts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.remove_atom_mapping"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.remove_atom_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.TemplateMolecule.sanitize"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.sanitize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.ReactionTemplate"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.ReactionTemplate.apply"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.apply()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.ReactionTemplate.fingerprint_bits"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.fingerprint_bits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.ReactionTemplate.fingerprint_vector"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.fingerprint_vector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.ReactionTemplate.hash_from_bits"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.hash_from_bits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.ReactionTemplate.hash_from_smiles"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.hash_from_smiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.ReactionTemplate.hash_from_smarts"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.hash_from_smarts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.template.ReactionTemplate.rdkit_validation"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.rdkit_validation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.utils">rxnutils.chem.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.get_symmetric_sites"><code class="docutils literal notranslate"><span class="pre">get_symmetric_sites()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.get_mol_weight"><code class="docutils literal notranslate"><span class="pre">get_mol_weight()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.get_special_groups"><code class="docutils literal notranslate"><span class="pre">get_special_groups()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.has_atom_mapping"><code class="docutils literal notranslate"><span class="pre">has_atom_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.canonicalize_tautomer"><code class="docutils literal notranslate"><span class="pre">canonicalize_tautomer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.enumerate_tautomers"><code class="docutils literal notranslate"><span class="pre">enumerate_tautomers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.is_valid_mol"><code class="docutils literal notranslate"><span class="pre">is_valid_mol()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.remove_stereochemistry"><code class="docutils literal notranslate"><span class="pre">remove_stereochemistry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.remove_atom_mapping"><code class="docutils literal notranslate"><span class="pre">remove_atom_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.remove_atom_mapping_template"><code class="docutils literal notranslate"><span class="pre">remove_atom_mapping_template()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.neutralize_molecules"><code class="docutils literal notranslate"><span class="pre">neutralize_molecules()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.desalt_molecules"><code class="docutils literal notranslate"><span class="pre">desalt_molecules()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.same_molecule"><code class="docutils literal notranslate"><span class="pre">same_molecule()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.atom_mapping_numbers"><code class="docutils literal notranslate"><span class="pre">atom_mapping_numbers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.reassign_rsmi_atom_mapping"><code class="docutils literal notranslate"><span class="pre">reassign_rsmi_atom_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.split_rsmi"><code class="docutils literal notranslate"><span class="pre">split_rsmi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.join_smiles_from_reaction"><code class="docutils literal notranslate"><span class="pre">join_smiles_from_reaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.split_smiles_from_reaction"><code class="docutils literal notranslate"><span class="pre">split_smiles_from_reaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.recreate_rsmi"><code class="docutils literal notranslate"><span class="pre">recreate_rsmi()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.utils.reaction_centres"><code class="docutils literal notranslate"><span class="pre">reaction_centres()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.ord.html">rxnutils.data.ord package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#module-rxnutils.data.ord.import_ord_dataset">rxnutils.data.ord.import_ord_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#module-rxnutils.data.ord.preparation_pipeline">rxnutils.data.ord.preparation_pipeline module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#module-rxnutils.data.ord">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.uspto.html">rxnutils.data.uspto package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto.combine">rxnutils.data.uspto.combine module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto.download">rxnutils.data.uspto.download module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto.preparation_pipeline">rxnutils.data.uspto.preparation_pipeline module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto.uspto_yield">rxnutils.data.uspto.uspto_yield module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data.base_pipeline">rxnutils.data.base_pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.base_pipeline.DataBaseFlow"><code class="docutils literal notranslate"><span class="pre">DataBaseFlow</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.base_pipeline.DataBaseFlow.nbatches"><code class="docutils literal notranslate"><span class="pre">DataBaseFlow.nbatches</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.base_pipeline.DataBaseFlow.folder"><code class="docutils literal notranslate"><span class="pre">DataBaseFlow.folder</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.base_pipeline.DataPreparationBaseFlow"><code class="docutils literal notranslate"><span class="pre">DataPreparationBaseFlow</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.base_pipeline.DataPreparationBaseFlow.data_prefix"><code class="docutils literal notranslate"><span class="pre">DataPreparationBaseFlow.data_prefix</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data.batch_utils">rxnutils.data.batch_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.batch_utils.nlines"><code class="docutils literal notranslate"><span class="pre">nlines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.batch_utils.combine_batches"><code class="docutils literal notranslate"><span class="pre">combine_batches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.batch_utils.combine_csv_batches"><code class="docutils literal notranslate"><span class="pre">combine_csv_batches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.batch_utils.combine_numpy_array_batches"><code class="docutils literal notranslate"><span class="pre">combine_numpy_array_batches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.batch_utils.combine_sparse_matrix_batches"><code class="docutils literal notranslate"><span class="pre">combine_sparse_matrix_batches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.batch_utils.create_csv_batches"><code class="docutils literal notranslate"><span class="pre">create_csv_batches()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.batch_utils.read_csv_batch"><code class="docutils literal notranslate"><span class="pre">read_csv_batch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data.mapping">rxnutils.data.mapping module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.mapping.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data.mapping_pipeline">rxnutils.data.mapping_pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.mapping_pipeline.RxnMappingFlow"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.mapping_pipeline.RxnMappingFlow.data_prefix"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.data_prefix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.mapping_pipeline.RxnMappingFlow.start"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.mapping_pipeline.RxnMappingFlow.do_mapping"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.do_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.mapping_pipeline.RxnMappingFlow.join_mapping"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.join_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#rxnutils.data.mapping_pipeline.RxnMappingFlow.end"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.end()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html">rxnutils.pipeline.actions package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.dataframe_mod">rxnutils.pipeline.actions.dataframe_mod module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.reaction_mod">rxnutils.pipeline.actions.reaction_mod module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.reaction_props">rxnutils.pipeline.actions.reaction_props module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.templates">rxnutils.pipeline.actions.templates module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.html#module-rxnutils.pipeline.base">rxnutils.pipeline.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.base.action"><code class="docutils literal notranslate"><span class="pre">action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.base.list_actions"><code class="docutils literal notranslate"><span class="pre">list_actions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.base.create_action"><code class="docutils literal notranslate"><span class="pre">create_action()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.base.ReactionActionMixIn"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.base.ReactionActionMixIn.join_lists"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn.join_lists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.base.ReactionActionMixIn.join_smiles"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn.join_smiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.base.ReactionActionMixIn.split_lists"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn.split_lists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.base.ReactionActionMixIn.split_smiles"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn.split_smiles()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.html#module-rxnutils.pipeline.runner">rxnutils.pipeline.runner module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.runner.run_pipeline"><code class="docutils literal notranslate"><span class="pre">run_pipeline()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html#rxnutils.pipeline.runner.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.html#module-rxnutils.pipeline">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.routes.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.chemformer_feasibility.html">rxnutils.routes.chemformer_feasibility package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.chemformer_feasibility.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.chemformer_feasibility.html#module-rxnutils.routes.chemformer_feasibility.model_interface">rxnutils.routes.chemformer_feasibility.model_interface module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.chemformer_feasibility.html#module-rxnutils.routes.chemformer_feasibility.scoring">rxnutils.routes.chemformer_feasibility.scoring module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.chemformer_feasibility.html#module-rxnutils.routes.chemformer_feasibility">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.deepset.html">rxnutils.routes.deepset package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.deepset.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.deepset.html#module-rxnutils.routes.deepset.featurizers">rxnutils.routes.deepset.featurizers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.deepset.html#module-rxnutils.routes.deepset.scoring">rxnutils.routes.deepset.scoring module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.deepset.html#module-rxnutils.routes.deepset">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.retro_bleu.html">rxnutils.routes.retro_bleu package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.retro_bleu.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.retro_bleu.html#module-rxnutils.routes.retro_bleu.ngram_collection">rxnutils.routes.retro_bleu.ngram_collection module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.retro_bleu.html#module-rxnutils.routes.retro_bleu.scoring">rxnutils.routes.retro_bleu.scoring module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.retro_bleu.html#module-rxnutils.routes.retro_bleu">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.ted.html">rxnutils.routes.ted package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.ted.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.ted.html#module-rxnutils.routes.ted.distances_calculator">rxnutils.routes.ted.distances_calculator module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.ted.html#module-rxnutils.routes.ted.reactiontree">rxnutils.routes.ted.reactiontree module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.ted.html#module-rxnutils.routes.ted.utils">rxnutils.routes.ted.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.ted.html#module-rxnutils.routes.ted">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.utils.html">rxnutils.routes.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.utils.html#module-rxnutils.routes.utils.validation">rxnutils.routes.utils.validation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.utils.html#module-rxnutils.routes.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.routes.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.base">rxnutils.routes.base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.mapped_root_smiles"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.mapped_root_smiles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.nsteps"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.nsteps</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.atom_mapped_reaction_smiles"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.atom_mapped_reaction_smiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.assign_atom_mapping"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.assign_atom_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.chains"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.chains()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.image"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.intermediate_counts"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.intermediate_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.intermediates"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.intermediates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.is_solved"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.is_solved()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.leaf_counts"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.leaf_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.leaves"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.leaves()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.reaction_data"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.reaction_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.reaction_ngrams"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.reaction_ngrams()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.reaction_smiles"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.reaction_smiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.remap"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.remap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute.update_stock"><code class="docutils literal notranslate"><span class="pre">SynthesisRoute.update_stock()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.smiles2inchikey"><code class="docutils literal notranslate"><span class="pre">smiles2inchikey()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.comparison">rxnutils.routes.comparison module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.comparison.simple_route_similarity"><code class="docutils literal notranslate"><span class="pre">simple_route_similarity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.comparison.atom_matching_bonanza_similarity"><code class="docutils literal notranslate"><span class="pre">atom_matching_bonanza_similarity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.comparison.simple_bond_forming_similarity"><code class="docutils literal notranslate"><span class="pre">simple_bond_forming_similarity()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.comparison.route_distances_calculator"><code class="docutils literal notranslate"><span class="pre">route_distances_calculator()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.image">rxnutils.routes.image module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.image.molecule_to_image"><code class="docutils literal notranslate"><span class="pre">molecule_to_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.image.molecules_to_images"><code class="docutils literal notranslate"><span class="pre">molecules_to_images()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.image.crop_image"><code class="docutils literal notranslate"><span class="pre">crop_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.image.draw_rounded_rectangle"><code class="docutils literal notranslate"><span class="pre">draw_rounded_rectangle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.image.RouteImageFactory"><code class="docutils literal notranslate"><span class="pre">RouteImageFactory</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.readers">rxnutils.routes.readers module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.readers.read_reaction_lists"><code class="docutils literal notranslate"><span class="pre">read_reaction_lists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.readers.read_aizynthcli_dataframe"><code class="docutils literal notranslate"><span class="pre">read_aizynthcli_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.readers.read_aizynthfinder_dict"><code class="docutils literal notranslate"><span class="pre">read_aizynthfinder_dict()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.readers.read_reactions_dataframe"><code class="docutils literal notranslate"><span class="pre">read_reactions_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.readers.reactions2route"><code class="docutils literal notranslate"><span class="pre">reactions2route()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.readers.read_rdf_file"><code class="docutils literal notranslate"><span class="pre">read_rdf_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.scoring">rxnutils.routes.scoring module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.scoring.route_sorter"><code class="docutils literal notranslate"><span class="pre">route_sorter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.scoring.route_ranks"><code class="docutils literal notranslate"><span class="pre">route_ranks()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.scoring.badowski_route_score"><code class="docutils literal notranslate"><span class="pre">badowski_route_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.scoring.reaction_class_rank_score"><code class="docutils literal notranslate"><span class="pre">reaction_class_rank_score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-rxnutils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,29 @@
+rxnutils.data.ord package
+=========================
+
+Submodules
+----------
+
+rxnutils.data.ord.import\_ord\_dataset module
+---------------------------------------------
+
+.. automodule:: rxnutils.data.ord.import_ord_dataset
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.data.ord.preparation\_pipeline module
+----------------------------------------------
+
+.. automodule:: rxnutils.data.ord.preparation_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.data.ord
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,45 @@
+rxnutils.data.uspto package
+===========================
+
+Submodules
+----------
+
+rxnutils.data.uspto.combine module
+----------------------------------
+
+.. automodule:: rxnutils.data.uspto.combine
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.data.uspto.download module
+-----------------------------------
+
+.. automodule:: rxnutils.data.uspto.download
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.data.uspto.preparation\_pipeline module
+------------------------------------------------
+
+.. automodule:: rxnutils.data.uspto.preparation_pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.data.uspto.uspto\_yield module
+---------------------------------------
+
+.. automodule:: rxnutils.data.uspto.uspto_yield
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.data.uspto
+   :members:
+   :undoc-members:
+   :show-inheritance:

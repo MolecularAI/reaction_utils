@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.chem.features package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.chem.protection package" href="rxnutils.chem.protection.html" />
+    <link rel="prev" title="rxnutils.chem package" href="rxnutils.chem.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="rxnutils.chem.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">rxnutils.chem.features package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.features.reaction_centre_fp">rxnutils.chem.features.reaction_centre_fp module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint"><code class="docutils literal notranslate"><span class="pre">ReactionCentreFingerprint</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint.numbits"><code class="docutils literal notranslate"><span class="pre">ReactionCentreFingerprint.numbits</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint.max_centers"><code class="docutils literal notranslate"><span class="pre">ReactionCentreFingerprint.max_centers</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.features.reaction_centre_fp.reaction_center_similarity"><code class="docutils literal notranslate"><span class="pre">reaction_center_similarity()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.features.rxnfp_runner">rxnutils.chem.features.rxnfp_runner module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.features.rxnfp_runner.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.features.sc_score">rxnutils.chem.features.sc_score module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.features.sc_score.SCScore"><code class="docutils literal notranslate"><span class="pre">SCScore</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.features.simple_rdkit">rxnutils.chem.features.simple_rdkit module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint"><code class="docutils literal notranslate"><span class="pre">SimpleRdkitFingerprint</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.featurizer"><code class="docutils literal notranslate"><span class="pre">SimpleRdkitFingerprint.featurizer</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.numbits"><code class="docutils literal notranslate"><span class="pre">SimpleRdkitFingerprint.numbits</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.product_bits"><code class="docutils literal notranslate"><span class="pre">SimpleRdkitFingerprint.product_bits</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.features.simple_rdkit.fingerprint_mixed"><code class="docutils literal notranslate"><span class="pre">fingerprint_mixed()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.features.simple_rdkit.fingerprint_ecfp"><code class="docutils literal notranslate"><span class="pre">fingerprint_ecfp()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.features">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.chem.protection.html">rxnutils.chem.protection package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.chem.rinchi.html">rxnutils.chem.rinchi package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.augmentation">rxnutils.chem.augmentation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.cgr">rxnutils.chem.cgr module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.reaction">rxnutils.chem.reaction module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.smartslib">rxnutils.chem.smartslib module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.template">rxnutils.chem.template module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.utils">rxnutils.chem.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+  <li><a href="rxnutils.chem.html">rxnutils.chem package</a><ul>
+      <li>Previous: <a href="rxnutils.chem.html" title="previous chapter">rxnutils.chem package</a></li>
+      <li>Next: <a href="rxnutils.chem.protection.html" title="next chapter">rxnutils.chem.protection package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-chem-features-package">
+<h1>rxnutils.chem.features package<a class="headerlink" href="#rxnutils-chem-features-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.chem.features.reaction_centre_fp">
+<span id="rxnutils-chem-features-reaction-centre-fp-module"></span><h2>rxnutils.chem.features.reaction_centre_fp module<a class="headerlink" href="#module-rxnutils.chem.features.reaction_centre_fp" title="Link to this heading">¶</a></h2>
+<p>Calculates reaction centre RDKit fingerprints</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.features.reaction_centre_fp.</span></span><span class="sig-name descname"><span class="pre">ReactionCentreFingerprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numbits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_centers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Reaction featurizer based on a native RDKit functions for reaction centre atoms</p>
+<p>if max_centers is not set, the output of the featurization will be a list of each
+centre’s fingerprint - but if max_centers is given the output is a flattend and
+concatenated list of all centres up to max_centers. the fingerprint is padded
+with zeros, and an initial bit indicate the number of fingerprints that has
+been concatenated</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params numbits<span class="colon">:</span></dt>
+<dd class="field-odd"><p>length of fingerprint</p>
+</dd>
+<dt class="field-even">Params max_centers<span class="colon">:</span></dt>
+<dd class="field-even"><p>if given, will concatenate the individual FPs up to a maximum of centres</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>numbits</strong> (<em>int</em>)</p></li>
+<li><p><strong>max_centers</strong> (<em>int</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint.numbits">
+<span class="sig-name descname"><span class="pre">numbits</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1024</span></em><a class="headerlink" href="#rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint.numbits" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint.max_centers">
+<span class="sig-name descname"><span class="pre">max_centers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint.max_centers" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.features.reaction_centre_fp.reaction_center_similarity">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.features.reaction_centre_fp.</span></span><span class="sig-name descname"><span class="pre">reaction_center_similarity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fingerprints1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fingerprints2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.features.reaction_centre_fp.reaction_center_similarity" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the maximum similarity between two sets of reaction center fingerprints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params fingerprints1<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the first set of center fingerprints</p>
+</dd>
+<dt class="field-even">Params fingerprints2<span class="colon">:</span></dt>
+<dd class="field-even"><p>the second set of center fingerprints</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the maximum Jaccard distance</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>fingerprints1</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>fingerprints2</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>float</em><em>]</em><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.features.rxnfp_runner">
+<span id="rxnutils-chem-features-rxnfp-runner-module"></span><h2>rxnutils.chem.features.rxnfp_runner module<a class="headerlink" href="#module-rxnutils.chem.features.rxnfp_runner" title="Link to this heading">¶</a></h2>
+<p>Module containing script to calculate RXNFP for a set of reactions</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.features.rxnfp_runner.main">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.features.rxnfp_runner.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.features.rxnfp_runner.main" title="Link to this definition">¶</a></dt>
+<dd><p>Function for command-line tool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_args</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.features.sc_score">
+<span id="rxnutils-chem-features-sc-score-module"></span><h2>rxnutils.chem.features.sc_score module<a class="headerlink" href="#module-rxnutils.chem.features.sc_score" title="Link to this heading">¶</a></h2>
+<p>Module containing the implementation of the SC-score model for synthetic complexity scoring.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.features.sc_score.SCScore">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.features.sc_score.</span></span><span class="sig-name descname"><span class="pre">SCScore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fingerprint_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fingerprint_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.features.sc_score.SCScore" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Encapsulation of the SCScore model</p>
+<p>Re-write of the SCScorer from the scscorer package using ONNX</p>
+<p>The predictions of the score is made with a sanitized instance of an RDKit molecule</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mol</span> <span class="o">=</span> <span class="n">Chem</span><span class="o">.</span><span class="n">MolFromSmiles</span><span class="p">(</span><span class="n">CCC</span><span class="p">)</span>
+<span class="n">scscorer</span> <span class="o">=</span> <span class="n">SCScorer</span><span class="p">(</span><span class="s2">&quot;path_to_model&quot;</span><span class="p">)</span>
+<span class="n">score</span> <span class="o">=</span> <span class="n">scscorer</span><span class="p">(</span><span class="n">mol</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em>) – the filename of the model weights and biases</p></li>
+<li><p><strong>fingerprint_length</strong> (<em>int</em>) – the number of bits in the fingerprint</p></li>
+<li><p><strong>fingerprint_radius</strong> (<em>int</em>) – the radius of the fingerprint</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.features.simple_rdkit">
+<span id="rxnutils-chem-features-simple-rdkit-module"></span><h2>rxnutils.chem.features.simple_rdkit module<a class="headerlink" href="#module-rxnutils.chem.features.simple_rdkit" title="Link to this heading">¶</a></h2>
+<p>Calculates RDKit fingerprints for reactions</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.features.simple_rdkit.</span></span><span class="sig-name descname"><span class="pre">SimpleRdkitFingerprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">featurizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2048</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_bits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Reaction featurizer based on a native RDKit functions</p>
+<p>The featurizer is used by calling it with a reaction SMILES and
+a list of float constituting the fingerprints</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params featurizer<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the type of featurizer</p>
+</dd>
+<dt class="field-even">Params numbits<span class="colon">:</span></dt>
+<dd class="field-even"><p>length of fingerprint</p>
+</dd>
+<dt class="field-odd">Params product_bits<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of bits for the product</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>featurizer</strong> (<em>str</em>)</p></li>
+<li><p><strong>numbits</strong> (<em>int</em>)</p></li>
+<li><p><strong>product_bits</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.featurizer">
+<span class="sig-name descname"><span class="pre">featurizer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.featurizer" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.numbits">
+<span class="sig-name descname"><span class="pre">numbits</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2048</span></em><a class="headerlink" href="#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.numbits" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.product_bits">
+<span class="sig-name descname"><span class="pre">product_bits</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.product_bits" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.features.simple_rdkit.fingerprint_mixed">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.features.simple_rdkit.</span></span><span class="sig-name descname"><span class="pre">fingerprint_mixed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.features.simple_rdkit.fingerprint_mixed" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates a mixed fingerprint first half being an ECFP3
+and the second half being an RDKit fingerprint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params mol<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the molecule</p>
+</dd>
+<dt class="field-even">Params numbits<span class="colon">:</span></dt>
+<dd class="field-even"><p>the length of the finger fingerprint</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol</strong> (<em>Mol</em>)</p></li>
+<li><p><strong>numbits</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.features.simple_rdkit.fingerprint_ecfp">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.features.simple_rdkit.</span></span><span class="sig-name descname"><span class="pre">fingerprint_ecfp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.features.simple_rdkit.fingerprint_ecfp" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates an ECFP6</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params mol<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the molecule</p>
+</dd>
+<dt class="field-even">Params numbits<span class="colon">:</span></dt>
+<dd class="field-even"><p>the length of the fingal fingerprint</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol</strong> (<em>Mol</em>)</p></li>
+<li><p><strong>numbits</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.features">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.chem.features" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.chem.features.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

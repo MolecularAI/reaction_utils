@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Routes &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils package" href="rxnutils.html" />
+    <link rel="prev" title="Pipeline" href="pipeline.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Routes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#reading">Reading</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.html">rxnutils package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pipeline.html" title="previous chapter">Pipeline</a></li>
+      <li>Next: <a href="rxnutils.html" title="next chapter">rxnutils package</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="routes">
+<h1>Routes<a class="headerlink" href="#routes" title="Link to this heading">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">rxnutils</span></code> contains routines to analyse synthesis routes. There are a number of readers that can be used to read routes from a number of
+formats, and there are routines to score the different routes.</p>
+<section id="reading">
+<h2>Reading<a class="headerlink" href="#reading" title="Link to this heading">¶</a></h2>
+<p>The simplest route format supported is a text file, where each reaction is written as a reaction SMILES in a line.
+Routes are separated by new-line</p>
+<p>For instance:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CC</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="n">N</span><span class="o">.</span><span class="n">Clc1cccc</span><span class="p">(</span><span class="n">Nc2ccoc2</span><span class="p">)</span><span class="n">n1</span><span class="o">&gt;&gt;</span><span class="n">CC</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="n">Nc1cccc</span><span class="p">(</span><span class="n">Nc2ccoc2</span><span class="p">)</span><span class="n">n1</span>
+<span class="n">Brc1ccoc1</span><span class="o">.</span><span class="n">Nc1cccc</span><span class="p">(</span><span class="n">Cl</span><span class="p">)</span><span class="n">n1</span><span class="o">&gt;&gt;</span><span class="n">Clc1cccc</span><span class="p">(</span><span class="n">Nc2ccoc2</span><span class="p">)</span><span class="n">n1</span>
+
+<span class="n">Nc1cccc</span><span class="p">(</span><span class="n">NC</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="n">C</span><span class="p">)</span><span class="n">n1</span><span class="o">.</span><span class="n">Brc1ccoc1</span><span class="o">&gt;&gt;</span><span class="n">CC</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="n">Nc1cccc</span><span class="p">(</span><span class="n">Nc2ccoc2</span><span class="p">)</span><span class="n">n1</span>
+<span class="n">CC</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="n">N</span><span class="o">.</span><span class="n">Nc1cccc</span><span class="p">(</span><span class="n">Cl</span><span class="p">)</span><span class="n">n1</span><span class="o">&gt;&gt;</span><span class="n">Nc1cccc</span><span class="p">(</span><span class="n">NC</span><span class="p">(</span><span class="n">C</span><span class="p">)</span><span class="n">C</span><span class="p">)</span><span class="n">n1</span>
+</pre></div>
+</div>
+<p>If this is saved to <code class="docutils literal notranslate"><span class="pre">routes.txt</span></code>, these can be read into route objects with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rxnutils.routes.readers</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_reaction_lists</span>
+<span class="n">routes</span> <span class="o">=</span> <span class="n">read_reaction_lists</span><span class="p">(</span><span class="s2">&quot;reactions.txt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If you have an environment with <code class="docutils literal notranslate"><span class="pre">rxnmapper</span></code> installed and the NextMove software <code class="docutils literal notranslate"><span class="pre">namerxn</span></code> in your PATH then you can
+add atom-mapping and reaction classes to these routes with</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># This can be set on the command-line as well</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;RXNMAPPER_ENV_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;/home/username/miniconda/envs/rxnmapper/&quot;</span>
+
+<span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">routes</span><span class="p">:</span>
+    <span class="n">route</span><span class="o">.</span><span class="n">assign_atom_mapping</span><span class="p">(</span><span class="n">only_rxnmapper</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">routes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">remap</span><span class="p">(</span><span class="n">routes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The last line of code also make sure that the second route shares mapping with the first route.</p>
+<p>Other readers are available</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">read_aizynthcli_dataframe</span></code> - for reading routes from aizynthcli output dataframe</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">read_reactions_dataframe</span></code> - for reading routes stored as reactions in a dataframe</p></li>
+</ul>
+<p>For instance, to read routes from a dataframe with reactions. You can do something like what follows.
+The dataframe has column <code class="docutils literal notranslate"><span class="pre">reaction_smiles</span></code> that holds the reaction SMILES, and the individual routes
+are identified by a <code class="docutils literal notranslate"><span class="pre">target_smiles</span></code> and <code class="docutils literal notranslate"><span class="pre">route_id</span></code> column. The dataframe also has a column <code class="docutils literal notranslate"><span class="pre">classification</span></code>,
+holding the NextMove classification. The dataframe is called <code class="docutils literal notranslate"><span class="pre">data</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rxnutils.routes.readers</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_reactions_dataframe</span>
+<span class="n">routes</span> <span class="o">=</span> <span class="n">read_reactions_dataframe</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">,</span>
+    <span class="s2">&quot;reaction_smiles&quot;</span><span class="p">,</span>
+    <span class="n">group_by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;target_smiles&quot;</span><span class="p">,</span> <span class="s2">&quot;route_id&quot;</span><span class="p">],</span>
+    <span class="n">metadata_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;classification&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/routes.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

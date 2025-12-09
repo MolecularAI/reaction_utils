@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.data.uspto package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.pipeline package" href="rxnutils.pipeline.html" />
+    <link rel="prev" title="rxnutils.data.ord package" href="rxnutils.data.ord.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="rxnutils.data.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.data.ord.html">rxnutils.data.ord package</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">rxnutils.data.uspto package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.data.uspto.combine">rxnutils.data.uspto.combine module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.data.uspto.combine.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.data.uspto.download">rxnutils.data.uspto.download module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.data.uspto.download.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.data.uspto.preparation_pipeline">rxnutils.data.uspto.preparation_pipeline module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.data_prefix"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.data_prefix</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.start"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.start()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.combine_files"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.combine_files()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.setup_cleaning"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.setup_cleaning()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.do_cleaning"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.do_cleaning()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.join_cleaning"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.join_cleaning()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.end"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.end()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.data.uspto.uspto_yield">rxnutils.data.uspto.uspto_yield module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration"><code class="docutils literal notranslate"><span class="pre">UsptoYieldCuration</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.text_yield_column"><code class="docutils literal notranslate"><span class="pre">UsptoYieldCuration.text_yield_column</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.calc_yield_column"><code class="docutils literal notranslate"><span class="pre">UsptoYieldCuration.calc_yield_column</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.out_column"><code class="docutils literal notranslate"><span class="pre">UsptoYieldCuration.out_column</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.data.uspto">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data.base_pipeline">rxnutils.data.base_pipeline module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data.batch_utils">rxnutils.data.batch_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data.mapping">rxnutils.data.mapping module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data.mapping_pipeline">rxnutils.data.mapping_pipeline module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.html#module-rxnutils.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+  <li><a href="rxnutils.data.html">rxnutils.data package</a><ul>
+      <li>Previous: <a href="rxnutils.data.ord.html" title="previous chapter">rxnutils.data.ord package</a></li>
+      <li>Next: <a href="rxnutils.pipeline.html" title="next chapter">rxnutils.pipeline package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-data-uspto-package">
+<h1>rxnutils.data.uspto package<a class="headerlink" href="#rxnutils-data-uspto-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.data.uspto.combine">
+<span id="rxnutils-data-uspto-combine-module"></span><h2>rxnutils.data.uspto.combine module<a class="headerlink" href="#module-rxnutils.data.uspto.combine" title="Link to this heading">¶</a></h2>
+<p>Module containing script to combine raw USPTO files</p>
+<dl class="simple">
+<dt>It will:</dt><dd><ul class="simple">
+<li><p>preserve the ReactionSmiles and Year columns</p></li>
+<li><p>create an ID from PatentNumber and ParagraphNum and row index in the original file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.combine.main">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.uspto.combine.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.combine.main" title="Link to this definition">¶</a></dt>
+<dd><p>Function for command-line tool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.data.uspto.download">
+<span id="rxnutils-data-uspto-download-module"></span><h2>rxnutils.data.uspto.download module<a class="headerlink" href="#module-rxnutils.data.uspto.download" title="Link to this heading">¶</a></h2>
+<p>Module containing a script to download USPTO files Figshare</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.download.main">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.uspto.download.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.download.main" title="Link to this definition">¶</a></dt>
+<dd><p>Function for command-line tool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.data.uspto.preparation_pipeline">
+<span id="rxnutils-data-uspto-preparation-pipeline-module"></span><h2>rxnutils.data.uspto.preparation_pipeline module<a class="headerlink" href="#module-rxnutils.data.uspto.preparation_pipeline" title="Link to this heading">¶</a></h2>
+<p>Module containing pipeline for downloading, transforming and cleaning USPTO data
+This needs to be run in an environment with rxnutils installed</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.data.uspto.preparation_pipeline.</span></span><span class="sig-name descname"><span class="pre">UsptoDataPreparationFlow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="rxnutils.data.html#rxnutils.data.base_pipeline.DataPreparationBaseFlow" title="rxnutils.data.base_pipeline.DataPreparationBaseFlow"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataPreparationBaseFlow</span></code></a></p>
+<p>Pipeline for download UPSTO source file, combining them and do some clean-up</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.data_prefix">
+<span class="sig-name descname"><span class="pre">data_prefix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'uspto'</span></em><a class="headerlink" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.data_prefix" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.start" title="Link to this definition">¶</a></dt>
+<dd><p>Download USPTO data from Figshare</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.combine_files">
+<span class="sig-name descname"><span class="pre">combine_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.combine_files" title="Link to this definition">¶</a></dt>
+<dd><p>Combine USPTO data files and add IDs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.setup_cleaning">
+<span class="sig-name descname"><span class="pre">setup_cleaning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.setup_cleaning" title="Link to this definition">¶</a></dt>
+<dd><p>Setup cleaning</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.do_cleaning">
+<span class="sig-name descname"><span class="pre">do_cleaning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.do_cleaning" title="Link to this definition">¶</a></dt>
+<dd><p>Perform cleaning of data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.join_cleaning">
+<span class="sig-name descname"><span class="pre">join_cleaning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.join_cleaning" title="Link to this definition">¶</a></dt>
+<dd><p>Combined cleaned batches of data</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.end">
+<span class="sig-name descname"><span class="pre">end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.end" title="Link to this definition">¶</a></dt>
+<dd><p>Final step, just print information</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.data.uspto.uspto_yield">
+<span id="rxnutils-data-uspto-uspto-yield-module"></span><h2>rxnutils.data.uspto.uspto_yield module<a class="headerlink" href="#module-rxnutils.data.uspto.uspto_yield" title="Link to this heading">¶</a></h2>
+<p>Code for curating USPTO yields.</p>
+<p>Inspiration from this code: <a class="reference external" href="https://github.com/DocMinus/Yield_curation_USPTO">https://github.com/DocMinus/Yield_curation_USPTO</a></p>
+<p>This could potentially be an action, but since it only make sens to use it
+with USPTO data, it resides here for now.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.uspto_yield.UsptoYieldCuration">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.data.uspto.uspto_yield.</span></span><span class="sig-name descname"><span class="pre">UsptoYieldCuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_yield_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'TextMinedYield'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">calc_yield_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CalculatedYield'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CuratedYield'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Action for curating USPTO yield columns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text_yield_column</strong> (<em>str</em>)</p></li>
+<li><p><strong>calc_yield_column</strong> (<em>str</em>)</p></li>
+<li><p><strong>out_column</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.text_yield_column">
+<span class="sig-name descname"><span class="pre">text_yield_column</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'TextMinedYield'</span></em><a class="headerlink" href="#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.text_yield_column" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.calc_yield_column">
+<span class="sig-name descname"><span class="pre">calc_yield_column</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CalculatedYield'</span></em><a class="headerlink" href="#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.calc_yield_column" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.out_column">
+<span class="sig-name descname"><span class="pre">out_column</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'CuratedYield'</span></em><a class="headerlink" href="#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.out_column" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.data.uspto">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.data.uspto" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.data.uspto.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

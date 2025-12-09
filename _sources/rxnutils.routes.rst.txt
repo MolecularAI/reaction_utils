@@ -1,0 +1,65 @@
+rxnutils.routes package
+=======================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   rxnutils.routes.chemformer_feasibility
+   rxnutils.routes.deepset
+   rxnutils.routes.retro_bleu
+   rxnutils.routes.ted
+   rxnutils.routes.utils
+
+Submodules
+----------
+
+rxnutils.routes.base module
+---------------------------
+
+.. automodule:: rxnutils.routes.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.routes.comparison module
+---------------------------------
+
+.. automodule:: rxnutils.routes.comparison
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.routes.image module
+----------------------------
+
+.. automodule:: rxnutils.routes.image
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.routes.readers module
+------------------------------
+
+.. automodule:: rxnutils.routes.readers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.routes.scoring module
+------------------------------
+
+.. automodule:: rxnutils.routes.scoring
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.routes
+   :members:
+   :undoc-members:
+   :show-inheritance:

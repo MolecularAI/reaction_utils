@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.pipeline package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.pipeline.actions package" href="rxnutils.pipeline.actions.html" />
+    <link rel="prev" title="rxnutils.data.uspto package" href="rxnutils.data.uspto.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">rxnutils.pipeline package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.pipeline.actions.html">rxnutils.pipeline.actions package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.pipeline.base">rxnutils.pipeline.base module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.pipeline.base.action"><code class="docutils literal notranslate"><span class="pre">action()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.pipeline.base.list_actions"><code class="docutils literal notranslate"><span class="pre">list_actions()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.pipeline.base.create_action"><code class="docutils literal notranslate"><span class="pre">create_action()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.pipeline.base.ReactionActionMixIn"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.pipeline.base.ReactionActionMixIn.join_lists"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn.join_lists()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.pipeline.base.ReactionActionMixIn.join_smiles"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn.join_smiles()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.pipeline.base.ReactionActionMixIn.split_lists"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn.split_lists()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.pipeline.base.ReactionActionMixIn.split_smiles"><code class="docutils literal notranslate"><span class="pre">ReactionActionMixIn.split_smiles()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.pipeline.runner">rxnutils.pipeline.runner module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.pipeline.runner.run_pipeline"><code class="docutils literal notranslate"><span class="pre">run_pipeline()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.pipeline.runner.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.pipeline">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+      <li>Previous: <a href="rxnutils.data.uspto.html" title="previous chapter">rxnutils.data.uspto package</a></li>
+      <li>Next: <a href="rxnutils.pipeline.actions.html" title="next chapter">rxnutils.pipeline.actions package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-pipeline-package">
+<h1>rxnutils.pipeline package<a class="headerlink" href="#rxnutils-pipeline-package" title="Link to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.pipeline.actions.html">rxnutils.pipeline.actions package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.dataframe_mod">rxnutils.pipeline.actions.dataframe_mod module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.DropColumns"><code class="docutils literal notranslate"><span class="pre">DropColumns</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.DropColumns.pretty_name"><code class="docutils literal notranslate"><span class="pre">DropColumns.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.DropColumns.columns"><code class="docutils literal notranslate"><span class="pre">DropColumns.columns</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.DropDuplicates"><code class="docutils literal notranslate"><span class="pre">DropDuplicates</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.DropDuplicates.pretty_name"><code class="docutils literal notranslate"><span class="pre">DropDuplicates.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.DropDuplicates.key_columns"><code class="docutils literal notranslate"><span class="pre">DropDuplicates.key_columns</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.DropRows"><code class="docutils literal notranslate"><span class="pre">DropRows</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.DropRows.pretty_name"><code class="docutils literal notranslate"><span class="pre">DropRows.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.DropRows.indicator_columns"><code class="docutils literal notranslate"><span class="pre">DropRows.indicator_columns</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.KeepColumns"><code class="docutils literal notranslate"><span class="pre">KeepColumns</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.KeepColumns.pretty_name"><code class="docutils literal notranslate"><span class="pre">KeepColumns.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.KeepColumns.columns"><code class="docutils literal notranslate"><span class="pre">KeepColumns.columns</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.RenameColumns"><code class="docutils literal notranslate"><span class="pre">RenameColumns</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.RenameColumns.pretty_name"><code class="docutils literal notranslate"><span class="pre">RenameColumns.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.RenameColumns.in_columns"><code class="docutils literal notranslate"><span class="pre">RenameColumns.in_columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.RenameColumns.out_columns"><code class="docutils literal notranslate"><span class="pre">RenameColumns.out_columns</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.QueryDataframe"><code class="docutils literal notranslate"><span class="pre">QueryDataframe</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.QueryDataframe.pretty_name"><code class="docutils literal notranslate"><span class="pre">QueryDataframe.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.QueryDataframe.query"><code class="docutils literal notranslate"><span class="pre">QueryDataframe.query</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.StackColumns"><code class="docutils literal notranslate"><span class="pre">StackColumns</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.StackColumns.pretty_name"><code class="docutils literal notranslate"><span class="pre">StackColumns.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.StackColumns.in_columns"><code class="docutils literal notranslate"><span class="pre">StackColumns.in_columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.StackColumns.out_column"><code class="docutils literal notranslate"><span class="pre">StackColumns.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.StackMultiColumns"><code class="docutils literal notranslate"><span class="pre">StackMultiColumns</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.StackMultiColumns.pretty_name"><code class="docutils literal notranslate"><span class="pre">StackMultiColumns.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.StackMultiColumns.stack_columns"><code class="docutils literal notranslate"><span class="pre">StackMultiColumns.stack_columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.dataframe_mod.StackMultiColumns.target_columns"><code class="docutils literal notranslate"><span class="pre">StackMultiColumns.target_columns</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.reaction_mod">rxnutils.pipeline.actions.reaction_mod module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.DesaltMolecules"><code class="docutils literal notranslate"><span class="pre">DesaltMolecules</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.DesaltMolecules.pretty_name"><code class="docutils literal notranslate"><span class="pre">DesaltMolecules.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.DesaltMolecules.in_column"><code class="docutils literal notranslate"><span class="pre">DesaltMolecules.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.DesaltMolecules.out_column"><code class="docutils literal notranslate"><span class="pre">DesaltMolecules.out_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.DesaltMolecules.keep_something"><code class="docutils literal notranslate"><span class="pre">DesaltMolecules.keep_something</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NameRxn"><code class="docutils literal notranslate"><span class="pre">NameRxn</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NameRxn.pretty_name"><code class="docutils literal notranslate"><span class="pre">NameRxn.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NameRxn.in_column"><code class="docutils literal notranslate"><span class="pre">NameRxn.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NameRxn.options"><code class="docutils literal notranslate"><span class="pre">NameRxn.options</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NameRxn.nm_rxn_column"><code class="docutils literal notranslate"><span class="pre">NameRxn.nm_rxn_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NameRxn.nmc_column"><code class="docutils literal notranslate"><span class="pre">NameRxn.nmc_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NeutralizeMolecules"><code class="docutils literal notranslate"><span class="pre">NeutralizeMolecules</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NeutralizeMolecules.pretty_name"><code class="docutils literal notranslate"><span class="pre">NeutralizeMolecules.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NeutralizeMolecules.in_column"><code class="docutils literal notranslate"><span class="pre">NeutralizeMolecules.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.NeutralizeMolecules.out_column"><code class="docutils literal notranslate"><span class="pre">NeutralizeMolecules.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ReactantsToReagents"><code class="docutils literal notranslate"><span class="pre">ReactantsToReagents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ReactantsToReagents.pretty_name"><code class="docutils literal notranslate"><span class="pre">ReactantsToReagents.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ReactantsToReagents.in_column"><code class="docutils literal notranslate"><span class="pre">ReactantsToReagents.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ReactantsToReagents.out_column"><code class="docutils literal notranslate"><span class="pre">ReactantsToReagents.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ReagentsToReactants"><code class="docutils literal notranslate"><span class="pre">ReagentsToReactants</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ReagentsToReactants.pretty_name"><code class="docutils literal notranslate"><span class="pre">ReagentsToReactants.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ReagentsToReactants.in_column"><code class="docutils literal notranslate"><span class="pre">ReagentsToReactants.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ReagentsToReactants.out_column"><code class="docutils literal notranslate"><span class="pre">ReagentsToReactants.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveAtomMapping"><code class="docutils literal notranslate"><span class="pre">RemoveAtomMapping</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveAtomMapping.pretty_name"><code class="docutils literal notranslate"><span class="pre">RemoveAtomMapping.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveAtomMapping.in_column"><code class="docutils literal notranslate"><span class="pre">RemoveAtomMapping.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveAtomMapping.out_column"><code class="docutils literal notranslate"><span class="pre">RemoveAtomMapping.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveStereoInfo"><code class="docutils literal notranslate"><span class="pre">RemoveStereoInfo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveStereoInfo.pretty_name"><code class="docutils literal notranslate"><span class="pre">RemoveStereoInfo.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveStereoInfo.in_column"><code class="docutils literal notranslate"><span class="pre">RemoveStereoInfo.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveStereoInfo.out_column"><code class="docutils literal notranslate"><span class="pre">RemoveStereoInfo.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.InvertStereo"><code class="docutils literal notranslate"><span class="pre">InvertStereo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.InvertStereo.pretty_name"><code class="docutils literal notranslate"><span class="pre">InvertStereo.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.InvertStereo.in_column"><code class="docutils literal notranslate"><span class="pre">InvertStereo.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.InvertStereo.out_column"><code class="docutils literal notranslate"><span class="pre">InvertStereo.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.IsotopeInfo"><code class="docutils literal notranslate"><span class="pre">IsotopeInfo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.IsotopeInfo.pretty_name"><code class="docutils literal notranslate"><span class="pre">IsotopeInfo.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.IsotopeInfo.in_column"><code class="docutils literal notranslate"><span class="pre">IsotopeInfo.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.IsotopeInfo.isotope_column"><code class="docutils literal notranslate"><span class="pre">IsotopeInfo.isotope_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.IsotopeInfo.out_column"><code class="docutils literal notranslate"><span class="pre">IsotopeInfo.out_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.IsotopeInfo.match_regex"><code class="docutils literal notranslate"><span class="pre">IsotopeInfo.match_regex</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.IsotopeInfo.sub_regex"><code class="docutils literal notranslate"><span class="pre">IsotopeInfo.sub_regex</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveExtraAtomMapping"><code class="docutils literal notranslate"><span class="pre">RemoveExtraAtomMapping</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveExtraAtomMapping.pretty_name"><code class="docutils literal notranslate"><span class="pre">RemoveExtraAtomMapping.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveExtraAtomMapping.in_column"><code class="docutils literal notranslate"><span class="pre">RemoveExtraAtomMapping.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveExtraAtomMapping.out_column"><code class="docutils literal notranslate"><span class="pre">RemoveExtraAtomMapping.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveUnchangedProducts"><code class="docutils literal notranslate"><span class="pre">RemoveUnchangedProducts</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveUnchangedProducts.pretty_name"><code class="docutils literal notranslate"><span class="pre">RemoveUnchangedProducts.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveUnchangedProducts.in_column"><code class="docutils literal notranslate"><span class="pre">RemoveUnchangedProducts.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveUnchangedProducts.out_column"><code class="docutils literal notranslate"><span class="pre">RemoveUnchangedProducts.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveUnsanitizable"><code class="docutils literal notranslate"><span class="pre">RemoveUnsanitizable</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveUnsanitizable.pretty_name"><code class="docutils literal notranslate"><span class="pre">RemoveUnsanitizable.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveUnsanitizable.in_column"><code class="docutils literal notranslate"><span class="pre">RemoveUnsanitizable.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveUnsanitizable.out_column"><code class="docutils literal notranslate"><span class="pre">RemoveUnsanitizable.out_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RemoveUnsanitizable.bad_column"><code class="docutils literal notranslate"><span class="pre">RemoveUnsanitizable.bad_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RDKitRxnRoles"><code class="docutils literal notranslate"><span class="pre">RDKitRxnRoles</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RDKitRxnRoles.pretty_name"><code class="docutils literal notranslate"><span class="pre">RDKitRxnRoles.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RDKitRxnRoles.in_column"><code class="docutils literal notranslate"><span class="pre">RDKitRxnRoles.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RDKitRxnRoles.out_column"><code class="docutils literal notranslate"><span class="pre">RDKitRxnRoles.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RxnMapper"><code class="docutils literal notranslate"><span class="pre">RxnMapper</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RxnMapper.pretty_name"><code class="docutils literal notranslate"><span class="pre">RxnMapper.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RxnMapper.in_column"><code class="docutils literal notranslate"><span class="pre">RxnMapper.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RxnMapper.out_column"><code class="docutils literal notranslate"><span class="pre">RxnMapper.out_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.RxnMapper.rxnmapper_command"><code class="docutils literal notranslate"><span class="pre">RxnMapper.rxnmapper_command</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.SplitReaction"><code class="docutils literal notranslate"><span class="pre">SplitReaction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.SplitReaction.pretty_name"><code class="docutils literal notranslate"><span class="pre">SplitReaction.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.SplitReaction.in_column"><code class="docutils literal notranslate"><span class="pre">SplitReaction.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.SplitReaction.out_columns"><code class="docutils literal notranslate"><span class="pre">SplitReaction.out_columns</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.AtomMapTagDisconnectionSite"><code class="docutils literal notranslate"><span class="pre">AtomMapTagDisconnectionSite</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.AtomMapTagDisconnectionSite.pretty_name"><code class="docutils literal notranslate"><span class="pre">AtomMapTagDisconnectionSite.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.AtomMapTagDisconnectionSite.in_column"><code class="docutils literal notranslate"><span class="pre">AtomMapTagDisconnectionSite.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.AtomMapTagDisconnectionSite.out_column"><code class="docutils literal notranslate"><span class="pre">AtomMapTagDisconnectionSite.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ConvertAtomMapDisconnectionTag"><code class="docutils literal notranslate"><span class="pre">ConvertAtomMapDisconnectionTag</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ConvertAtomMapDisconnectionTag.pretty_name"><code class="docutils literal notranslate"><span class="pre">ConvertAtomMapDisconnectionTag.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ConvertAtomMapDisconnectionTag.in_column"><code class="docutils literal notranslate"><span class="pre">ConvertAtomMapDisconnectionTag.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ConvertAtomMapDisconnectionTag.out_column_tagged"><code class="docutils literal notranslate"><span class="pre">ConvertAtomMapDisconnectionTag.out_column_tagged</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.ConvertAtomMapDisconnectionTag.out_column_reconstructed"><code class="docutils literal notranslate"><span class="pre">ConvertAtomMapDisconnectionTag.out_column_reconstructed</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.TrimRxnSmiles"><code class="docutils literal notranslate"><span class="pre">TrimRxnSmiles</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.TrimRxnSmiles.pretty_name"><code class="docutils literal notranslate"><span class="pre">TrimRxnSmiles.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.TrimRxnSmiles.in_column"><code class="docutils literal notranslate"><span class="pre">TrimRxnSmiles.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.TrimRxnSmiles.out_column"><code class="docutils literal notranslate"><span class="pre">TrimRxnSmiles.out_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_mod.TrimRxnSmiles.smiles_column_index"><code class="docutils literal notranslate"><span class="pre">TrimRxnSmiles.smiles_column_index</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.reaction_props">rxnutils.pipeline.actions.reaction_props module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountComponents"><code class="docutils literal notranslate"><span class="pre">CountComponents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountComponents.pretty_name"><code class="docutils literal notranslate"><span class="pre">CountComponents.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountComponents.in_column"><code class="docutils literal notranslate"><span class="pre">CountComponents.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountComponents.nreactants_column"><code class="docutils literal notranslate"><span class="pre">CountComponents.nreactants_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountComponents.nmapped_reactants_column"><code class="docutils literal notranslate"><span class="pre">CountComponents.nmapped_reactants_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountComponents.nreagents_column"><code class="docutils literal notranslate"><span class="pre">CountComponents.nreagents_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountComponents.nmapped_reagents_column"><code class="docutils literal notranslate"><span class="pre">CountComponents.nmapped_reagents_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountComponents.nproducts_column"><code class="docutils literal notranslate"><span class="pre">CountComponents.nproducts_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountComponents.nmapped_products_column"><code class="docutils literal notranslate"><span class="pre">CountComponents.nmapped_products_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountElements"><code class="docutils literal notranslate"><span class="pre">CountElements</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountElements.pretty_name"><code class="docutils literal notranslate"><span class="pre">CountElements.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountElements.in_column"><code class="docutils literal notranslate"><span class="pre">CountElements.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CountElements.out_column"><code class="docutils literal notranslate"><span class="pre">CountElements.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.DetectReactiveFunctions"><code class="docutils literal notranslate"><span class="pre">DetectReactiveFunctions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.DetectReactiveFunctions.pretty_name"><code class="docutils literal notranslate"><span class="pre">DetectReactiveFunctions.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.DetectReactiveFunctions.in_column"><code class="docutils literal notranslate"><span class="pre">DetectReactiveFunctions.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.DetectReactiveFunctions.func_column"><code class="docutils literal notranslate"><span class="pre">DetectReactiveFunctions.func_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.DetectReactiveFunctions.rsmi_column"><code class="docutils literal notranslate"><span class="pre">DetectReactiveFunctions.rsmi_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.DetectReactiveFunctions.smarts_lib"><code class="docutils literal notranslate"><span class="pre">DetectReactiveFunctions.smarts_lib</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.DetectReactiveFunctions.alphabetic_order"><code class="docutils literal notranslate"><span class="pre">DetectReactiveFunctions.alphabetic_order</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.DetectReactiveFunctions.add_none"><code class="docutils literal notranslate"><span class="pre">DetectReactiveFunctions.add_none</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.DetectReactiveFunctions.max_reactants"><code class="docutils literal notranslate"><span class="pre">DetectReactiveFunctions.max_reactants</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasStereoInfo"><code class="docutils literal notranslate"><span class="pre">HasStereoInfo</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasStereoInfo.pretty_name"><code class="docutils literal notranslate"><span class="pre">HasStereoInfo.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasStereoInfo.in_column"><code class="docutils literal notranslate"><span class="pre">HasStereoInfo.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasStereoInfo.out_column"><code class="docutils literal notranslate"><span class="pre">HasStereoInfo.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasUnmappedRadicalAtom"><code class="docutils literal notranslate"><span class="pre">HasUnmappedRadicalAtom</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasUnmappedRadicalAtom.pretty_name"><code class="docutils literal notranslate"><span class="pre">HasUnmappedRadicalAtom.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasUnmappedRadicalAtom.in_column"><code class="docutils literal notranslate"><span class="pre">HasUnmappedRadicalAtom.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasUnmappedRadicalAtom.out_column"><code class="docutils literal notranslate"><span class="pre">HasUnmappedRadicalAtom.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasUnsanitizableReactants"><code class="docutils literal notranslate"><span class="pre">HasUnsanitizableReactants</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasUnsanitizableReactants.pretty_name"><code class="docutils literal notranslate"><span class="pre">HasUnsanitizableReactants.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasUnsanitizableReactants.rsmi_column"><code class="docutils literal notranslate"><span class="pre">HasUnsanitizableReactants.rsmi_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasUnsanitizableReactants.bad_columns"><code class="docutils literal notranslate"><span class="pre">HasUnsanitizableReactants.bad_columns</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.HasUnsanitizableReactants.out_column"><code class="docutils literal notranslate"><span class="pre">HasUnsanitizableReactants.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CgrCreated"><code class="docutils literal notranslate"><span class="pre">CgrCreated</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CgrCreated.in_column"><code class="docutils literal notranslate"><span class="pre">CgrCreated.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CgrCreated.pretty_name"><code class="docutils literal notranslate"><span class="pre">CgrCreated.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CgrCreated.out_column"><code class="docutils literal notranslate"><span class="pre">CgrCreated.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CgrNumberOfDynamicBonds"><code class="docutils literal notranslate"><span class="pre">CgrNumberOfDynamicBonds</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CgrNumberOfDynamicBonds.in_column"><code class="docutils literal notranslate"><span class="pre">CgrNumberOfDynamicBonds.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CgrNumberOfDynamicBonds.pretty_name"><code class="docutils literal notranslate"><span class="pre">CgrNumberOfDynamicBonds.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.CgrNumberOfDynamicBonds.out_column"><code class="docutils literal notranslate"><span class="pre">CgrNumberOfDynamicBonds.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ProductAtomMappingStats"><code class="docutils literal notranslate"><span class="pre">ProductAtomMappingStats</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ProductAtomMappingStats.pretty_name"><code class="docutils literal notranslate"><span class="pre">ProductAtomMappingStats.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ProductAtomMappingStats.in_column"><code class="docutils literal notranslate"><span class="pre">ProductAtomMappingStats.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ProductAtomMappingStats.unmapped_column"><code class="docutils literal notranslate"><span class="pre">ProductAtomMappingStats.unmapped_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ProductAtomMappingStats.widow_column"><code class="docutils literal notranslate"><span class="pre">ProductAtomMappingStats.widow_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ProductSize"><code class="docutils literal notranslate"><span class="pre">ProductSize</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ProductSize.pretty_name"><code class="docutils literal notranslate"><span class="pre">ProductSize.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ProductSize.in_column"><code class="docutils literal notranslate"><span class="pre">ProductSize.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ProductSize.out_column"><code class="docutils literal notranslate"><span class="pre">ProductSize.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.PseudoReactionHash"><code class="docutils literal notranslate"><span class="pre">PseudoReactionHash</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.PseudoReactionHash.pretty_name"><code class="docutils literal notranslate"><span class="pre">PseudoReactionHash.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.PseudoReactionHash.in_column"><code class="docutils literal notranslate"><span class="pre">PseudoReactionHash.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.PseudoReactionHash.out_column"><code class="docutils literal notranslate"><span class="pre">PseudoReactionHash.out_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.PseudoReactionHash.no_reagents"><code class="docutils literal notranslate"><span class="pre">PseudoReactionHash.no_reagents</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.PseudoSmilesHash"><code class="docutils literal notranslate"><span class="pre">PseudoSmilesHash</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.PseudoSmilesHash.pretty_name"><code class="docutils literal notranslate"><span class="pre">PseudoSmilesHash.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.PseudoSmilesHash.in_column"><code class="docutils literal notranslate"><span class="pre">PseudoSmilesHash.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.PseudoSmilesHash.out_column"><code class="docutils literal notranslate"><span class="pre">PseudoSmilesHash.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ReactantProductAtomBalance"><code class="docutils literal notranslate"><span class="pre">ReactantProductAtomBalance</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ReactantProductAtomBalance.pretty_name"><code class="docutils literal notranslate"><span class="pre">ReactantProductAtomBalance.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ReactantProductAtomBalance.in_column"><code class="docutils literal notranslate"><span class="pre">ReactantProductAtomBalance.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ReactantProductAtomBalance.out_column"><code class="docutils literal notranslate"><span class="pre">ReactantProductAtomBalance.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ReactantSize"><code class="docutils literal notranslate"><span class="pre">ReactantSize</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ReactantSize.pretty_name"><code class="docutils literal notranslate"><span class="pre">ReactantSize.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ReactantSize.in_column"><code class="docutils literal notranslate"><span class="pre">ReactantSize.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.ReactantSize.out_column"><code class="docutils literal notranslate"><span class="pre">ReactantSize.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.MaxRingNumber"><code class="docutils literal notranslate"><span class="pre">MaxRingNumber</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.MaxRingNumber.pretty_name"><code class="docutils literal notranslate"><span class="pre">MaxRingNumber.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.MaxRingNumber.in_column"><code class="docutils literal notranslate"><span class="pre">MaxRingNumber.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.MaxRingNumber.out_column"><code class="docutils literal notranslate"><span class="pre">MaxRingNumber.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingNumberChange"><code class="docutils literal notranslate"><span class="pre">RingNumberChange</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingNumberChange.pretty_name"><code class="docutils literal notranslate"><span class="pre">RingNumberChange.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingNumberChange.in_column"><code class="docutils literal notranslate"><span class="pre">RingNumberChange.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingNumberChange.out_column"><code class="docutils literal notranslate"><span class="pre">RingNumberChange.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingBondMade"><code class="docutils literal notranslate"><span class="pre">RingBondMade</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingBondMade.pretty_name"><code class="docutils literal notranslate"><span class="pre">RingBondMade.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingBondMade.in_column"><code class="docutils literal notranslate"><span class="pre">RingBondMade.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingBondMade.out_column"><code class="docutils literal notranslate"><span class="pre">RingBondMade.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingMadeSize"><code class="docutils literal notranslate"><span class="pre">RingMadeSize</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingMadeSize.pretty_name"><code class="docutils literal notranslate"><span class="pre">RingMadeSize.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingMadeSize.in_column"><code class="docutils literal notranslate"><span class="pre">RingMadeSize.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.RingMadeSize.out_column"><code class="docutils literal notranslate"><span class="pre">RingMadeSize.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.SmilesLength"><code class="docutils literal notranslate"><span class="pre">SmilesLength</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.SmilesLength.pretty_name"><code class="docutils literal notranslate"><span class="pre">SmilesLength.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.SmilesLength.in_column"><code class="docutils literal notranslate"><span class="pre">SmilesLength.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.SmilesLength.out_column"><code class="docutils literal notranslate"><span class="pre">SmilesLength.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.SmilesSanitizable"><code class="docutils literal notranslate"><span class="pre">SmilesSanitizable</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.SmilesSanitizable.pretty_name"><code class="docutils literal notranslate"><span class="pre">SmilesSanitizable.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.SmilesSanitizable.in_column"><code class="docutils literal notranslate"><span class="pre">SmilesSanitizable.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.SmilesSanitizable.out_column"><code class="docutils literal notranslate"><span class="pre">SmilesSanitizable.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoInvention"><code class="docutils literal notranslate"><span class="pre">StereoInvention</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoInvention.pretty_name"><code class="docutils literal notranslate"><span class="pre">StereoInvention.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoInvention.in_column"><code class="docutils literal notranslate"><span class="pre">StereoInvention.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoInvention.out_column"><code class="docutils literal notranslate"><span class="pre">StereoInvention.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCentreChanges"><code class="docutils literal notranslate"><span class="pre">StereoCentreChanges</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCentreChanges.pretty_name"><code class="docutils literal notranslate"><span class="pre">StereoCentreChanges.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCentreChanges.in_column"><code class="docutils literal notranslate"><span class="pre">StereoCentreChanges.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCentreChanges.out_column"><code class="docutils literal notranslate"><span class="pre">StereoCentreChanges.out_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCentreChanges.stereo_changes_column"><code class="docutils literal notranslate"><span class="pre">StereoCentreChanges.stereo_changes_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoHasChiralReagent"><code class="docutils literal notranslate"><span class="pre">StereoHasChiralReagent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoHasChiralReagent.pretty_name"><code class="docutils literal notranslate"><span class="pre">StereoHasChiralReagent.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoHasChiralReagent.in_column"><code class="docutils literal notranslate"><span class="pre">StereoHasChiralReagent.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoHasChiralReagent.out_column"><code class="docutils literal notranslate"><span class="pre">StereoHasChiralReagent.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterIsCreated"><code class="docutils literal notranslate"><span class="pre">StereoCenterIsCreated</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterIsCreated.pretty_name"><code class="docutils literal notranslate"><span class="pre">StereoCenterIsCreated.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterIsCreated.in_column"><code class="docutils literal notranslate"><span class="pre">StereoCenterIsCreated.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterIsCreated.out_column"><code class="docutils literal notranslate"><span class="pre">StereoCenterIsCreated.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterIsRemoved"><code class="docutils literal notranslate"><span class="pre">StereoCenterIsRemoved</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterIsRemoved.pretty_name"><code class="docutils literal notranslate"><span class="pre">StereoCenterIsRemoved.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterIsRemoved.in_column"><code class="docutils literal notranslate"><span class="pre">StereoCenterIsRemoved.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterIsRemoved.out_column"><code class="docutils literal notranslate"><span class="pre">StereoCenterIsRemoved.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterInReactantPotential"><code class="docutils literal notranslate"><span class="pre">StereoCenterInReactantPotential</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterInReactantPotential.pretty_name"><code class="docutils literal notranslate"><span class="pre">StereoCenterInReactantPotential.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterInReactantPotential.in_column"><code class="docutils literal notranslate"><span class="pre">StereoCenterInReactantPotential.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterInReactantPotential.out_column"><code class="docutils literal notranslate"><span class="pre">StereoCenterInReactantPotential.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterOutsideReaction"><code class="docutils literal notranslate"><span class="pre">StereoCenterOutsideReaction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterOutsideReaction.pretty_name"><code class="docutils literal notranslate"><span class="pre">StereoCenterOutsideReaction.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterOutsideReaction.in_column"><code class="docutils literal notranslate"><span class="pre">StereoCenterOutsideReaction.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoCenterOutsideReaction.out_column"><code class="docutils literal notranslate"><span class="pre">StereoCenterOutsideReaction.out_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoMesoProduct"><code class="docutils literal notranslate"><span class="pre">StereoMesoProduct</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoMesoProduct.pretty_name"><code class="docutils literal notranslate"><span class="pre">StereoMesoProduct.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoMesoProduct.in_column"><code class="docutils literal notranslate"><span class="pre">StereoMesoProduct.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.reaction_props.StereoMesoProduct.out_column"><code class="docutils literal notranslate"><span class="pre">StereoMesoProduct.out_column</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions.templates">rxnutils.pipeline.actions.templates module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.CountTemplateComponents"><code class="docutils literal notranslate"><span class="pre">CountTemplateComponents</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.CountTemplateComponents.pretty_name"><code class="docutils literal notranslate"><span class="pre">CountTemplateComponents.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.CountTemplateComponents.in_column"><code class="docutils literal notranslate"><span class="pre">CountTemplateComponents.in_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.CountTemplateComponents.nreactants_column"><code class="docutils literal notranslate"><span class="pre">CountTemplateComponents.nreactants_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.CountTemplateComponents.nreagents_column"><code class="docutils literal notranslate"><span class="pre">CountTemplateComponents.nreagents_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.CountTemplateComponents.nproducts_column"><code class="docutils literal notranslate"><span class="pre">CountTemplateComponents.nproducts_column</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.RetroTemplateReproduction"><code class="docutils literal notranslate"><span class="pre">RetroTemplateReproduction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.RetroTemplateReproduction.pretty_name"><code class="docutils literal notranslate"><span class="pre">RetroTemplateReproduction.pretty_name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.RetroTemplateReproduction.template_column"><code class="docutils literal notranslate"><span class="pre">RetroTemplateReproduction.template_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.RetroTemplateReproduction.smiles_column"><code class="docutils literal notranslate"><span class="pre">RetroTemplateReproduction.smiles_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.RetroTemplateReproduction.expected_reactants_column"><code class="docutils literal notranslate"><span class="pre">RetroTemplateReproduction.expected_reactants_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.RetroTemplateReproduction.other_reactants_column"><code class="docutils literal notranslate"><span class="pre">RetroTemplateReproduction.other_reactants_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.pipeline.actions.html#rxnutils.pipeline.actions.templates.RetroTemplateReproduction.noutcomes_column"><code class="docutils literal notranslate"><span class="pre">RetroTemplateReproduction.noutcomes_column</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.pipeline.actions.html#module-rxnutils.pipeline.actions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.pipeline.base">
+<span id="rxnutils-pipeline-base-module"></span><h2>rxnutils.pipeline.base module<a class="headerlink" href="#module-rxnutils.pipeline.base" title="Link to this heading">¶</a></h2>
+<p>Module containing routines for the validation framework</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.action">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.base.</span></span><span class="sig-name descname"><span class="pre">action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.action" title="Link to this definition">¶</a></dt>
+<dd><p>Decorator that register a callable as a validation action.</p>
+<p>An action will be called with a <cite>pandas.DataFrame</cite> object
+and return a new <cite>pandas.DataFrame</cite> object.</p>
+<p>An action needs to have an attribute <cite>pretty_name</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>obj</strong> (<em>Callable</em><em>[</em><em>[</em><em>DataFrame</em><em>]</em><em>, </em><em>DataFrame</em><em>]</em>) – the callable to register as an action</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the same as <cite>obj</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Callable</em>[[<em>DataFrame</em>], <em>DataFrame</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.list_actions">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.base.</span></span><span class="sig-name descname"><span class="pre">list_actions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">short</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.list_actions" title="Link to this definition">¶</a></dt>
+<dd><p>List all available actions in a nice table</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>short</strong> (<em>bool</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.create_action">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.base.</span></span><span class="sig-name descname"><span class="pre">create_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pretty_name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.create_action" title="Link to this definition">¶</a></dt>
+<dd><p>Create an action that can be called</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pretty_name</strong> (<em>str</em>) – the name of the action</p></li>
+<li><p><strong>args</strong> (<em>Any</em>)</p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the instantiated actions</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Callable</em>[[<em>DataFrame</em>], <em>DataFrame</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.base.</span></span><span class="sig-name descname"><span class="pre">ReactionActionMixIn</span></span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Mixin class with standard routines for splitting and joining reaction SMILES</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn.join_lists">
+<span class="sig-name descname"><span class="pre">join_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reactants_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reagents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">products_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn.join_lists" title="Link to this definition">¶</a></dt>
+<dd><p>Join list of components into a reaction SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reactants_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the list of reactant SMILES</p></li>
+<li><p><strong>reagents_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the list of reagent SMILES</p></li>
+<li><p><strong>products_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the list of product SMILES</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the concatenated reaction SMILES</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn.join_smiles">
+<span class="sig-name descname"><span class="pre">join_smiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reactants</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reagents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">products</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn.join_smiles" title="Link to this definition">¶</a></dt>
+<dd><p>Join component SMILES into a reaction SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reactants</strong> (<em>str</em>) – the reactant SMILES</p></li>
+<li><p><strong>reagents</strong> (<em>str</em>) – the reagent SMILES</p></li>
+<li><p><strong>products</strong> (<em>str</em>) – the product SMILES</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the concatenated reaction SMILES</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn.split_lists">
+<span class="sig-name descname"><span class="pre">split_lists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn.split_lists" title="Link to this definition">¶</a></dt>
+<dd><p>Split a reaction SMILES into list of component SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>Series</em>) – the row with the SMILES</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the list of SMILES of the components</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>List</em>[str], <em>List</em>[str], <em>List</em>[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.pipeline.base.ReactionActionMixIn.split_smiles">
+<span class="sig-name descname"><span class="pre">split_smiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.base.ReactionActionMixIn.split_smiles" title="Link to this definition">¶</a></dt>
+<dd><p>Split a reaction SMILES into components SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>Series</em>) – the row with the SMILES</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the SMILES of the components</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[str, str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.pipeline.runner">
+<span id="rxnutils-pipeline-runner-module"></span><h2>rxnutils.pipeline.runner module<a class="headerlink" href="#module-rxnutils.pipeline.runner" title="Link to this heading">¶</a></h2>
+<p>Module containg routines and interface to run pipelines</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.runner.run_pipeline">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.runner.</span></span><span class="sig-name descname"><span class="pre">run_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pipeline</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_intermediates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.runner.run_pipeline" title="Link to this definition">¶</a></dt>
+<dd><p>Run a given pipeline on a dataset</p>
+<p>The actions are applied sequentials as they are defined in the pipeline</p>
+<p>The intermediate results of the pipeline will be written to separate
+tab-separated CSV files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em>) – the dataset</p></li>
+<li><p><strong>pipeline</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>) – the action specifications</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – path to the final output file</p></li>
+<li><p><strong>save_intermediates</strong> (<em>bool</em>) – if True will save intermediate results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the dataset after completing the pipeline</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.pipeline.runner.main">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.pipeline.runner.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.pipeline.runner.main" title="Link to this definition">¶</a></dt>
+<dd><p>Function for command line argument</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.pipeline">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.pipeline" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.pipeline.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

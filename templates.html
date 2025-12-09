@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Templates &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="USPTO" href="uspto.html" />
+    <link rel="prev" title="rxnutils documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Templates</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#template-extraction">Template extraction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#template-manipulation">Template manipulation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.html">rxnutils package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">rxnutils documentation</a></li>
+      <li>Next: <a href="uspto.html" title="next chapter">USPTO</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="templates">
+<h1>Templates<a class="headerlink" href="#templates" title="Link to this heading">¶</a></h1>
+<p><cite>reaction utils</cite> contains routines for extracting reaction templates using the <cite>RDchiral</cite> package.
+This code is based on the work of Thakkar et al. (Chem. Sci., 2019) but with some re-factoring and
+other additions.</p>
+<section id="template-extraction">
+<h2>Template extraction<a class="headerlink" href="#template-extraction" title="Link to this heading">¶</a></h2>
+<p>Let’s start with this atom-mapped reaction</p>
+<img alt="_images/sample_reaction.PNG" src="_images/sample_reaction.PNG" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CCN</span><span class="p">(</span><span class="n">CC</span><span class="p">)</span><span class="n">CC</span><span class="o">.</span><span class="n">CCOCC</span><span class="o">.</span><span class="n">Cl</span><span class="p">[</span><span class="n">S</span><span class="p">:</span><span class="mi">3</span><span class="p">]([</span><span class="n">CH2</span><span class="p">:</span><span class="mi">2</span><span class="p">][</span><span class="n">CH3</span><span class="p">:</span><span class="mi">1</span><span class="p">])(</span><span class="o">=</span><span class="p">[</span><span class="n">O</span><span class="p">:</span><span class="mi">4</span><span class="p">])</span><span class="o">=</span><span class="p">[</span><span class="n">O</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="p">[</span><span class="n">OH</span><span class="p">:</span><span class="mi">6</span><span class="p">][</span><span class="n">CH2</span><span class="p">:</span><span class="mi">7</span><span class="p">][</span><span class="n">CH2</span><span class="p">:</span><span class="mi">8</span><span class="p">][</span><span class="n">Br</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span><span class="o">&gt;&gt;</span><span class="p">[</span><span class="n">CH3</span><span class="p">:</span><span class="mi">1</span><span class="p">][</span><span class="n">CH2</span><span class="p">:</span><span class="mi">2</span><span class="p">][</span><span class="n">S</span><span class="p">:</span><span class="mi">3</span><span class="p">](</span><span class="o">=</span><span class="p">[</span><span class="n">O</span><span class="p">:</span><span class="mi">4</span><span class="p">])(</span><span class="o">=</span><span class="p">[</span><span class="n">O</span><span class="p">:</span><span class="mi">5</span><span class="p">])[</span><span class="n">O</span><span class="p">:</span><span class="mi">6</span><span class="p">][</span><span class="n">CH2</span><span class="p">:</span><span class="mi">7</span><span class="p">][</span><span class="n">CH2</span><span class="p">:</span><span class="mi">8</span><span class="p">][</span><span class="n">Br</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>First we create a <code class="docutils literal notranslate"><span class="pre">ChemicalReaction</span></code> object that is encapsulating the reaction and provides some
+simple curation routines.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">rxnutils.chem.reaction</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChemicalReaction</span>
+
+<span class="n">reaction</span> <span class="o">=</span> <span class="s2">&quot;CCN(CC)CC.CCOCC.Cl[S:3]([CH2:2][CH3:1])(=[O:4])=[O:5].[OH:6][CH2:7][CH2:8][Br:9]&gt;&gt;[CH3:1][CH2:2][S:3](=[O:4])(=[O:5])[O:6][CH2:7][CH2:8][Br:9]&quot;</span>
+<span class="n">rxn</span> <span class="o">=</span> <span class="n">ChemicalReaction</span><span class="p">(</span><span class="n">reaction</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>if you inspect the <code class="docutils literal notranslate"><span class="pre">reactants_list</span></code> property, you will see that two of the reactants from the reaction
+SMILES have been moved to the list of agents because they are not mapped.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rxn</span><span class="o">.</span><span class="n">reactants_list</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s1">&#39;Cl[S:3]([CH2:2][CH3:1])(=[O:4])=[O:5]&#39;</span><span class="p">,</span> <span class="s1">&#39;[OH:6][CH2:7][CH2:8][Br:9]&#39;</span><span class="p">]</span>
+
+<span class="n">rxn</span><span class="o">.</span><span class="n">agents_list</span>
+<span class="o">&gt;&gt;</span> <span class="p">[</span><span class="s1">&#39;CCN(CC)CC&#39;</span><span class="p">,</span> <span class="s1">&#39;CCOCC&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Now we can extract a reaction template</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rxn</span><span class="o">.</span><span class="n">generate_reaction_template</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">rxn</span><span class="o">.</span><span class="n">retro_template</span>
+<span class="o">&gt;&gt;</span> <span class="o">&lt;</span><span class="n">rxnutils</span><span class="o">.</span><span class="n">chem</span><span class="o">.</span><span class="n">template</span><span class="o">.</span><span class="n">ReactionTemplate</span> <span class="n">at</span> <span class="mh">0x7fe4e9488d90</span><span class="o">&gt;</span>
+
+<span class="n">rxn</span><span class="o">.</span><span class="n">retro_template</span><span class="o">.</span><span class="n">smarts</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;[C:2]-[S;H0;D4;+0:1](=[O;D1;H0:3])(=[O;D1;H0:4])-[O;H0;D2;+0:6]-[C:5]&gt;&gt;Cl-[S;H0;D4;+0:1](-[C:2])(=[O;D1;H0:3])=[O;D1;H0:4].[C:5]-[OH;D1;+0:6]&#39;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">radius</span></code> is an optional argument, specifying the radius of the template.</p>
+</section>
+<section id="template-manipulation">
+<h2>Template manipulation<a class="headerlink" href="#template-manipulation" title="Link to this heading">¶</a></h2>
+<p>The reaction template, either the canonical (forward) or retro template is encapulsated in a
+<cite>ReactionTemplate</cite> object that can be used to apply the template to a molecule or to generate
+fingerprints or hash strings.</p>
+<p>Let’s see if the template generated above is capable of re-generating the expected reactants.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">smiles</span><span class="o">=</span><span class="s2">&quot;CCS(=O)(=O)OCCBr&quot;</span>
+<span class="n">reactant_list</span> <span class="o">=</span> <span class="n">rxn</span><span class="o">.</span><span class="n">retro_template</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">smiles</span><span class="p">)</span>
+<span class="n">reactant_list</span>
+<span class="o">&gt;&gt;</span> <span class="p">((</span><span class="s1">&#39;CCS(=O)(=O)Cl&#39;</span><span class="p">,</span> <span class="s1">&#39;OCCBr&#39;</span><span class="p">),)</span>
+</pre></div>
+</div>
+<p>we see that returned list (technically a tuple) contains one item, implying that the template
+was specific and only produced one set of reactants. These reactants as you see are identical
+to the reactants in the reaction SMILES above.</p>
+<p>To create a hash string for the template, there are a number of routines</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rxn</span><span class="o">.</span><span class="n">retro_template</span><span class="o">.</span><span class="n">hash_from_bits</span><span class="p">()</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;a1727cc9ed68a6411bfd02873c1615c22baa1af4957f14ae942e2c85caf9adb5&#39;</span>
+
+<span class="n">rxn</span><span class="o">.</span><span class="n">retro_template</span><span class="o">.</span><span class="n">hash_from_smarts</span><span class="p">()</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;4cb9be0738a3a84e7ed4fb661d2efb73c099fc7d6c532a4b294c8d0d&#39;</span>
+
+<span class="n">rxn</span><span class="o">.</span><span class="n">retro_template</span><span class="o">.</span><span class="n">hash_from_smiles</span><span class="p">()</span>
+<span class="o">&gt;&gt;</span> <span class="s1">&#39;5b2ff2a69fb7bd6a032938e468684773bcc668928b037bbec0ac8335&#39;</span>
+</pre></div>
+</div>
+<p>The first one is creating the hash string from the fingerprint bits that are one, whereas the
+other two creates it by hashing the SMARTS and the SMILES string, respectively.</p>
+<p>A Morgan fingerprint can be computed for a reaction template:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rxn</span><span class="o">.</span><span class="n">retro_template</span><span class="o">.</span><span class="n">fingerprint_vector</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">nbits</span><span class="o">=</span><span class="mi">1024</span><span class="p">)</span>
+<span class="o">&gt;&gt;</span> <span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/templates.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

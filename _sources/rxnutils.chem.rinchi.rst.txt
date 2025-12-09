@@ -1,0 +1,29 @@
+rxnutils.chem.rinchi package
+============================
+
+Submodules
+----------
+
+rxnutils.chem.rinchi.download\_rinchi module
+--------------------------------------------
+
+.. automodule:: rxnutils.chem.rinchi.download_rinchi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.rinchi.rinchi\_api module
+---------------------------------------
+
+.. automodule:: rxnutils.chem.rinchi.rinchi_api
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.chem.rinchi
+   :members:
+   :undoc-members:
+   :show-inheritance:

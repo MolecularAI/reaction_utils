@@ -1,0 +1,45 @@
+rxnutils.chem.features package
+==============================
+
+Submodules
+----------
+
+rxnutils.chem.features.reaction\_centre\_fp module
+--------------------------------------------------
+
+.. automodule:: rxnutils.chem.features.reaction_centre_fp
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.features.rxnfp\_runner module
+-------------------------------------------
+
+.. automodule:: rxnutils.chem.features.rxnfp_runner
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.features.sc\_score module
+---------------------------------------
+
+.. automodule:: rxnutils.chem.features.sc_score
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.chem.features.simple\_rdkit module
+-------------------------------------------
+
+.. automodule:: rxnutils.chem.features.simple_rdkit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.chem.features
+   :members:
+   :undoc-members:
+   :show-inheritance:
