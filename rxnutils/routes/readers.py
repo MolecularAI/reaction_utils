@@ -110,7 +110,11 @@ def read_reactions_dataframe(
     return grouped.apply(reaction_dataframe2routes)
 
 
-def reactions2route(reactions: Sequence[str], metadata: Sequence[Dict[str, Any]] = None) -> SynthesisRoute:
+def reactions2route(
+    reactions: Sequence[str],
+    metadata: Sequence[Dict[str, Any]] = None,
+    ignore_stereo: bool = True,
+) -> SynthesisRoute:
     """
     Convert a list of reactions into a retrosynthesis tree
 
@@ -118,6 +122,8 @@ def reactions2route(reactions: Sequence[str], metadata: Sequence[Dict[str, Any]]
     reaction with the partial InChI key of a product.
 
     :params reactions: list of reaction SMILES
+    :params metadata: optional list of metadata dictionaries for each reaction
+    :params ignore_stereo: whether to ignore stereochemistry when matching reactants and products
     :returns: the created trees
     """
 
@@ -126,7 +132,7 @@ def reactions2route(reactions: Sequence[str], metadata: Sequence[Dict[str, Any]]
             "type": "mol",
             "smiles": product_smiles,
         }
-        product_inchi = smiles2inchikey(product_smiles, ignore_stereo=True)
+        product_inchi = smiles2inchikey(product_smiles, ignore_stereo=ignore_stereo)
         reaction = product2reaction.get(product_inchi)
         if reaction is not None:
             metadata = dict(reaction["metadata"])
@@ -147,14 +153,18 @@ def reactions2route(reactions: Sequence[str], metadata: Sequence[Dict[str, Any]]
     for reaction, meta in zip(reactions, metadata):
         reactants_smiles, _, product_smiles = split_rsmi(reaction)
         product_smiles = Chem.CanonSmiles(product_smiles)
-        partial_product_inchi = smiles2inchikey(product_smiles, ignore_stereo=True)
+        partial_product_inchi = smiles2inchikey(
+            product_smiles, ignore_stereo=ignore_stereo
+        )
         inchi_map[partial_product_inchi] = product_smiles
         reactants = split_smiles_from_reaction(reactants_smiles)
         try:
             reactants = [Chem.CanonSmiles(smi) for smi in reactants]
         except:
             raise ValueError(f"Cannot canonicalize SMILES: {reactants_smiles}")
-        all_reactants = all_reactants.union([smiles2inchikey(smi, ignore_stereo=True) for smi in reactants])
+        all_reactants = all_reactants.union(
+            [smiles2inchikey(smi, ignore_stereo=ignore_stereo) for smi in reactants]
+        )
         product2reaction[partial_product_inchi] = {
             "smiles": reaction,
             "product": product_smiles,
