@@ -1,8 +1,18 @@
 import json
 
 import pytest
+import rdkit
 
 from rxnutils.chem.reaction import ChemicalReaction, ReactionException
+
+# rdkit>=2024 (required for Python>=3.13 wheels) emits a slightly different
+# template SMARTS for the radius=1 case below.
+_NEW_RDKIT = tuple(int(x) for x in rdkit.__version__.split(".")[:2]) >= (2024, 0)
+_RADIUS1_EXPECTED = (
+    "[C:2]-[N;H0;D3;+0:3](-[CH3;D1;+0:1])-[C:4]>>I-[CH3;D1;+0:1].[C:2]-[NH;D2;+0:3]-[C:4]"
+    if _NEW_RDKIT
+    else "[C:2]-[N;H0;D3;+0:3](-[C:4])-[CH3;D1;+0:1]>>I-[CH3;D1;+0:1].[C:2]-[NH;D2;+0:3]-[C:4]"
+)
 
 
 @pytest.fixture
@@ -132,7 +142,7 @@ def test_no_template_creation(load_templates):
         ),
         (
             1,
-            "[C:2]-[N;H0;D3;+0:3](-[C:4])-[CH3;D1;+0:1]>>I-[CH3;D1;+0:1].[C:2]-[NH;D2;+0:3]-[C:4]",
+            _RADIUS1_EXPECTED,
         ),
     ],
 )

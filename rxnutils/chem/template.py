@@ -24,6 +24,14 @@ HYDROGEN_REGEX = re.compile(HYDROGEN_REGEX_STR)
 DEGREE_REGEX_STR = r"&D(\d)" + DELIM_REGEX_STR
 DEGREE_REGEX = re.compile(DEGREE_REGEX_STR)
 
+# Atom getters that took zero arguments historically but were changed in
+# rdkit>=2024 to require an argument. ``atom_properties`` skips these because
+# the choice of argument is not unambiguous. If you care about one of these
+# values, query it explicitly outside ``atom_properties``.
+_ZERO_ARG_GETTER_BLOCKLIST = frozenset({
+    "GetValence",  # rdkit>=2024 requires Atom.ValenceType (TOTAL or EXPLICIT)
+})
+
 
 class TemplateMolecule:
     """
@@ -87,12 +95,20 @@ class TemplateMolecule:
         for idx, atom in enumerate(self.atoms()):
             props["index"].append(idx)
             for key in dir(atom):
-                if key.startswith("Get") and "Prop" not in key:
-                    ret = getattr(atom, key)()
-                    if isinstance(ret, (list, tuple)):
-                        props[f"# {key[3:]}"].append(len(ret))
-                    else:
-                        props[key[3:]].append(ret)
+                if not key.startswith("Get") or "Prop" in key:
+                    continue
+                if key in _ZERO_ARG_GETTER_BLOCKLIST:
+                    # Getter signature changed in rdkit>=2024 to require an
+                    # argument (e.g. ValenceType for GetValence). We can't
+                    # guess the right argument, so skip these explicitly. If a
+                    # new getter starts requiring arguments, calling it here
+                    # will raise loudly - that's the intended behaviour.
+                    continue
+                ret = getattr(atom, key)()
+                if isinstance(ret, (list, tuple)):
+                    props[f"# {key[3:]}"].append(len(ret))
+                else:
+                    props[key[3:]].append(ret)
             try:
                 props["comp degree"].append(atom.GetIntProp("comp_degree"))
             except KeyError:  # Raised if fix_atom_properties hasn't been called

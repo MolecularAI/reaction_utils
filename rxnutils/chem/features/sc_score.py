@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import numpy as np
+from rdkit import DataStructs
 from rdkit.Chem import AllChem
 
 RdMol = AllChem.rdchem.Mol
@@ -60,4 +61,9 @@ class SCScore:
             nBits=self._fingerprint_length,
             useChirality=True,
         )
-        return np.array(fp_vec, dtype=float)
+        # NOTE: np.array(fp_vec, dtype=float) segfaults under rdkit>=2026 +
+        # numpy>=2 because ExplicitBitVect's array protocol is broken in that
+        # combination. ConvertToNumpyArray is the supported path.
+        out = np.zeros((self._fingerprint_length,), dtype=np.int8)
+        DataStructs.ConvertToNumpyArray(fp_vec, out)
+        return out.astype(float)
