@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.routes.utils package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="rxnutils.routes.ted package" href="rxnutils.routes.ted.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="rxnutils.routes.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.chemformer_feasibility.html">rxnutils.routes.chemformer_feasibility package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.deepset.html">rxnutils.routes.deepset package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.retro_bleu.html">rxnutils.routes.retro_bleu package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.ted.html">rxnutils.routes.ted package</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">rxnutils.routes.utils package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.utils.validation">rxnutils.routes.utils.validation module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.utils.validation.ReactionNode"><code class="docutils literal notranslate"><span class="pre">ReactionNode</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.utils.validation.ReactionNode.type"><code class="docutils literal notranslate"><span class="pre">ReactionNode.type</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.utils.validation.ReactionNode.children"><code class="docutils literal notranslate"><span class="pre">ReactionNode.children</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.utils.validation.ReactionNode.model_config"><code class="docutils literal notranslate"><span class="pre">ReactionNode.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.utils.validation.MoleculeNode"><code class="docutils literal notranslate"><span class="pre">MoleculeNode</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.utils.validation.MoleculeNode.smiles"><code class="docutils literal notranslate"><span class="pre">MoleculeNode.smiles</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.utils.validation.MoleculeNode.type"><code class="docutils literal notranslate"><span class="pre">MoleculeNode.type</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.utils.validation.MoleculeNode.children"><code class="docutils literal notranslate"><span class="pre">MoleculeNode.children</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.utils.validation.MoleculeNode.model_config"><code class="docutils literal notranslate"><span class="pre">MoleculeNode.model_config</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.utils.validation.validate_dict"><code class="docutils literal notranslate"><span class="pre">validate_dict()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.base">rxnutils.routes.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.comparison">rxnutils.routes.comparison module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.image">rxnutils.routes.image module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.readers">rxnutils.routes.readers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.scoring">rxnutils.routes.scoring module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+  <li><a href="rxnutils.routes.html">rxnutils.routes package</a><ul>
+      <li>Previous: <a href="rxnutils.routes.ted.html" title="previous chapter">rxnutils.routes.ted package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-routes-utils-package">
+<h1>rxnutils.routes.utils package<a class="headerlink" href="#rxnutils-routes-utils-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.routes.utils.validation">
+<span id="rxnutils-routes-utils-validation-module"></span><h2>rxnutils.routes.utils.validation module<a class="headerlink" href="#module-rxnutils.routes.utils.validation" title="Link to this heading">¶</a></h2>
+<p>Module containing routes to validate AiZynthFinder-like input dictionaries</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.ReactionNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.utils.validation.</span></span><span class="sig-name descname"><span class="pre">ReactionNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.utils.validation.ReactionNode" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Node representing a reaction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>Any</em>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.ReactionNode.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">StringConstraints</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'^reaction$'</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.routes.utils.validation.ReactionNode.type" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.ReactionNode.children">
+<span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#rxnutils.routes.utils.validation.MoleculeNode" title="rxnutils.routes.utils.validation.MoleculeNode"><span class="pre">MoleculeNode</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.routes.utils.validation.ReactionNode.children" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.ReactionNode.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#rxnutils.routes.utils.validation.ReactionNode.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.MoleculeNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.utils.validation.</span></span><span class="sig-name descname"><span class="pre">MoleculeNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">children</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.utils.validation.MoleculeNode" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Node representing a molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smiles</strong> (<em>str</em>)</p></li>
+<li><p><strong>type</strong> (<em>Annotated</em><em>[</em><em>str</em><em>, </em><em>StringConstraints</em><em>(</em><em>strip_whitespace=None</em><em>, </em><em>to_upper=None</em><em>, </em><em>to_lower=None</em><em>, </em><em>strict=None</em><em>, </em><em>min_length=None</em><em>, </em><em>max_length=None</em><em>, </em><em>pattern=^mol$</em><em>)</em><em>]</em>)</p></li>
+<li><p><strong>children</strong> (<em>Annotated</em><em>[</em><em>list</em><em>[</em><a class="reference internal" href="#rxnutils.routes.utils.validation.ReactionNode" title="rxnutils.routes.utils.validation.ReactionNode"><em>ReactionNode</em></a><em>]</em><em>, </em><em>Len</em><em>(</em><em>min_length=1</em><em>, </em><em>max_length=1</em><em>)</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.MoleculeNode.smiles">
+<span class="sig-name descname"><span class="pre">smiles</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.routes.utils.validation.MoleculeNode.smiles" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.MoleculeNode.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">StringConstraints</span><span class="p"><span class="pre">(</span></span><span class="n"><span class="pre">pattern</span></span><span class="o"><span class="pre">=</span></span><span class="s"><span class="pre">'^mol$'</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.routes.utils.validation.MoleculeNode.type" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.MoleculeNode.children">
+<span class="sig-name descname"><span class="pre">children</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">conlist</span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#rxnutils.routes.utils.validation.ReactionNode" title="rxnutils.routes.utils.validation.ReactionNode"><span class="pre">ReactionNode</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">min_length</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">max_length</span></span><span class="o"><span class="pre">=</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">)</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rxnutils.routes.utils.validation.MoleculeNode.children" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.MoleculeNode.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#rxnutils.routes.utils.validation.MoleculeNode.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.utils.validation.validate_dict">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.utils.validation.</span></span><span class="sig-name descname"><span class="pre">validate_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.utils.validation.validate_dict" title="Link to this definition">¶</a></dt>
+<dd><p>Check that the route dictionary is a valid structure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dict</strong> – the route as dictionary</p></li>
+<li><p><strong>dict_</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.routes.utils" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.routes.utils.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

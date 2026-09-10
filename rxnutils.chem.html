@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.chem package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.chem.features package" href="rxnutils.chem.features.html" />
+    <link rel="prev" title="rxnutils package" href="rxnutils.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">rxnutils.chem package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.chem.features.html">rxnutils.chem.features package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.chem.protection.html">rxnutils.chem.protection package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.chem.rinchi.html">rxnutils.chem.rinchi package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.chem.augmentation">rxnutils.chem.augmentation module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.augmentation.single_reactant_augmentation"><code class="docutils literal notranslate"><span class="pre">single_reactant_augmentation()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.chem.cgr">rxnutils.chem.cgr module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.cgr.CondensedGraphReaction"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.cgr.CondensedGraphReaction.bonds_broken"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.bonds_broken</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.cgr.CondensedGraphReaction.bonds_changed"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.bonds_changed</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.cgr.CondensedGraphReaction.bonds_formed"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.bonds_formed</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.cgr.CondensedGraphReaction.total_centers"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.total_centers</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.cgr.CondensedGraphReaction.distance_to"><code class="docutils literal notranslate"><span class="pre">CondensedGraphReaction.distance_to()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.chem.reaction">rxnutils.chem.reaction module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.reaction.ReactionException"><code class="docutils literal notranslate"><span class="pre">ReactionException</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.agents_list"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.agents_list</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.canonical_template"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.canonical_template</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.products_list"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.products_list</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.pseudo_rinchi"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.pseudo_rinchi</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.pseudo_rinchi_key"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.pseudo_rinchi_key</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.hashed_rid"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.hashed_rid</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.reactants_list"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.reactants_list</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.retro_template"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.retro_template</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.rinchi"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.rinchi</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.rinchi_key_long"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.rinchi_key_long</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.rinchi_key_short"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.rinchi_key_short</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.generate_coreagent"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.generate_coreagent()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.generate_reaction_template"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.generate_reaction_template()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.has_partial_mapping"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.has_partial_mapping()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.is_complete"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.is_complete()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.no_change"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.no_change()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.is_fuzzy"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.is_fuzzy()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.sanitization_check"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.sanitization_check()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.canonical_template_generate_outcome"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.canonical_template_generate_outcome()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.retro_template_generate_outcome"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.retro_template_generate_outcome()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction.retro_template_selectivity"><code class="docutils literal notranslate"><span class="pre">ChemicalReaction.retro_template_selectivity()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.chem.smartslib">rxnutils.chem.smartslib module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsHit"><code class="docutils literal notranslate"><span class="pre">SmartsHit</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsHit.number_of_hits"><code class="docutils literal notranslate"><span class="pre">SmartsHit.number_of_hits</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsHit.match"><code class="docutils literal notranslate"><span class="pre">SmartsHit.match</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsHit.atoms"><code class="docutils literal notranslate"><span class="pre">SmartsHit.atoms</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsHit.smarts_mol"><code class="docutils literal notranslate"><span class="pre">SmartsHit.smarts_mol</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsLibrary"><code class="docutils literal notranslate"><span class="pre">SmartsLibrary</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsLibrary.load"><code class="docutils literal notranslate"><span class="pre">SmartsLibrary.load()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsLibrary.detect_reactive_functions"><code class="docutils literal notranslate"><span class="pre">SmartsLibrary.detect_reactive_functions()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsLibrary.match_smarts"><code class="docutils literal notranslate"><span class="pre">SmartsLibrary.match_smarts()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.chem.template">rxnutils.chem.template module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.atoms"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.atoms()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.atom_invariants"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.atom_invariants()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.atom_properties"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.atom_properties()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.fingerprint_bits"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.fingerprint_bits()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.fingerprint_vector"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.fingerprint_vector()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.fix_atom_properties"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.fix_atom_properties()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.hash_from_smiles"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.hash_from_smiles()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.hash_from_smarts"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.hash_from_smarts()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.remove_atom_mapping"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.remove_atom_mapping()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.TemplateMolecule.sanitize"><code class="docutils literal notranslate"><span class="pre">TemplateMolecule.sanitize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate.apply"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.apply()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate.fingerprint_bits"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.fingerprint_bits()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate.fingerprint_vector"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.fingerprint_vector()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate.hash_from_bits"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.hash_from_bits()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate.hash_from_smiles"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.hash_from_smiles()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate.hash_from_smarts"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.hash_from_smarts()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate.rdkit_validation"><code class="docutils literal notranslate"><span class="pre">ReactionTemplate.rdkit_validation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.chem.utils">rxnutils.chem.utils module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.get_symmetric_sites"><code class="docutils literal notranslate"><span class="pre">get_symmetric_sites()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.get_mol_weight"><code class="docutils literal notranslate"><span class="pre">get_mol_weight()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.get_special_groups"><code class="docutils literal notranslate"><span class="pre">get_special_groups()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.has_atom_mapping"><code class="docutils literal notranslate"><span class="pre">has_atom_mapping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.canonicalize_tautomer"><code class="docutils literal notranslate"><span class="pre">canonicalize_tautomer()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.enumerate_tautomers"><code class="docutils literal notranslate"><span class="pre">enumerate_tautomers()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.is_valid_mol"><code class="docutils literal notranslate"><span class="pre">is_valid_mol()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.remove_stereochemistry"><code class="docutils literal notranslate"><span class="pre">remove_stereochemistry()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.remove_atom_mapping"><code class="docutils literal notranslate"><span class="pre">remove_atom_mapping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.remove_atom_mapping_template"><code class="docutils literal notranslate"><span class="pre">remove_atom_mapping_template()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.neutralize_molecules"><code class="docutils literal notranslate"><span class="pre">neutralize_molecules()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.desalt_molecules"><code class="docutils literal notranslate"><span class="pre">desalt_molecules()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.same_molecule"><code class="docutils literal notranslate"><span class="pre">same_molecule()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.atom_mapping_numbers"><code class="docutils literal notranslate"><span class="pre">atom_mapping_numbers()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.reassign_rsmi_atom_mapping"><code class="docutils literal notranslate"><span class="pre">reassign_rsmi_atom_mapping()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.split_rsmi"><code class="docutils literal notranslate"><span class="pre">split_rsmi()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.join_smiles_from_reaction"><code class="docutils literal notranslate"><span class="pre">join_smiles_from_reaction()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.split_smiles_from_reaction"><code class="docutils literal notranslate"><span class="pre">split_smiles_from_reaction()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.recreate_rsmi"><code class="docutils literal notranslate"><span class="pre">recreate_rsmi()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.chem.utils.reaction_centres"><code class="docutils literal notranslate"><span class="pre">reaction_centres()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.chem">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+      <li>Previous: <a href="rxnutils.html" title="previous chapter">rxnutils package</a></li>
+      <li>Next: <a href="rxnutils.chem.features.html" title="next chapter">rxnutils.chem.features package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-chem-package">
+<h1>rxnutils.chem package<a class="headerlink" href="#rxnutils-chem-package" title="Link to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.chem.features.html">rxnutils.chem.features package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.features.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features.reaction_centre_fp">rxnutils.chem.features.reaction_centre_fp module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint"><code class="docutils literal notranslate"><span class="pre">ReactionCentreFingerprint</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint.numbits"><code class="docutils literal notranslate"><span class="pre">ReactionCentreFingerprint.numbits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.reaction_centre_fp.ReactionCentreFingerprint.max_centers"><code class="docutils literal notranslate"><span class="pre">ReactionCentreFingerprint.max_centers</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.reaction_centre_fp.reaction_center_similarity"><code class="docutils literal notranslate"><span class="pre">reaction_center_similarity()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features.rxnfp_runner">rxnutils.chem.features.rxnfp_runner module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.rxnfp_runner.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features.sc_score">rxnutils.chem.features.sc_score module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.sc_score.SCScore"><code class="docutils literal notranslate"><span class="pre">SCScore</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features.simple_rdkit">rxnutils.chem.features.simple_rdkit module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint"><code class="docutils literal notranslate"><span class="pre">SimpleRdkitFingerprint</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.featurizer"><code class="docutils literal notranslate"><span class="pre">SimpleRdkitFingerprint.featurizer</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.numbits"><code class="docutils literal notranslate"><span class="pre">SimpleRdkitFingerprint.numbits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.simple_rdkit.SimpleRdkitFingerprint.product_bits"><code class="docutils literal notranslate"><span class="pre">SimpleRdkitFingerprint.product_bits</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.simple_rdkit.fingerprint_mixed"><code class="docutils literal notranslate"><span class="pre">fingerprint_mixed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.simple_rdkit.fingerprint_ecfp"><code class="docutils literal notranslate"><span class="pre">fingerprint_ecfp()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.features.html#module-rxnutils.chem.features">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.chem.protection.html">rxnutils.chem.protection package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.protection.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.protection.html#module-rxnutils.chem.protection.amino_acids">rxnutils.chem.protection.amino_acids module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.protection.html#rxnutils.chem.protection.amino_acids.preprocess_amino_acids"><code class="docutils literal notranslate"><span class="pre">preprocess_amino_acids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.protection.html#rxnutils.chem.protection.amino_acids.remove_backbone_charges"><code class="docutils literal notranslate"><span class="pre">remove_backbone_charges()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.protection.html#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid"><code class="docutils literal notranslate"><span class="pre">ProtectedAminoAcid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.protection.html#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid.smiles"><code class="docutils literal notranslate"><span class="pre">ProtectedAminoAcid.smiles</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.protection.html#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid.protection_groups"><code class="docutils literal notranslate"><span class="pre">ProtectedAminoAcid.protection_groups</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.protection.html#rxnutils.chem.protection.amino_acids.AminoAcidProtectionEngine"><code class="docutils literal notranslate"><span class="pre">AminoAcidProtectionEngine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.protection.html#rxnutils.chem.protection.amino_acids.AminoAcidProtectionEngine.protect"><code class="docutils literal notranslate"><span class="pre">AminoAcidProtectionEngine.protect()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.protection.html#module-rxnutils.chem.protection">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.chem.rinchi.html">rxnutils.chem.rinchi package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.rinchi.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.rinchi.html#module-rxnutils.chem.rinchi.download_rinchi">rxnutils.chem.rinchi.download_rinchi module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.rinchi.html#rxnutils.chem.rinchi.download_rinchi.RInChIError"><code class="docutils literal notranslate"><span class="pre">RInChIError</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.rinchi.html#rxnutils.chem.rinchi.download_rinchi.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.rinchi.html#module-rxnutils.chem.rinchi.rinchi_api">rxnutils.chem.rinchi.rinchi_api module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.rinchi.html#rxnutils.chem.rinchi.rinchi_api.RInChIStructure"><code class="docutils literal notranslate"><span class="pre">RInChIStructure</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.rinchi.html#rxnutils.chem.rinchi.rinchi_api.generate_rinchi"><code class="docutils literal notranslate"><span class="pre">generate_rinchi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.chem.rinchi.html#module-rxnutils.chem.rinchi">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.chem.augmentation">
+<span id="rxnutils-chem-augmentation-module"></span><h2>rxnutils.chem.augmentation module<a class="headerlink" href="#module-rxnutils.chem.augmentation" title="Link to this heading">¶</a></h2>
+<p>Routines for augmenting chemical reactions</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.augmentation.single_reactant_augmentation">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.augmentation.</span></span><span class="sig-name descname"><span class="pre">single_reactant_augmentation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.augmentation.single_reactant_augmentation" title="Link to this definition">¶</a></dt>
+<dd><p>Augment single-reactant reaction with additional reagent if possible
+based on the classification of the reaction
+:param smiles: the reaction SMILES to augment
+:param classification: the classification of the reaction or an empty string
+:return: the processed SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smiles</strong> (<em>str</em>)</p></li>
+<li><p><strong>classification</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.cgr">
+<span id="rxnutils-chem-cgr-module"></span><h2>rxnutils.chem.cgr module<a class="headerlink" href="#module-rxnutils.chem.cgr" title="Link to this heading">¶</a></h2>
+<p>Wrapper class for the CGRTools library</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.cgr.CondensedGraphReaction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.cgr.</span></span><span class="sig-name descname"><span class="pre">CondensedGraphReaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.cgr.CondensedGraphReaction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The Condensed Graph of Reaction (CGR) representation of a reaction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reaction_container</strong> – the CGRTools container of the reaction</p></li>
+<li><p><strong>cgr_container</strong> – the CGRTools container of the CGR</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>reaction</strong> (<a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction" title="rxnutils.chem.reaction.ChemicalReaction"><em>ChemicalReaction</em></a>) – the reaction composed of RDKit molecule to start from</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – if it is not possible to create the CGR from the reaction</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.cgr.CondensedGraphReaction.bonds_broken">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bonds_broken</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rxnutils.chem.cgr.CondensedGraphReaction.bonds_broken" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the number of broken bonds in the reaction</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.cgr.CondensedGraphReaction.bonds_changed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bonds_changed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rxnutils.chem.cgr.CondensedGraphReaction.bonds_changed" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the number of broken or formed bonds in the reaction</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.cgr.CondensedGraphReaction.bonds_formed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bonds_formed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rxnutils.chem.cgr.CondensedGraphReaction.bonds_formed" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the number of formed bonds in the reaction</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.cgr.CondensedGraphReaction.total_centers">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">total_centers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rxnutils.chem.cgr.CondensedGraphReaction.total_centers" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the number of atom and bond centers in the reaction</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.cgr.CondensedGraphReaction.distance_to">
+<span class="sig-name descname"><span class="pre">distance_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.cgr.CondensedGraphReaction.distance_to" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the chemical distance between two reactions, i.e. the absolute difference
+between the total number of centers.</p>
+<p>Used for some atom-mapping comparison statistics</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#rxnutils.chem.cgr.CondensedGraphReaction" title="rxnutils.chem.cgr.CondensedGraphReaction"><em>CondensedGraphReaction</em></a>) – the reaction to compare to</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the computed distance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.reaction">
+<span id="rxnutils-chem-reaction-module"></span><h2>rxnutils.chem.reaction module<a class="headerlink" href="#module-rxnutils.chem.reaction" title="Link to this heading">¶</a></h2>
+<p>Module containing a class to handle chemical reactions</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ReactionException">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.reaction.</span></span><span class="sig-name descname"><span class="pre">ReactionException</span></span><a class="headerlink" href="#rxnutils.chem.reaction.ReactionException" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Custom exception raised when failing operations on a chemical reaction</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.reaction.</span></span><span class="sig-name descname"><span class="pre">ChemicalReaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id_</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clean_smiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation of chemical reaction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smiles</strong> (<em>str</em>) – the reaction SMILES</p></li>
+<li><p><strong>id</strong> – an optional database ID of the reaction</p></li>
+<li><p><strong>clean_smiles</strong> (<em>bool</em>) – if True, will standardize the reaction SMILES</p></li>
+<li><p><strong>id_</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.agents_list">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">agents_list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.agents_list" title="Link to this definition">¶</a></dt>
+<dd><p>Gives all the agents as strings</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.canonical_template">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">canonical_template</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate" title="rxnutils.chem.template.ReactionTemplate"><span class="pre">ReactionTemplate</span></a></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.canonical_template" title="Link to this definition">¶</a></dt>
+<dd><p>Gives the canonical (forward) template</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.products_list">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">products_list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.products_list" title="Link to this definition">¶</a></dt>
+<dd><p>Gives all products as strings</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.pseudo_rinchi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pseudo_rinchi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.pseudo_rinchi" title="Link to this definition">¶</a></dt>
+<dd><p>Gives pseudo RInChI</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.pseudo_rinchi_key">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pseudo_rinchi_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.pseudo_rinchi_key" title="Link to this definition">¶</a></dt>
+<dd><p>Gives a pseudo reaction InChI key</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.hashed_rid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hashed_rid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.hashed_rid" title="Link to this definition">¶</a></dt>
+<dd><p>Gives a reaction hashkey based on Reaction SMILES &amp; reaction id.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.reactants_list">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reactants_list</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.reactants_list" title="Link to this definition">¶</a></dt>
+<dd><p>Gives all reactants as strings</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.retro_template">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">retro_template</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate" title="rxnutils.chem.template.ReactionTemplate"><span class="pre">ReactionTemplate</span></a></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.retro_template" title="Link to this definition">¶</a></dt>
+<dd><p>Gives the retro template</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.rinchi">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rinchi</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.rinchi" title="Link to this definition">¶</a></dt>
+<dd><p>Gives the reaction InChI</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.rinchi_key_long">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rinchi_key_long</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.rinchi_key_long" title="Link to this definition">¶</a></dt>
+<dd><p>Gives the long reaction InChI key</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.rinchi_key_short">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rinchi_key_short</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.rinchi_key_short" title="Link to this definition">¶</a></dt>
+<dd><p>Gives the short reaction InChI key</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.generate_coreagent">
+<span class="sig-name descname"><span class="pre">generate_coreagent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.generate_coreagent" title="Link to this definition">¶</a></dt>
+<dd><p>Extract un-mapped product atoms as extra ractant fragments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.generate_reaction_template">
+<span class="sig-name descname"><span class="pre">generate_reaction_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_ring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_hetero</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.generate_reaction_template" title="Link to this definition">¶</a></dt>
+<dd><p>Extracts the forward(canonical) and retro reaction template with the specified radius.</p>
+<dl class="simple">
+<dt>Uses a modified version of:</dt><dd><p><a class="reference external" href="https://github.com/connorcoley/ochem_predict_nn/blob/master/data/generate_reaction_templates.py">https://github.com/connorcoley/ochem_predict_nn/blob/master/data/generate_reaction_templates.py</a>
+<a class="reference external" href="https://github.com/connorcoley/rdchiral/blob/master/templates/template_extractor.py">https://github.com/connorcoley/rdchiral/blob/master/templates/template_extractor.py</a></p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>int</em>) – the radius refers to the number of atoms away from the reaction
+centre to be extracted (the enivronment) i.e. radius = 1 (default)
+returns the first neighbours around the reaction centre</p></li>
+<li><p><strong>expand_ring</strong> (<em>bool</em>) – if True will include all atoms in the same ring as the reaction centre in the template</p></li>
+<li><p><strong>expand_hetero</strong> (<em>bool</em>) – if True will extend the template with all bonded hetero atoms</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the canonical and retrosynthetic templates</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate" title="rxnutils.chem.template.ReactionTemplate"><em>ReactionTemplate</em></a>, <a class="reference internal" href="#rxnutils.chem.template.ReactionTemplate" title="rxnutils.chem.template.ReactionTemplate"><em>ReactionTemplate</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.has_partial_mapping">
+<span class="sig-name descname"><span class="pre">has_partial_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.has_partial_mapping" title="Link to this definition">¶</a></dt>
+<dd><p>Check product atom mapping.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.is_complete">
+<span class="sig-name descname"><span class="pre">is_complete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.is_complete" title="Link to this definition">¶</a></dt>
+<dd><p>Check that the product is not among the reactants</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.no_change">
+<span class="sig-name descname"><span class="pre">no_change</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.no_change" title="Link to this definition">¶</a></dt>
+<dd><p>Checks to see if the product appears in the reactant set.</p>
+<p>Compares InChIs to rule out possible variations in SMILES notation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True the product is present in the reactants set, else False</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.is_fuzzy">
+<span class="sig-name descname"><span class="pre">is_fuzzy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.is_fuzzy" title="Link to this definition">¶</a></dt>
+<dd><p>Checks to see if there is fuzziness in the reaction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if there is fuzziness, False otherwise</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.sanitization_check">
+<span class="sig-name descname"><span class="pre">sanitization_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.sanitization_check" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if the reactant and product mol objects can be sanitized in RDKit.</p>
+<p>The actualy sanitization is carried out when the reaction is instansiated,
+this method will only check that all molecules objects were created.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if all the molecule objects were successfully created, else False</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.canonical_template_generate_outcome">
+<span class="sig-name descname"><span class="pre">canonical_template_generate_outcome</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.canonical_template_generate_outcome" title="Link to this definition">¶</a></dt>
+<dd><p>Checks whether the canonical template produces</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.retro_template_generate_outcome">
+<span class="sig-name descname"><span class="pre">retro_template_generate_outcome</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.retro_template_generate_outcome" title="Link to this definition">¶</a></dt>
+<dd><p>Checks whether the retrosynthetic template produces an outcome</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.reaction.ChemicalReaction.retro_template_selectivity">
+<span class="sig-name descname"><span class="pre">retro_template_selectivity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.reaction.ChemicalReaction.retro_template_selectivity" title="Link to this definition">¶</a></dt>
+<dd><p>Checks whether the recorded reactants belong to the set of generated precursors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>selectivity, i.e. the fraction of generated precursors matching the recorded precursors
+i.e. 1.0 - match or match.match or match.match.match etc.</p>
+<blockquote>
+<div><p>0.5 - match.none or match.none.match.none etc.
+0.0 - none</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.smartslib">
+<span id="rxnutils-chem-smartslib-module"></span><h2>rxnutils.chem.smartslib module<a class="headerlink" href="#module-rxnutils.chem.smartslib" title="Link to this heading">¶</a></h2>
+<p>Module containing routines to deal with a SMARTS library of chemical functions</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.smartslib.SmartsHit">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.smartslib.</span></span><span class="sig-name descname"><span class="pre">SmartsHit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_hits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smarts_mol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.smartslib.SmartsHit" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A hit/match for a substructure match</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>number_of_hits</strong> (<em>int</em>) – the number of times the SMARTS match</p></li>
+<li><p><strong>match</strong> (<em>Tuple</em><em>[</em><em>Tuple</em><em>[</em><em>int</em><em>, </em><em>...</em><em>]</em><em>]</em>) – the result from the substructure match, i.e. a tuple of each atom match</p></li>
+<li><p><strong>atoms</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – the flattened list of atoms matching the smarts</p></li>
+<li><p><strong>smarts_mol</strong> (<em>Mol</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.smartslib.SmartsHit.number_of_hits">
+<span class="sig-name descname"><span class="pre">number_of_hits</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#rxnutils.chem.smartslib.SmartsHit.number_of_hits" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.smartslib.SmartsHit.match">
+<span class="sig-name descname"><span class="pre">match</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.chem.smartslib.SmartsHit.match" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.smartslib.SmartsHit.atoms">
+<span class="sig-name descname"><span class="pre">atoms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.chem.smartslib.SmartsHit.atoms" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.smartslib.SmartsHit.smarts_mol">
+<span class="sig-name descname"><span class="pre">smarts_mol</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Mol</span></em><a class="headerlink" href="#rxnutils.chem.smartslib.SmartsHit.smarts_mol" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.smartslib.SmartsLibrary">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.smartslib.</span></span><span class="sig-name descname"><span class="pre">SmartsLibrary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.smartslib.SmartsLibrary" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for manipulating and working with a library of SMARTS
+defining chemical functions.</p>
+<p>The created instances of the class are stored in an internal
+storage dictionary for easy retrieval.</p>
+<p>The library supports reading two kinds of file:</p>
+<ol class="arabic">
+<li><p>a JSON-file with a dictionary with pattern names as keys and
+SMARTS strings as values, e.g.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>{</dt><dd><p>“ARC”: “[c]”,
+“ARN3”: “[n;X3]”</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</li>
+<li><dl>
+<dt>An “ontology-file” that should have 6 tab-separated columns for each pattern</dt><dd><ul class="simple">
+<li><p>The super-group name of the SMARTS</p></li>
+<li><p>The group name of the SMARTS</p></li>
+<li><p>The name of the SMARTS</p></li>
+<li><p>The more generic version of the SMARTS</p></li>
+<li><p>The more specific version of the SMARTS</p></li>
+<li><p>The type of SMARTS, i.e. if it can be used for clipping or labeling</p></li>
+</ul>
+<p>For an example, look at the tests/data/simple_smartslib.txt file in the repository</p>
+</dd>
+</dl>
+</li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Params filename<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the path of the library on disc or an environmental variable pointing to a path</p>
+</dd>
+<dt class="field-even">Params label<span class="colon">:</span></dt>
+<dd class="field-even"><p>the label for the library in the internal storage, if not given will use basename</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>)</p></li>
+<li><p><strong>label</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.smartslib.SmartsLibrary.load">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.smartslib.SmartsLibrary.load" title="Link to this definition">¶</a></dt>
+<dd><p>Loads a SMARTS library either from the storage
+if <cite>source</cite> exists as a label or creates a new
+library using <cite>source</cite> as the path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params source<span class="colon">:</span></dt>
+<dd class="field-odd"><p>either the label or a path of a SMARTS library</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the loaded library</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsLibrary" title="rxnutils.chem.smartslib.SmartsLibrary"><em>SmartsLibrary</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.smartslib.SmartsLibrary.detect_reactive_functions">
+<span class="sig-name descname"><span class="pre">detect_reactive_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_none</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">none_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'None'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_reactants</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">product_functions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reactants_functions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.smartslib.SmartsLibrary.detect_reactive_functions" title="Link to this definition">¶</a></dt>
+<dd><p>Find the reactive functions in the reactants, i.e. the functional
+groups that changes during the reaction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reaction</strong> (<a class="reference internal" href="#rxnutils.chem.reaction.ChemicalReaction" title="rxnutils.chem.reaction.ChemicalReaction"><em>ChemicalReaction</em></a>) – the reaction to manipulate</p></li>
+<li><p><strong>sort</strong> (<em>bool</em>) – if True will sort the reactants based on the alphabetical order of the reactive functions</p></li>
+<li><p><strong>add_none</strong> (<em>bool</em>) – if True will add the <cite>none_str</cite> for reactants without any hits</p></li>
+<li><p><strong>none_str</strong> (<em>str</em>) – the placeholder string for the non-matching reactants</p></li>
+<li><p><strong>target_size</strong> (<em>int</em><em> | </em><em>None</em>) – the desired length of the returned lists when adding placeholders</p></li>
+<li><p><strong>max_reactants</strong> (<em>int</em><em> | </em><em>None</em>) – if number of reactant larger than this, it will raise an exception</p></li>
+<li><p><strong>product_functions</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsHit" title="rxnutils.chem.smartslib.SmartsHit"><em>SmartsHit</em></a><em>] </em><em>| </em><em>None</em>) – Dictionary of pre-identified SMARTS hits for the products</p></li>
+<li><p><strong>reactants_functions</strong> (<em>List</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#rxnutils.chem.smartslib.SmartsHit" title="rxnutils.chem.smartslib.SmartsHit"><em>SmartsHit</em></a><em>]</em><em>] </em><em>| </em><em>None</em>) – List of dictionaries of pre-identified SMARTS hits for each reactant</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple of reactive function and reaction SMILES</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – when there is no reactants or no product or number of reactant are larger than limit</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Tuple</em>[<em>Tuple</em>[str, …], str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.smartslib.SmartsLibrary.match_smarts">
+<span class="sig-name descname"><span class="pre">match_smarts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.smartslib.SmartsLibrary.match_smarts" title="Link to this definition">¶</a></dt>
+<dd><p>Check the SMARTS library for hits, i.e. substructure matches
+in the given SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles</strong> (<em>str</em>) – the query SMILES</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dictionary of SMARTS hits</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Dict</em>[str, <a class="reference internal" href="#rxnutils.chem.smartslib.SmartsHit" title="rxnutils.chem.smartslib.SmartsHit"><em>SmartsHit</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.template">
+<span id="rxnutils-chem-template-module"></span><h2>rxnutils.chem.template module<a class="headerlink" href="#module-rxnutils.chem.template" title="Link to this heading">¶</a></h2>
+<p>Module containing useful representations of templates</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.template.</span></span><span class="sig-name descname"><span class="pre">TemplateMolecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rd_mol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smarts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation of a molecule created from a SMARTS string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rd_mol</strong> (<em>Mol</em>) – the RDKit molecule to be represented by this class</p></li>
+<li><p><strong>smarts</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.atoms">
+<span class="sig-name descname"><span class="pre">atoms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.atoms" title="Link to this definition">¶</a></dt>
+<dd><p>Generate the atom object of this molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Yield<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the next atom object</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Iterator</em>[<em>Atom</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.atom_invariants">
+<span class="sig-name descname"><span class="pre">atom_invariants</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.atom_invariants" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate invariants on similar properties as in RDKit but ignore mass and add aromaticity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a list of the atom invariants</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>List</em>[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.atom_properties">
+<span class="sig-name descname"><span class="pre">atom_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.atom_properties" title="Link to this definition">¶</a></dt>
+<dd><p>Return a dictionary with atomic properties</p>
+<dl class="simple">
+<dt>Example:</dt><dd><p>import pandas
+pandas.DataFrame(my_mol.atom_properties())</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Dict</em>[str, <em>List</em>[object]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.fingerprint_bits">
+<span class="sig-name descname"><span class="pre">fingerprint_bits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_chirality</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.fingerprint_bits" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the unique fingerprint bits</p>
+<p>Will sanitize molecule if necessary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>int</em>) – the radius of the Morgan calculation</p></li>
+<li><p><strong>use_chirality</strong> (<em>bool</em>) – determines if chirality should be taken into account</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the set of unique bits</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Set</em>[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.fingerprint_vector">
+<span class="sig-name descname"><span class="pre">fingerprint_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_chirality</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.fingerprint_vector" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the finger bit vector</p>
+<p>Will sanitize molecule if necessary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>int</em>) – the radius of the Morgan calculation</p></li>
+<li><p><strong>nbits</strong> (<em>int</em>) – the length of the bit vector</p></li>
+<li><p><strong>use_chirality</strong> (<em>bool</em>) – determines if chirality should be taken into account</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the bit vector</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.fix_atom_properties">
+<span class="sig-name descname"><span class="pre">fix_atom_properties</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.fix_atom_properties" title="Link to this definition">¶</a></dt>
+<dd><p>Copy over some properties from the SMARTS specification to the atom object
+1. Set IsAromatic flag is lower-case a is in the SMARTS
+2. Fix formal charges
+3. Explicit number of hydrogen atoms</p>
+<p>Also extract explicit degree from SMARTS and is stored in
+the <cite>comp_degree</cite> property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.hash_from_smiles">
+<span class="sig-name descname"><span class="pre">hash_from_smiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.hash_from_smiles" title="Link to this definition">¶</a></dt>
+<dd><p>Create a hash of the template based on a cleaned-up template SMILES string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the hash string</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.hash_from_smarts">
+<span class="sig-name descname"><span class="pre">hash_from_smarts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.hash_from_smarts" title="Link to this definition">¶</a></dt>
+<dd><p>Create a hash of the template based on a cleaned-up template SMARTS string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the hash string</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.remove_atom_mapping">
+<span class="sig-name descname"><span class="pre">remove_atom_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.remove_atom_mapping" title="Link to this definition">¶</a></dt>
+<dd><p>Remove the atom mappings from the molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.TemplateMolecule.sanitize">
+<span class="sig-name descname"><span class="pre">sanitize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.TemplateMolecule.sanitize" title="Link to this definition">¶</a></dt>
+<dd><p>Will do selective sanitation - skip some procedures that causes problems due to “hanging” aromatic atoms</p>
+<dl class="simple">
+<dt>All possible flags:</dt><dd><p>SANITIZE_ADJUSTHS
+SANITIZE_ALL
+SANITIZE_CLEANUP
+SANITIZE_CLEANUPCHIRALITY
+SANITIZE_FINDRADICALS
+SANITIZE_KEKULIZE
+SANITIZE_NONE
+SANITIZE_PROPERTIES
+SANITIZE_SETAROMATICITY
+SANITIZE_SETCONJUGATION
+SANITIZE_SETHYBRIDIZATION
+SANITIZE_SYMMRINGS</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.template.ReactionTemplate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.template.</span></span><span class="sig-name descname"><span class="pre">ReactionTemplate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smarts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'canonical'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.ReactionTemplate" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation of a reaction template created with RDChiral</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smarts</strong> (<em>str</em>) – the SMARTS string representation of the reaction</p></li>
+<li><p><strong>direction</strong> (<em>str</em>) – if equal to “retro” reverse the meaning of products and reactants</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.ReactionTemplate.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mols</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.ReactionTemplate.apply" title="Link to this definition">¶</a></dt>
+<dd><p>Applies the template on the given molecule</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mols</strong> (<em>str</em>) – the molecule as a SMILES</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the list of reactants</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>Tuple</em>[str, …], …]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.ReactionTemplate.fingerprint_bits">
+<span class="sig-name descname"><span class="pre">fingerprint_bits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_chirality</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.ReactionTemplate.fingerprint_bits" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the difference count of the fingerprint bits set of the reactants and products</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>int</em>) – the radius of the Morgan calculation</p></li>
+<li><p><strong>use_chirality</strong> (<em>bool</em>) – determines if chirality should be taken into account</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary of the difference count for each bit</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Dict</em>[int, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.ReactionTemplate.fingerprint_vector">
+<span class="sig-name descname"><span class="pre">fingerprint_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1024</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_chirality</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.ReactionTemplate.fingerprint_vector" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the difference fingerprint vector</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>int</em>) – the radius of the Morgan calculation</p></li>
+<li><p><strong>nbits</strong> (<em>int</em>) – the length of the bit vector</p></li>
+<li><p><strong>use_chirality</strong> (<em>bool</em>) – determines if chirality should be taken into account</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the bit vector</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.ReactionTemplate.hash_from_bits">
+<span class="sig-name descname"><span class="pre">hash_from_bits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_chirality</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.ReactionTemplate.hash_from_bits" title="Link to this definition">¶</a></dt>
+<dd><p>Create a hash of the template based on the difference counts of the fingerprint bits</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>int</em>) – the radius of the Morgan calculation</p></li>
+<li><p><strong>use_chirality</strong> (<em>bool</em>) – determines if chirality should be taken into account</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the hash string</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.ReactionTemplate.hash_from_smiles">
+<span class="sig-name descname"><span class="pre">hash_from_smiles</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.ReactionTemplate.hash_from_smiles" title="Link to this definition">¶</a></dt>
+<dd><p>Create a hash of the template based on a cleaned-up template SMILES string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the hash string</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.ReactionTemplate.hash_from_smarts">
+<span class="sig-name descname"><span class="pre">hash_from_smarts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.ReactionTemplate.hash_from_smarts" title="Link to this definition">¶</a></dt>
+<dd><p>Create a hash of the template based on a cleaned-up template SMARTS string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the hash string</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.template.ReactionTemplate.rdkit_validation">
+<span class="sig-name descname"><span class="pre">rdkit_validation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.template.ReactionTemplate.rdkit_validation" title="Link to this definition">¶</a></dt>
+<dd><p>Checks if the template is valid in RDKit</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.utils">
+<span id="rxnutils-chem-utils-module"></span><h2>rxnutils.chem.utils module<a class="headerlink" href="#module-rxnutils.chem.utils" title="Link to this heading">¶</a></h2>
+<p>Module containing various chemical utility routines</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.get_symmetric_sites">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">get_symmetric_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_atoms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.get_symmetric_sites" title="Link to this definition">¶</a></dt>
+<dd><p>Get all symmetric sites (atoms) of each atom in the list of atoms defined by their
+atomic index (not atom-map number). Symmetry is assessed with respect to the molecule.
+Symmetric atoms will have different atom inds but the same rank index from
+CanonicalRankAtoms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol</strong> (<em>Mol</em>) – RdKit molecule</p></li>
+<li><p><strong>candidate_atoms</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Indices of the atoms that will be checked for symmetry.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of all symmetric sites (list of atom-ids) that include the candidate
+atoms. Returns empty list if no atoms have symmetric sites.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[<em>List</em>[int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.get_mol_weight">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">get_mol_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.get_mol_weight" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate molecule’s exact molecular weight.
+:param smiles: Molecule’s SMILES.
+:return: Molecule’s exact molecular weight.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.get_special_groups">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">get_special_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mol</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.get_special_groups" title="Link to this definition">¶</a></dt>
+<dd><p>Given an RDKit molecule, this function returns a list of tuples, where
+each tuple contains the AtomIdx’s for a special group of atoms which should
+be included in a fragment all together. This should only be done for the
+reactants, otherwise the products might end up with mapping mismatches
+We draw a distinction between atoms in groups that trigger that whole
+group to be included, and “unimportant” atoms in the groups that will not
+be included if another atom matches.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[<em>Tuple</em>[<em>Tuple</em>[int, …], <em>Tuple</em>[int, …]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.has_atom_mapping">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">has_atom_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_smarts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sanitize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.has_atom_mapping" title="Link to this definition">¶</a></dt>
+<dd><p>Returns True if a molecule has atom mapping, else False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smiles</strong> (<em>str</em>) – the SMILES/SMARTS representing the molecule</p></li>
+<li><p><strong>is_smarts</strong> (<em>bool</em>) – if True, will interpret the SMILES as a SMARTS</p></li>
+<li><p><strong>sanitize</strong> (<em>bool</em>) – if True, will sanitize the molecule</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the SMILES string has atom-mapping, else False</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.canonicalize_tautomer">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">canonicalize_tautomer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.canonicalize_tautomer" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the canonical tautomeric form of the input SMILES.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.enumerate_tautomers">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">enumerate_tautomers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.enumerate_tautomers" title="Link to this definition">¶</a></dt>
+<dd><p>Returns (sorted) collection of tautomers for the input SMILES.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>List</em>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.is_valid_mol">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">is_valid_mol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.is_valid_mol" title="Link to this definition">¶</a></dt>
+<dd><p>Check if the molecule structure is valid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles</strong> (<em>str</em>) – Molecule in SMILES.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return True if molecule structure is valid, return False otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.remove_stereochemistry">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">remove_stereochemistry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.remove_stereochemistry" title="Link to this definition">¶</a></dt>
+<dd><p>Removing stereo-chemistry information from a SMILES.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.remove_atom_mapping">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">remove_atom_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_smarts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sanitize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">canonical</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.remove_atom_mapping" title="Link to this definition">¶</a></dt>
+<dd><p>Returns a molecule without atom mapping</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smiles</strong> (<em>str</em>) – the SMILES/SMARTS representing the molecule</p></li>
+<li><p><strong>is_smarts</strong> (<em>bool</em>) – if True, will interpret the SMILES as a SMARTS</p></li>
+<li><p><strong>sanitize</strong> (<em>bool</em>) – if True, will sanitize the molecule</p></li>
+<li><p><strong>canonical</strong> (<em>bool</em>) – if False, will not canonicalize (applies to SMILES)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the molecule without atom-mapping</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.remove_atom_mapping_template">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">remove_atom_mapping_template</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template_smarts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.remove_atom_mapping_template" title="Link to this definition">¶</a></dt>
+<dd><p>Remove atom mapping from a template SMARTS string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>template_smarts</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.neutralize_molecules">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">neutralize_molecules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.neutralize_molecules" title="Link to this definition">¶</a></dt>
+<dd><p>Neutralize a set of molecules using RDKit routines</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the molecules as SMILES</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the neutralized molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.desalt_molecules">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">desalt_molecules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_something</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.desalt_molecules" title="Link to this definition">¶</a></dt>
+<dd><p>Remove salts from a set of molecules using RDKit routines</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smiles_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the molecules as SMILES</p></li>
+<li><p><strong>keep_something</strong> (<em>bool</em>) – if True will keep at least one salt</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the desalted molecules</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.same_molecule">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">same_molecule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mol1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mol2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.same_molecule" title="Link to this definition">¶</a></dt>
+<dd><p>Test if two molecules are the same.
+First number of atoms and bonds are compared to guard the potentially more expensive
+substructure match. If mol1 is a substructure of mol2 and vice versa, the molecules
+are considered to be the same.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol1</strong> – First molecule</p></li>
+<li><p><strong>mol2</strong> – Second molecule for comparison</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>if the molecules match</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.atom_mapping_numbers">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">atom_mapping_numbers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.atom_mapping_numbers" title="Link to this definition">¶</a></dt>
+<dd><p>Return the numbers in the atom mapping</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles</strong> (<em>str</em>) – the molecule as SMILES</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the atom mapping numbers</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.reassign_rsmi_atom_mapping">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">reassign_rsmi_atom_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rsmi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">as_smiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.reassign_rsmi_atom_mapping" title="Link to this definition">¶</a></dt>
+<dd><p>Reassign reaction’s atom mapping.
+Remove atom maps for atoms in reactants and reactents not found in product’s atoms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rsmi</strong> (<em>str</em>) – Reaction SMILES</p></li>
+<li><p><strong>as_smiles</strong> (<em>bool</em>) – Return reaction SMILES or SMARTS, defaults to False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Reaction SMILES or SMARTS</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.split_rsmi">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">split_rsmi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rsmi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.split_rsmi" title="Link to this definition">¶</a></dt>
+<dd><p>Split a reaction SMILES into components SMILES</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rsmi</strong> (<em>str</em>) – the reaction SMILES</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the SMILES of the components</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[str, str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.join_smiles_from_reaction">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">join_smiles_from_reaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.join_smiles_from_reaction" title="Link to this definition">¶</a></dt>
+<dd><p>Join a part of reaction SMILES, e.g. reactants and products into components.
+Intra-molecular complexes are bracketed with parenthesis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles_list</strong> (<em>List</em><em>[</em><em>str</em><em>]</em>) – the SMILES components</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the joined list</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.split_smiles_from_reaction">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">split_smiles_from_reaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.split_smiles_from_reaction" title="Link to this definition">¶</a></dt>
+<dd><p>Split a part of reaction SMILES, e.g. reactants or products
+into components. Taking care of intra-molecular complexes</p>
+<p>Taken from RDKit:
+<a class="reference external" href="https://github.com/rdkit/rdkit/blob/master/Code/GraphMol/ChemReactions/DaylightParser.cpp">https://github.com/rdkit/rdkit/blob/master/Code/GraphMol/ChemReactions/DaylightParser.cpp</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles</strong> (<em>str</em>) – the SMILES/SMARTS</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the individual components.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.recreate_rsmi">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">recreate_rsmi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rsmi</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.recreate_rsmi" title="Link to this definition">¶</a></dt>
+<dd><p>Recreate Reactions SMILES by removing intra-molecular complexes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rsmi</strong> (<em>str</em>) – the original reaction smiles</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the updated reaction smiles without intra-molecular complexes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.utils.reaction_centres">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.utils.</span></span><span class="sig-name descname"><span class="pre">reaction_centres</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rxn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.utils.reaction_centres" title="Link to this definition">¶</a></dt>
+<dd><p>Return reaction centre atoms, provided that the bonding partners
+actually change when comparing the environment in the reactant and the product</p>
+<p>inspired by code from Greg Landrum’s tutorial
+set up array to remove atoms from the reaction centers
+by comparing the atom mapping in the reactant vs the products</p>
+<p>Original implementation by Christoph Bauer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rxn</strong> (<em>ChemicalReaction</em>) – the initialized RDKit reaction</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple of reaction centre atoms, filtered by connectivity criterion</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[<em>List</em>[int], …]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.chem" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.chem.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.routes.deepset package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.routes.retro_bleu package" href="rxnutils.routes.retro_bleu.html" />
+    <link rel="prev" title="rxnutils.routes.chemformer_feasibility package" href="rxnutils.routes.chemformer_feasibility.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="rxnutils.routes.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.chemformer_feasibility.html">rxnutils.routes.chemformer_feasibility package</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">rxnutils.routes.deepset package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.deepset.featurizers">rxnutils.routes.deepset.featurizers module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.deepset.featurizers.collect_reaction_features"><code class="docutils literal notranslate"><span class="pre">collect_reaction_features()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.deepset.featurizers.default_reaction_featurizer"><code class="docutils literal notranslate"><span class="pre">default_reaction_featurizer()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.deepset.featurizers.ecfp_fingerprint"><code class="docutils literal notranslate"><span class="pre">ecfp_fingerprint()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.deepset.featurizers.reaction_difference_fingerprint"><code class="docutils literal notranslate"><span class="pre">reaction_difference_fingerprint()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.deepset.scoring">rxnutils.routes.deepset.scoring module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.deepset.scoring.DeepsetModelClient"><code class="docutils literal notranslate"><span class="pre">DeepsetModelClient</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.deepset.scoring.deepset_route_score"><code class="docutils literal notranslate"><span class="pre">deepset_route_score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.deepset">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.retro_bleu.html">rxnutils.routes.retro_bleu package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.ted.html">rxnutils.routes.ted package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.utils.html">rxnutils.routes.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.base">rxnutils.routes.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.comparison">rxnutils.routes.comparison module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.image">rxnutils.routes.image module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.readers">rxnutils.routes.readers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.scoring">rxnutils.routes.scoring module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+  <li><a href="rxnutils.routes.html">rxnutils.routes package</a><ul>
+      <li>Previous: <a href="rxnutils.routes.chemformer_feasibility.html" title="previous chapter">rxnutils.routes.chemformer_feasibility package</a></li>
+      <li>Next: <a href="rxnutils.routes.retro_bleu.html" title="next chapter">rxnutils.routes.retro_bleu package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-routes-deepset-package">
+<h1>rxnutils.routes.deepset package<a class="headerlink" href="#rxnutils-routes-deepset-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.routes.deepset.featurizers">
+<span id="rxnutils-routes-deepset-featurizers-module"></span><h2>rxnutils.routes.deepset.featurizers module<a class="headerlink" href="#module-rxnutils.routes.deepset.featurizers" title="Link to this heading">¶</a></h2>
+<p>Module with featurizers for molecules and reactions</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.deepset.featurizers.collect_reaction_features">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.deepset.featurizers.</span></span><span class="sig-name descname"><span class="pre">collect_reaction_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_fingerprint</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_class_ranks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">featurizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefactor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_rank</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_cls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0.0'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.deepset.featurizers.collect_reaction_features" title="Link to this definition">¶</a></dt>
+<dd><p>Collect all reaction features and compute the prior reaction feasibility score</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params reaction_data<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the reactions of the route</p>
+</dd>
+<dt class="field-even">Params target_fingerprint<span class="colon">:</span></dt>
+<dd class="field-even"><p>the precomputed fingerprint of the target</p>
+</dd>
+<dt class="field-odd">Params reaction_class_ranks<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the ranks of the reaction classes</p>
+</dd>
+<dt class="field-even">Params featurizer<span class="colon">:</span></dt>
+<dd class="field-even"><p>the featurizer to use for reactions</p>
+</dd>
+<dt class="field-odd">Params prefactor<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the factor for the feasibility score</p>
+</dd>
+<dt class="field-even">Params default_rank<span class="colon">:</span></dt>
+<dd class="field-even"><p>the rank of reactions not parameterized</p>
+</dd>
+<dt class="field-odd">Params default_cls<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the class of reactions not parameterized</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the prior feasibility score</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the reaction features</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>reaction_data</strong> (<em>List</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em>)</p></li>
+<li><p><strong>target_fingerprint</strong> (<em>ndarray</em>)</p></li>
+<li><p><strong>reaction_class_ranks</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>)</p></li>
+<li><p><strong>featurizer</strong> (<em>Callable</em><em>[</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em><em>]</em><em>, </em><em>ndarray</em><em>]</em>)</p></li>
+<li><p><strong>prefactor</strong> (<em>float</em>)</p></li>
+<li><p><strong>default_rank</strong> (<em>int</em>)</p></li>
+<li><p><strong>default_cls</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Tuple</em>[float, <em>ndarray</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.deepset.featurizers.default_reaction_featurizer">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.deepset.featurizers.</span></span><span class="sig-name descname"><span class="pre">default_reaction_featurizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.deepset.featurizers.default_reaction_featurizer" title="Link to this definition">¶</a></dt>
+<dd><p>Given an item of reaction data, returned by the <cite>reaction_data</cite> method
+of <cite>SynthesisRoute</cite> this features the reaction using a difference ECFP</p>
+<p>Currently it featurizes the reaction in the retro-sense</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params reaction_data<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the reaction as a dictionary</p>
+</dd>
+<dt class="field-even">Params radius<span class="colon">:</span></dt>
+<dd class="field-even"><p>the radius of the fingerprint</p>
+</dd>
+<dt class="field-odd">Params numbits<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of bits</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the fingerprint</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reaction_data</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p></li>
+<li><p><strong>radius</strong> (<em>int</em>)</p></li>
+<li><p><strong>numbits</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.deepset.featurizers.ecfp_fingerprint">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.deepset.featurizers.</span></span><span class="sig-name descname"><span class="pre">ecfp_fingerprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.deepset.featurizers.ecfp_fingerprint" title="Link to this definition">¶</a></dt>
+<dd><p>Computes a ECFP with a given radius and length</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params mol<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the RDKit molecule</p>
+</dd>
+<dt class="field-even">Params radius<span class="colon">:</span></dt>
+<dd class="field-even"><p>the radius of the fingerprint</p>
+</dd>
+<dt class="field-odd">Params numbits<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of bits</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the fingerprint</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mol</strong> (<em>Mol</em>)</p></li>
+<li><p><strong>radius</strong> (<em>int</em>)</p></li>
+<li><p><strong>numbits</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.deepset.featurizers.reaction_difference_fingerprint">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.deepset.featurizers.</span></span><span class="sig-name descname"><span class="pre">reaction_difference_fingerprint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.deepset.featurizers.reaction_difference_fingerprint" title="Link to this definition">¶</a></dt>
+<dd><p>Computes the difference fingerprint of given reaction</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params reaction<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the reaction to featurize</p>
+</dd>
+<dt class="field-even">Params radius<span class="colon">:</span></dt>
+<dd class="field-even"><p>the radius of the fingerprint</p>
+</dd>
+<dt class="field-odd">Params numbits<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of bits</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the fingerprint</p>
+</dd>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>reaction</strong> (<a class="reference internal" href="rxnutils.chem.html#rxnutils.chem.reaction.ChemicalReaction" title="rxnutils.chem.reaction.ChemicalReaction"><em>ChemicalReaction</em></a>)</p></li>
+<li><p><strong>radius</strong> (<em>int</em>)</p></li>
+<li><p><strong>numbits</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.deepset.scoring">
+<span id="rxnutils-routes-deepset-scoring-module"></span><h2>rxnutils.routes.deepset.scoring module<a class="headerlink" href="#module-rxnutils.routes.deepset.scoring" title="Link to this heading">¶</a></h2>
+<p>Module containing routines for Deepset route scoring</p>
+<p>This is an implementation of the code used in the following publication,
+original implementation by Guo Yujia</p>
+<p>Yujia G, Kabeshov M, Le THD, Genheden S, Bergonzini G, Engkvist O, et al. 
+A Deep Learning with Expert Augmentation Approach for Route Scoring in Organic Synthesis. ChemRxiv. 2024; 
+doi:10.26434/chemrxiv-2024-tp7rh</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.deepset.scoring.DeepsetModelClient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.deepset.scoring.</span></span><span class="sig-name descname"><span class="pre">DeepsetModelClient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.deepset.scoring.DeepsetModelClient" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface for an in-memory instance of a Deepset model for route scoring</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params model_path<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the path to an ONNX model file</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>model_path</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.deepset.scoring.deepset_route_score">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.deepset.scoring.</span></span><span class="sig-name descname"><span class="pre">deepset_route_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_client</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scscorer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_class_ranks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.deepset.scoring.deepset_route_score" title="Link to this definition">¶</a></dt>
+<dd><p>Scores a synthesis route using a Deepset model</p>
+<p>Currently, it uses defaults for featurizers as
+described in the original publication.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Params route<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the route to score</p>
+</dd>
+<dt class="field-even">Params model_client<span class="colon">:</span></dt>
+<dd class="field-even"><p>the interface to the model</p>
+</dd>
+<dt class="field-odd">Params scscorer<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the interface to the SCScore</p>
+</dd>
+<dt class="field-even">Params reaction_class_ranks<span class="colon">:</span></dt>
+<dd class="field-even"><p>the lookup from reaction class to rank</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the computed score</p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>route</strong> (<a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute" title="rxnutils.routes.base.SynthesisRoute"><em>SynthesisRoute</em></a>)</p></li>
+<li><p><strong>model_client</strong> (<a class="reference internal" href="#rxnutils.routes.deepset.scoring.DeepsetModelClient" title="rxnutils.routes.deepset.scoring.DeepsetModelClient"><em>DeepsetModelClient</em></a>)</p></li>
+<li><p><strong>scscorer</strong> (<a class="reference internal" href="rxnutils.chem.features.html#rxnutils.chem.features.sc_score.SCScore" title="rxnutils.chem.features.sc_score.SCScore"><em>SCScore</em></a>)</p></li>
+<li><p><strong>reaction_class_ranks</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.deepset">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.routes.deepset" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.routes.deepset.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

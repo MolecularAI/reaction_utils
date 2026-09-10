@@ -1,0 +1,37 @@
+rxnutils.routes.ted package
+===========================
+
+Submodules
+----------
+
+rxnutils.routes.ted.distances\_calculator module
+------------------------------------------------
+
+.. automodule:: rxnutils.routes.ted.distances_calculator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.routes.ted.reactiontree module
+---------------------------------------
+
+.. automodule:: rxnutils.routes.ted.reactiontree
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+rxnutils.routes.ted.utils module
+--------------------------------
+
+.. automodule:: rxnutils.routes.ted.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: rxnutils.routes.ted
+   :members:
+   :undoc-members:
+   :show-inheritance:

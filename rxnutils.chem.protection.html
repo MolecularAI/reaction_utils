@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.chem.protection package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.chem.rinchi package" href="rxnutils.chem.rinchi.html" />
+    <link rel="prev" title="rxnutils.chem.features package" href="rxnutils.chem.features.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="rxnutils.chem.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.chem.features.html">rxnutils.chem.features package</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">rxnutils.chem.protection package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.protection.amino_acids">rxnutils.chem.protection.amino_acids module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.protection.amino_acids.preprocess_amino_acids"><code class="docutils literal notranslate"><span class="pre">preprocess_amino_acids()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.protection.amino_acids.remove_backbone_charges"><code class="docutils literal notranslate"><span class="pre">remove_backbone_charges()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid"><code class="docutils literal notranslate"><span class="pre">ProtectedAminoAcid</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid.smiles"><code class="docutils literal notranslate"><span class="pre">ProtectedAminoAcid.smiles</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid.protection_groups"><code class="docutils literal notranslate"><span class="pre">ProtectedAminoAcid.protection_groups</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.protection.amino_acids.AminoAcidProtectionEngine"><code class="docutils literal notranslate"><span class="pre">AminoAcidProtectionEngine</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.chem.protection.amino_acids.AminoAcidProtectionEngine.protect"><code class="docutils literal notranslate"><span class="pre">AminoAcidProtectionEngine.protect()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.protection">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.chem.rinchi.html">rxnutils.chem.rinchi package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.augmentation">rxnutils.chem.augmentation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.cgr">rxnutils.chem.cgr module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.reaction">rxnutils.chem.reaction module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.smartslib">rxnutils.chem.smartslib module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.template">rxnutils.chem.template module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.utils">rxnutils.chem.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+  <li><a href="rxnutils.chem.html">rxnutils.chem package</a><ul>
+      <li>Previous: <a href="rxnutils.chem.features.html" title="previous chapter">rxnutils.chem.features package</a></li>
+      <li>Next: <a href="rxnutils.chem.rinchi.html" title="next chapter">rxnutils.chem.rinchi package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-chem-protection-package">
+<h1>rxnutils.chem.protection package<a class="headerlink" href="#rxnutils-chem-protection-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.chem.protection.amino_acids">
+<span id="rxnutils-chem-protection-amino-acids-module"></span><h2>rxnutils.chem.protection.amino_acids module<a class="headerlink" href="#module-rxnutils.chem.protection.amino_acids" title="Link to this heading">¶</a></h2>
+<p>Module to attach protection groups to amino acids</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.protection.amino_acids.preprocess_amino_acids">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.protection.amino_acids.</span></span><span class="sig-name descname"><span class="pre">preprocess_amino_acids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.protection.amino_acids.preprocess_amino_acids" title="Link to this definition">¶</a></dt>
+<dd><p>Remove all charges of the amino acids so that the protection
+reaction can be applied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>original_smiles</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.protection.amino_acids.remove_backbone_charges">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.protection.amino_acids.</span></span><span class="sig-name descname"><span class="pre">remove_backbone_charges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.protection.amino_acids.remove_backbone_charges" title="Link to this definition">¶</a></dt>
+<dd><p>Remove the backbone charges of the amino acid, this is
+needed for the protection chemistry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>original_smiles</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.protection.amino_acids.ProtectedAminoAcid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.protection.amino_acids.</span></span><span class="sig-name descname"><span class="pre">ProtectedAminoAcid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protection_groups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>An output from the protection strategy on an amino acid</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smiles</strong> (<em>str</em>) – the protected amino acid SMILES</p></li>
+<li><p><strong>protection_groups</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – the protection groups that was used
+to generate the amino acid</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.protection.amino_acids.ProtectedAminoAcid.smiles">
+<span class="sig-name descname"><span class="pre">smiles</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid.smiles" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.protection.amino_acids.ProtectedAminoAcid.protection_groups">
+<span class="sig-name descname"><span class="pre">protection_groups</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid.protection_groups" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.chem.protection.amino_acids.AminoAcidProtectionEngine">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.protection.amino_acids.</span></span><span class="sig-name descname"><span class="pre">AminoAcidProtectionEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smartslib_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reaction_rules_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">protection_groups_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.protection.amino_acids.AminoAcidProtectionEngine" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Engine for protecting amino acids</p>
+<p>The file with protection reactions, specified with <cite>reaction_rules_path</cite> should
+have the following columns:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>functional_group - the functional group that can be protected by this reaction</p></li>
+<li><p>protection_group - the name of the protection group</p></li>
+<li><p>primary_reaction - the first reaction SMARTS to apply</p></li>
+<li><p>secondary_reaction - a second, optional reaction SMARTS to apply</p></li>
+</ul>
+</div></blockquote>
+<p>The file with the protection groups, specified with <a href="#id1"><span class="problematic" id="id2">`</span></a>protection_groups_path`should
+have the following columns:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>name - the name of the protection group</p></li>
+<li><p>smiles - the SMILES of the group</p></li>
+<li><p>smarts - the SMARTS of the group</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>smartslib_path</strong> (<em>str</em>) – the path to a file with SMARTS patterns for functional group</p></li>
+<li><p><strong>reaction_rules_path</strong> (<em>str</em>) – the path to the file with the protection reaction SMARTS</p></li>
+<li><p><strong>protection_groups</strong> – the path to the file with SMILES for protection groups.</p></li>
+<li><p><strong>protection_groups_path</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.chem.protection.amino_acids.AminoAcidProtectionEngine.protect">
+<span class="sig-name descname"><span class="pre">protect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.protection.amino_acids.AminoAcidProtectionEngine.protect" title="Link to this definition">¶</a></dt>
+<dd><p>Protect the given SMILES.</p>
+<p>The SMILES need to have neutralized backbone charges</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>smiles</strong> (<em>str</em>) – the smiles of an amino acid</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a list of possible protected amino acids</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[<a class="reference internal" href="#rxnutils.chem.protection.amino_acids.ProtectedAminoAcid" title="rxnutils.chem.protection.amino_acids.ProtectedAminoAcid"><em>ProtectedAminoAcid</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.protection">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.chem.protection" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.chem.protection.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
