@@ -87,12 +87,19 @@ class TemplateMolecule:
         for idx, atom in enumerate(self.atoms()):
             props["index"].append(idx)
             for key in dir(atom):
-                if key.startswith("Get") and "Prop" not in key:
+                if not key.startswith("Get") or "Prop" in key:
+                    continue
+                try:
                     ret = getattr(atom, key)()
-                    if isinstance(ret, (list, tuple)):
-                        props[f"# {key[3:]}"].append(len(ret))
-                    else:
-                        props[key[3:]].append(ret)
+                except TypeError:
+                    # Getter requires arguments (e.g. Atom.GetValence in
+                    # rdkit>=2025.03.1 takes a ValenceType). Boost.Python's
+                    # ArgumentError is a TypeError subclass.
+                    continue
+                if isinstance(ret, (list, tuple)):
+                    props[f"# {key[3:]}"].append(len(ret))
+                else:
+                    props[key[3:]].append(ret)
             try:
                 props["comp degree"].append(atom.GetIntProp("comp_degree"))
             except KeyError:  # Raised if fix_atom_properties hasn't been called
@@ -128,7 +135,9 @@ class TemplateMolecule:
             calc_fp()
         return set(bits.keys())
 
-    def fingerprint_vector(self, radius: int = 2, nbits: int = 1024, use_chirality: bool = True) -> np.ndarray:
+    def fingerprint_vector(
+        self, radius: int = 2, nbits: int = 1024, use_chirality: bool = True
+    ) -> np.ndarray:
         """
         Calculate the finger bit vector
 
@@ -296,7 +305,9 @@ class ReactionTemplate:
         # Get all permutations of molecules
         outcome = []
         num_reactant_templates = self._rd_reaction.GetNumReactantTemplates()
-        logging.debug(f"#Reactants: {len(mols_objs)} Vs. #Reactant Templates: {num_reactant_templates}")
+        logging.debug(
+            f"#Reactants: {len(mols_objs)} Vs. #Reactant Templates: {num_reactant_templates}"
+        )
         reactants_permutations = permutations(mols_objs, num_reactant_templates)
         for idx, reactants in enumerate(reactants_permutations):
             outcome = self._rd_reaction.RunReactants(reactants)
@@ -319,7 +330,9 @@ class ReactionTemplate:
 
         return tuple(create_smiles(list_) for list_ in outcome)
 
-    def fingerprint_bits(self, radius: int = 2, use_chirality: bool = True) -> Dict[int, int]:
+    def fingerprint_bits(
+        self, radius: int = 2, use_chirality: bool = True
+    ) -> Dict[int, int]:
         """
         Calculate the difference count of the fingerprint bits set of the reactants and products
 
@@ -336,7 +349,9 @@ class ReactionTemplate:
                 bit_sum[bit] -= 1
         return bit_sum
 
-    def fingerprint_vector(self, radius: int = 2, nbits: int = 1024, use_chirality: bool = True) -> np.ndarray:
+    def fingerprint_vector(
+        self, radius: int = 2, nbits: int = 1024, use_chirality: bool = True
+    ) -> np.ndarray:
         """
         Calculate the difference fingerprint vector
 
@@ -396,9 +411,15 @@ class ReactionTemplate:
         :rtype: AllChem.ChemicalReaction
         """
         reaction = AllChem.ReactionFromSmarts(self.smarts)
-        mols = [TemplateMolecule(reaction.GetProductTemplate(i)) for i in range(reaction.GetNumProductTemplates())]
+        mols = [
+            TemplateMolecule(reaction.GetProductTemplate(i))
+            for i in range(reaction.GetNumProductTemplates())
+        ]
         mols.extend(
-            [TemplateMolecule(reaction.GetReactantTemplate(i)) for i in range(reaction.GetNumReactantTemplates())]
+            [
+                TemplateMolecule(reaction.GetReactantTemplate(i))
+                for i in range(reaction.GetNumReactantTemplates())
+            ]
         )
 
         for mol in mols:

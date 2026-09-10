@@ -1,8 +1,32 @@
 import json
 
 import pytest
+from rdkit.Chem import AllChem
 
 from rxnutils.chem.reaction import ChemicalReaction, ReactionException
+
+
+def _reaction_template_graph(rxn_smarts):
+    """Writer-order-invariant representation of a reaction template.
+
+    Keyed on atom-map numbers, which rdchiral assigns deterministically.
+    Two SMARTS strings describing the same template graph produce equal
+    outputs regardless of how rdkit chose to serialize branches.
+    """
+    rxn = AllChem.ReactionFromSmarts(rxn_smarts)
+
+    def side(mols):
+        atoms, bonds = [], []
+        for mol_idx, mol in enumerate(mols):
+            for atom in mol.GetAtoms():
+                atoms.append((atom.GetAtomMapNum(), atom.GetSmarts(), mol_idx))
+            for bond in mol.GetBonds():
+                m1 = bond.GetBeginAtom().GetAtomMapNum()
+                m2 = bond.GetEndAtom().GetAtomMapNum()
+                bonds.append((min(m1, m2), max(m1, m2), bond.GetSmarts(), mol_idx))
+        return frozenset(atoms), frozenset(bonds)
+
+    return side(rxn.GetReactants()), side(rxn.GetProducts())
 
 
 @pytest.fixture
@@ -144,7 +168,9 @@ def test_template_creation_different_radius(radius, expected):
     rxn = ChemicalReaction(rxn_smiles)
 
     rxn.generate_reaction_template(radius=radius)
-    assert rxn.retro_template.smarts == expected
+    assert _reaction_template_graph(
+        rxn.retro_template.smarts
+    ) == _reaction_template_graph(expected)
 
 
 def test_template_creation(make_template_dataframe):
@@ -155,10 +181,17 @@ def test_template_creation(make_template_dataframe):
         rxn.generate_reaction_template()
 
         if record["retrotemplate"] != rxn.retro_template.smarts:
-            failures.append((record["rsmi"], rxn.retro_template.smarts, record["retrotemplate"]))
+            failures.append(
+                (record["rsmi"], rxn.retro_template.smarts, record["retrotemplate"])
+            )
 
     if failures:
-        print("\n" + "\n\n".join(f"{failed[0]}\t{failed[1]}\t{failed[2]}" for failed in failures))
+        print(
+            "\n"
+            + "\n\n".join(
+                f"{failed[0]}\t{failed[1]}\t{failed[2]}" for failed in failures
+            )
+        )
     assert len(failures) == 0
 
 
@@ -233,7 +266,9 @@ def test_timedout_template_creation():
     )
     rxn = ChemicalReaction(rsmi)
     # Capture ReactionException
-    with pytest.raises(ReactionException, match="Template generation failed with message: Timed out"):
+    with pytest.raises(
+        ReactionException, match="Template generation failed with message: Timed out"
+    ):
         rxn.generate_reaction_template()
 
 
@@ -244,14 +279,18 @@ def test_ringbreaker_template_creation():
     )
     rxn = ChemicalReaction(rsmi, clean_smiles=False)
 
-    _, retro_template = rxn.generate_reaction_template(radius=0, expand_ring=True, expand_hetero=True)
+    _, retro_template = rxn.generate_reaction_template(
+        radius=0, expand_ring=True, expand_hetero=True
+    )
     expected = (
         "[Cl;H0;D1;+0:3]-[c;H0;D3;+0:2]1:[cH;D2;+0:1]:[c;H0;D3;+0:4]:[nH;D2;+0:5]:[n;H0;D2;+0:6]:1>>"
         "[CH;D1;+0:1]#[C;H0;D2;+0:2]-[Cl;H0;D1;+0:3].[CH;D2;+0:4]=[N+;H0;D2:5]=[N-;H0;D1:6]"
     )
     assert retro_template.smarts == expected
 
-    _, retro_template = rxn.generate_reaction_template(radius=0, expand_ring=True, expand_hetero=False)
+    _, retro_template = rxn.generate_reaction_template(
+        radius=0, expand_ring=True, expand_hetero=False
+    )
     expected = (
         "[c;H0;D3;+0:1]1:[cH;D2;+0:2]:[c;H0;D3;+0:3]:[nH;D2;+0:4]:[n;H0;D2;+0:5]:1"
         ">>[C;H0;D2;+0:1]#[CH;D1;+0:2].[CH;D2;+0:3]=[N+;H0;D2:4]=[N-;H0;D1:5]"
