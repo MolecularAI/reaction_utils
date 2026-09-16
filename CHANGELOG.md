@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Version 1.10.0 - 2026-09-10
+## Version 1.9.4 - 2026-09-10
 
 ### Trivial changes
 
