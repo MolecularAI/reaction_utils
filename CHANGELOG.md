@@ -2,7 +2,7 @@
 
 ## Version 1.10.0 - 2026-09-10
 
-### Features
+### Trivial changes
 
 - Support for Python 3.13
 - Support for rdkit 2024.9.1+ (with numpy 2 and updated scipy)
