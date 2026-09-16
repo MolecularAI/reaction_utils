@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.routes.chemformer_feasibility package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.routes.deepset package" href="rxnutils.routes.deepset.html" />
+    <link rel="prev" title="rxnutils.routes package" href="rxnutils.routes.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="rxnutils.routes.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">rxnutils.routes.chemformer_feasibility package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.chemformer_feasibility.model_interface">rxnutils.routes.chemformer_feasibility.model_interface module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.chemformer_feasibility.model_interface.ChemformerReactionFeasibilityCalculator"><code class="docutils literal notranslate"><span class="pre">ChemformerReactionFeasibilityCalculator</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.chemformer_feasibility.model_interface.ChemformerReactionFeasibilityCalculator.load_batch_output"><code class="docutils literal notranslate"><span class="pre">ChemformerReactionFeasibilityCalculator.load_batch_output()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.chemformer_feasibility.scoring">rxnutils.routes.chemformer_feasibility.scoring module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.chemformer_feasibility.scoring.reaction_feasibility_score"><code class="docutils literal notranslate"><span class="pre">reaction_feasibility_score()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.chemformer_feasibility">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.deepset.html">rxnutils.routes.deepset package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.retro_bleu.html">rxnutils.routes.retro_bleu package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.ted.html">rxnutils.routes.ted package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.utils.html">rxnutils.routes.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.base">rxnutils.routes.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.comparison">rxnutils.routes.comparison module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.image">rxnutils.routes.image module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.readers">rxnutils.routes.readers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.scoring">rxnutils.routes.scoring module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+  <li><a href="rxnutils.routes.html">rxnutils.routes package</a><ul>
+      <li>Previous: <a href="rxnutils.routes.html" title="previous chapter">rxnutils.routes package</a></li>
+      <li>Next: <a href="rxnutils.routes.deepset.html" title="next chapter">rxnutils.routes.deepset package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-routes-chemformer-feasibility-package">
+<h1>rxnutils.routes.chemformer_feasibility package<a class="headerlink" href="#rxnutils-routes-chemformer-feasibility-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.routes.chemformer_feasibility.model_interface">
+<span id="rxnutils-routes-chemformer-feasibility-model-interface-module"></span><h2>rxnutils.routes.chemformer_feasibility.model_interface module<a class="headerlink" href="#module-rxnutils.routes.chemformer_feasibility.model_interface" title="Link to this heading">¶</a></h2>
+<p>This module contains an interface for calculating reaction feasibility
+with a REST API to a Chemformer model or output from batch predictions</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.chemformer_feasibility.model_interface.ChemformerReactionFeasibilityCalculator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.chemformer_feasibility.model_interface.</span></span><span class="sig-name descname"><span class="pre">ChemformerReactionFeasibilityCalculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_url</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.chemformer_feasibility.model_interface.ChemformerReactionFeasibilityCalculator" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Interface to the Chemformer API to calculate forward feasibility</p>
+<p>Once instantiated, the calculator can be called as a function to calculate
+feasibilities of a set of reactions</p>
+<blockquote>
+<div><p>scores = calculator(list_of_smiles)</p>
+</div></blockquote>
+<p>the return value is a dictionary mapping reaction SMILES to the calculated
+feasibility.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>api_url</strong> (<em>str</em>) – the URL to the REST API</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.chemformer_feasibility.model_interface.ChemformerReactionFeasibilityCalculator.load_batch_output">
+<span class="sig-name descname"><span class="pre">load_batch_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.chemformer_feasibility.model_interface.ChemformerReactionFeasibilityCalculator.load_batch_output" title="Link to this definition">¶</a></dt>
+<dd><p>Given an output from the <cite>predict</cite> function of the chemformer
+package, and an additional column called <cite>reactants</cite> this will
+update the cache with those predictions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em>) – the batch output</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.chemformer_feasibility.scoring">
+<span id="rxnutils-routes-chemformer-feasibility-scoring-module"></span><h2>rxnutils.routes.chemformer_feasibility.scoring module<a class="headerlink" href="#module-rxnutils.routes.chemformer_feasibility.scoring" title="Link to this heading">¶</a></h2>
+<p>Scoring function for feasibility using Chemformer model</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.chemformer_feasibility.scoring.reaction_feasibility_score">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.chemformer_feasibility.scoring.</span></span><span class="sig-name descname"><span class="pre">reaction_feasibility_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feasibility_calculator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_reactant_heuristics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.chemformer_feasibility.scoring.reaction_feasibility_score" title="Link to this definition">¶</a></dt>
+<dd><p>A scorer that uses the Chemformer API to calculate the feasibility of each
+reaction and then combine it into a route score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> (<a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute" title="rxnutils.routes.base.SynthesisRoute"><em>SynthesisRoute</em></a>) – the route to score</p></li>
+<li><p><strong>feasibility_calculator</strong> (<a class="reference internal" href="#rxnutils.routes.chemformer_feasibility.model_interface.ChemformerReactionFeasibilityCalculator" title="rxnutils.routes.chemformer_feasibility.model_interface.ChemformerReactionFeasibilityCalculator"><em>ChemformerReactionFeasibilityCalculator</em></a>) – the interface to the Chemformer API</p></li>
+<li><p><strong>use_reactant_heuristics</strong> (<em>bool</em>) – if True, will augment the calculations with
+heuristics for reactant reactions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the computed score</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.chemformer_feasibility">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.routes.chemformer_feasibility" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.routes.chemformer_feasibility.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

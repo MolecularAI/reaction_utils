@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.routes.ted package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.routes.utils package" href="rxnutils.routes.utils.html" />
+    <link rel="prev" title="rxnutils.routes.retro_bleu package" href="rxnutils.routes.retro_bleu.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="rxnutils.routes.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.chemformer_feasibility.html">rxnutils.routes.chemformer_feasibility package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.deepset.html">rxnutils.routes.deepset package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.retro_bleu.html">rxnutils.routes.retro_bleu package</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">rxnutils.routes.ted package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.ted.distances_calculator">rxnutils.routes.ted.distances_calculator module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.ted.distances_calculator.ted_distances_calculator"><code class="docutils literal notranslate"><span class="pre">ted_distances_calculator()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.ted.reactiontree">rxnutils.routes.ted.reactiontree module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper"><code class="docutils literal notranslate"><span class="pre">ReactionTreeWrapper</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.info"><code class="docutils literal notranslate"><span class="pre">ReactionTreeWrapper.info</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.first_tree"><code class="docutils literal notranslate"><span class="pre">ReactionTreeWrapper.first_tree</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.trees"><code class="docutils literal notranslate"><span class="pre">ReactionTreeWrapper.trees</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.distance_iter"><code class="docutils literal notranslate"><span class="pre">ReactionTreeWrapper.distance_iter()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.distance_to"><code class="docutils literal notranslate"><span class="pre">ReactionTreeWrapper.distance_to()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.distance_to_with_sorting"><code class="docutils literal notranslate"><span class="pre">ReactionTreeWrapper.distance_to_with_sorting()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.ted.utils">rxnutils.routes.ted.utils module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.ted.utils.TreeContent"><code class="docutils literal notranslate"><span class="pre">TreeContent</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.utils.TreeContent.MOLECULES"><code class="docutils literal notranslate"><span class="pre">TreeContent.MOLECULES</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.utils.TreeContent.REACTIONS"><code class="docutils literal notranslate"><span class="pre">TreeContent.REACTIONS</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.utils.TreeContent.BOTH"><code class="docutils literal notranslate"><span class="pre">TreeContent.BOTH</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.ted.utils.AptedConfig"><code class="docutils literal notranslate"><span class="pre">AptedConfig</span></code></a><ul>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.utils.AptedConfig.rename"><code class="docutils literal notranslate"><span class="pre">AptedConfig.rename()</span></code></a></li>
+<li class="toctree-l8"><a class="reference internal" href="#rxnutils.routes.ted.utils.AptedConfig.children"><code class="docutils literal notranslate"><span class="pre">AptedConfig.children()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.routes.ted.utils.StandardFingerprintFactory"><code class="docutils literal notranslate"><span class="pre">StandardFingerprintFactory</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.routes.ted">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.routes.utils.html">rxnutils.routes.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.base">rxnutils.routes.base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.comparison">rxnutils.routes.comparison module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.image">rxnutils.routes.image module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.readers">rxnutils.routes.readers module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes.scoring">rxnutils.routes.scoring module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.routes.html#module-rxnutils.routes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+  <li><a href="rxnutils.routes.html">rxnutils.routes package</a><ul>
+      <li>Previous: <a href="rxnutils.routes.retro_bleu.html" title="previous chapter">rxnutils.routes.retro_bleu package</a></li>
+      <li>Next: <a href="rxnutils.routes.utils.html" title="next chapter">rxnutils.routes.utils package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-routes-ted-package">
+<h1>rxnutils.routes.ted package<a class="headerlink" href="#rxnutils-routes-ted-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.routes.ted.distances_calculator">
+<span id="rxnutils-routes-ted-distances-calculator-module"></span><h2>rxnutils.routes.ted.distances_calculator module<a class="headerlink" href="#module-rxnutils.routes.ted.distances_calculator" title="Link to this heading">¶</a></h2>
+<p>Module contain method to compute distance matrix using TED</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.distances_calculator.ted_distances_calculator">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.routes.ted.distances_calculator.</span></span><span class="sig-name descname"><span class="pre">ted_distances_calculator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">routes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.distances_calculator.ted_distances_calculator" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the TED distances between each pair of routes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>routes</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute" title="rxnutils.routes.base.SynthesisRoute"><em>SynthesisRoute</em></a><em>]</em>) – the routes to calculate pairwise distance on</p></li>
+<li><p><strong>content</strong> (<em>str</em>) – determine what part of the synthesis trees to include in the calculation,
+options ‘molecules’, ‘reactions’ and ‘both’, default ‘both’</p></li>
+<li><p><strong>timeout</strong> (<em>int</em>) – if given, raises an exception if timeout is taking longer time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the square distance matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>ndarray</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.ted.reactiontree">
+<span id="rxnutils-routes-ted-reactiontree-module"></span><h2>rxnutils.routes.ted.reactiontree module<a class="headerlink" href="#module-rxnutils.routes.ted.reactiontree" title="Link to this heading">¶</a></h2>
+<p>Module containing helper classes to compute the distance between to reaction trees using the APTED method
+Since APTED is based on ordered trees and the reaction trees are unordered, plenty of
+heuristics are implemented to deal with this.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.ted.reactiontree.</span></span><span class="sig-name descname"><span class="pre">ReactionTreeWrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">route</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">TreeContent.MOLECULES</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exhaustive_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fp_factory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper for a reaction tree that can calculate distances between
+trees.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>route</strong> (<a class="reference internal" href="rxnutils.routes.html#rxnutils.routes.base.SynthesisRoute" title="rxnutils.routes.base.SynthesisRoute"><em>SynthesisRoute</em></a>) – the synthesis route to wrap</p></li>
+<li><p><strong>content</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="#rxnutils.routes.ted.utils.TreeContent" title="rxnutils.routes.ted.utils.TreeContent"><em>TreeContent</em></a><em>]</em>) – the content of the route to consider in the distance calculation, default ‘molecules’</p></li>
+<li><p><strong>exhaustive_limit</strong> (<em>int</em>) – if the number of possible ordered trees are below this limit create them all, default 20</p></li>
+<li><p><strong>fp_factory</strong> (<em>Callable</em><em>[</em><em>[</em><em>StrDict</em><em>, </em><em>Optional</em><em>[</em><em>StrDict</em><em>]</em><em>]</em><em>, </em><em>None</em><em>]</em>) – the factory of the fingerprint, Morgan fingerprint for molecules and reactions by default</p></li>
+<li><p><strong>dist_func</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>float</em><em>]</em>) – the distance function to use when renaming nodes</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.info">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.info" title="Link to this definition">¶</a></dt>
+<dd><p>Return a dictionary with internal information about the wrapper</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.first_tree">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">first_tree</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.first_tree" title="Link to this definition">¶</a></dt>
+<dd><p>Return the first created ordered tree</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.trees">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trees</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.trees" title="Link to this definition">¶</a></dt>
+<dd><p>Return a list of all created ordered trees</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.distance_iter">
+<span class="sig-name descname"><span class="pre">distance_iter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exhaustive_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.distance_iter" title="Link to this definition">¶</a></dt>
+<dd><p>Iterate over all distances computed between this and another tree</p>
+<p>There are three possible enumeration of distances possible dependent
+on the number of possible ordered trees for the two routes that are compared</p>
+<ul class="simple">
+<li><p>If the product of the number of possible ordered trees for both routes are
+below <cite>exhaustive_limit</cite> compute the distance between all pair of trees</p></li>
+<li><p>If both self and other has been fully enumerated (i.e. all ordered trees has been created)
+compute the distances between all trees of the route with the most ordered trees and
+the first tree of the other route</p></li>
+<li><p>Compute <cite>exhaustive_limit</cite> number of distances by shuffling the child order for
+each of the routes.</p></li>
+</ul>
+<p>The rules are applied top-to-bottom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper" title="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper"><em>ReactionTreeWrapper</em></a>) – another tree to calculate distance to</p></li>
+<li><p><strong>exhaustive_limit</strong> (<em>int</em>) – used to determine what type of enumeration to do</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yield<span class="colon">:</span></dt>
+<dd class="field-even"><p>the next computed distance between self and other</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Iterable</em>[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.distance_to">
+<span class="sig-name descname"><span class="pre">distance_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exhaustive_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.distance_to" title="Link to this definition">¶</a></dt>
+<dd><p>Calculate the minimum distance from this route to another route</p>
+<p>Enumerate the distances using <cite>distance_iter</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>other</strong> (<a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper" title="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper"><em>ReactionTreeWrapper</em></a>) – another tree to calculate distance to</p></li>
+<li><p><strong>exhaustive_limit</strong> (<em>int</em>) – used to determine what type of enumeration to do</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the minimum distance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.distance_to_with_sorting">
+<span class="sig-name descname"><span class="pre">distance_to_with_sorting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper.distance_to_with_sorting" title="Link to this definition">¶</a></dt>
+<dd><p>Compute the distance to another tree, by simpling sorting the children
+of both trees. This is not guaranteed to return the minimum distance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#rxnutils.routes.ted.reactiontree.ReactionTreeWrapper" title="rxnutils.routes.ted.reactiontree.ReactionTreeWrapper"><em>ReactionTreeWrapper</em></a>) – another tree to calculate distance to</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the distance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.ted.utils">
+<span id="rxnutils-routes-ted-utils-module"></span><h2>rxnutils.routes.ted.utils module<a class="headerlink" href="#module-rxnutils.routes.ted.utils" title="Link to this heading">¶</a></h2>
+<p>Module containing utilities for TED calculations</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.utils.TreeContent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.ted.utils.</span></span><span class="sig-name descname"><span class="pre">TreeContent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.utils.TreeContent" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Possibilities for distance calculations on reaction trees</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.utils.TreeContent.MOLECULES">
+<span class="sig-name descname"><span class="pre">MOLECULES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'molecules'</span></em><a class="headerlink" href="#rxnutils.routes.ted.utils.TreeContent.MOLECULES" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.utils.TreeContent.REACTIONS">
+<span class="sig-name descname"><span class="pre">REACTIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'reactions'</span></em><a class="headerlink" href="#rxnutils.routes.ted.utils.TreeContent.REACTIONS" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.utils.TreeContent.BOTH">
+<span class="sig-name descname"><span class="pre">BOTH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'both'</span></em><a class="headerlink" href="#rxnutils.routes.ted.utils.TreeContent.BOTH" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.utils.AptedConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.ted.utils.</span></span><span class="sig-name descname"><span class="pre">AptedConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">randomize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_children</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.utils.AptedConfig" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></p>
+<p>This is a helper class for the tree edit distance
+calculation. It defines how the substitution
+cost is calculated and how to obtain children nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>randomize</strong> (<em>bool</em>) – if True, the children will be shuffled</p></li>
+<li><p><strong>sort_children</strong> (<em>bool</em>) – if True, the children will be sorted</p></li>
+<li><p><strong>dist_func</strong> (<em>Callable</em><em>[</em><em>[</em><em>np.ndarray</em><em>, </em><em>np.ndarray</em><em>]</em><em>, </em><em>float</em><em>]</em>) – the distance function used for renaming nodes, Jaccard by default</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.utils.AptedConfig.rename">
+<span class="sig-name descname"><span class="pre">rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.utils.AptedConfig.rename" title="Link to this definition">¶</a></dt>
+<dd><p>Calculates the cost of renaming the label of the source node
+to the label of the destination node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node1</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p></li>
+<li><p><strong>node2</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.utils.AptedConfig.children">
+<span class="sig-name descname"><span class="pre">children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.utils.AptedConfig.children" title="Link to this definition">¶</a></dt>
+<dd><p>Returns children of node</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Any</em><em>]</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>List</em>[<em>Dict</em>[str, <em>Any</em>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.routes.ted.utils.StandardFingerprintFactory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.routes.ted.utils.</span></span><span class="sig-name descname"><span class="pre">StandardFingerprintFactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbits</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2048</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.routes.ted.utils.StandardFingerprintFactory" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Calculate Morgan fingerprint for molecules, and difference fingerprints for reactions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>int</em>) – the radius of the fingerprint</p></li>
+<li><p><strong>nbits</strong> (<em>int</em>) – the fingerprint lengths</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.routes.ted">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.routes.ted" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.routes.ted.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

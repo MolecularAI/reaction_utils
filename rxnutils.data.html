@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.data package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.data.ord package" href="rxnutils.data.ord.html" />
+    <link rel="prev" title="rxnutils.chem.rinchi package" href="rxnutils.chem.rinchi.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">rxnutils.data package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.data.ord.html">rxnutils.data.ord package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.data.uspto.html">rxnutils.data.uspto package</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.data.base_pipeline">rxnutils.data.base_pipeline module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.base_pipeline.DataBaseFlow"><code class="docutils literal notranslate"><span class="pre">DataBaseFlow</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.data.base_pipeline.DataBaseFlow.nbatches"><code class="docutils literal notranslate"><span class="pre">DataBaseFlow.nbatches</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.data.base_pipeline.DataBaseFlow.folder"><code class="docutils literal notranslate"><span class="pre">DataBaseFlow.folder</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.base_pipeline.DataPreparationBaseFlow"><code class="docutils literal notranslate"><span class="pre">DataPreparationBaseFlow</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.data.base_pipeline.DataPreparationBaseFlow.data_prefix"><code class="docutils literal notranslate"><span class="pre">DataPreparationBaseFlow.data_prefix</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.data.batch_utils">rxnutils.data.batch_utils module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.batch_utils.nlines"><code class="docutils literal notranslate"><span class="pre">nlines()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.batch_utils.combine_batches"><code class="docutils literal notranslate"><span class="pre">combine_batches()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.batch_utils.combine_csv_batches"><code class="docutils literal notranslate"><span class="pre">combine_csv_batches()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.batch_utils.combine_numpy_array_batches"><code class="docutils literal notranslate"><span class="pre">combine_numpy_array_batches()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.batch_utils.combine_sparse_matrix_batches"><code class="docutils literal notranslate"><span class="pre">combine_sparse_matrix_batches()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.batch_utils.create_csv_batches"><code class="docutils literal notranslate"><span class="pre">create_csv_batches()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.batch_utils.read_csv_batch"><code class="docutils literal notranslate"><span class="pre">read_csv_batch()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.data.mapping">rxnutils.data.mapping module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.mapping.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.data.mapping_pipeline">rxnutils.data.mapping_pipeline module</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.data_prefix"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.data_prefix</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.start"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.start()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.do_mapping"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.do_mapping()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.join_mapping"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.join_mapping()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.end"><code class="docutils literal notranslate"><span class="pre">RxnMappingFlow.end()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#module-rxnutils.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+      <li>Previous: <a href="rxnutils.chem.rinchi.html" title="previous chapter">rxnutils.chem.rinchi package</a></li>
+      <li>Next: <a href="rxnutils.data.ord.html" title="next chapter">rxnutils.data.ord package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-data-package">
+<h1>rxnutils.data package<a class="headerlink" href="#rxnutils-data-package" title="Link to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.data.ord.html">rxnutils.data.ord package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.ord.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.ord.html#module-rxnutils.data.ord.import_ord_dataset">rxnutils.data.ord.import_ord_dataset module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.ord.html#rxnutils.data.ord.import_ord_dataset.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.ord.html#module-rxnutils.data.ord.preparation_pipeline">rxnutils.data.ord.preparation_pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.ord.html#rxnutils.data.ord.preparation_pipeline.OrdDataPreparationFlow"><code class="docutils literal notranslate"><span class="pre">OrdDataPreparationFlow</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#rxnutils.data.ord.preparation_pipeline.OrdDataPreparationFlow.ord_data"><code class="docutils literal notranslate"><span class="pre">OrdDataPreparationFlow.ord_data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#rxnutils.data.ord.preparation_pipeline.OrdDataPreparationFlow.data_prefix"><code class="docutils literal notranslate"><span class="pre">OrdDataPreparationFlow.data_prefix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#rxnutils.data.ord.preparation_pipeline.OrdDataPreparationFlow.start"><code class="docutils literal notranslate"><span class="pre">OrdDataPreparationFlow.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#rxnutils.data.ord.preparation_pipeline.OrdDataPreparationFlow.setup_cleaning"><code class="docutils literal notranslate"><span class="pre">OrdDataPreparationFlow.setup_cleaning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#rxnutils.data.ord.preparation_pipeline.OrdDataPreparationFlow.do_cleaning"><code class="docutils literal notranslate"><span class="pre">OrdDataPreparationFlow.do_cleaning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#rxnutils.data.ord.preparation_pipeline.OrdDataPreparationFlow.join_cleaning"><code class="docutils literal notranslate"><span class="pre">OrdDataPreparationFlow.join_cleaning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.ord.html#rxnutils.data.ord.preparation_pipeline.OrdDataPreparationFlow.end"><code class="docutils literal notranslate"><span class="pre">OrdDataPreparationFlow.end()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.ord.html#module-rxnutils.data.ord">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="rxnutils.data.uspto.html">rxnutils.data.uspto package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.uspto.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto.combine">rxnutils.data.uspto.combine module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.combine.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto.download">rxnutils.data.uspto.download module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.download.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto.preparation_pipeline">rxnutils.data.uspto.preparation_pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.data_prefix"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.data_prefix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.start"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.combine_files"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.combine_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.setup_cleaning"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.setup_cleaning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.do_cleaning"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.do_cleaning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.join_cleaning"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.join_cleaning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.preparation_pipeline.UsptoDataPreparationFlow.end"><code class="docutils literal notranslate"><span class="pre">UsptoDataPreparationFlow.end()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto.uspto_yield">rxnutils.data.uspto.uspto_yield module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration"><code class="docutils literal notranslate"><span class="pre">UsptoYieldCuration</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.text_yield_column"><code class="docutils literal notranslate"><span class="pre">UsptoYieldCuration.text_yield_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.calc_yield_column"><code class="docutils literal notranslate"><span class="pre">UsptoYieldCuration.calc_yield_column</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.data.uspto.html#rxnutils.data.uspto.uspto_yield.UsptoYieldCuration.out_column"><code class="docutils literal notranslate"><span class="pre">UsptoYieldCuration.out_column</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.data.uspto.html#module-rxnutils.data.uspto">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.data.base_pipeline">
+<span id="rxnutils-data-base-pipeline-module"></span><h2>rxnutils.data.base_pipeline module<a class="headerlink" href="#module-rxnutils.data.base_pipeline" title="Link to this heading">¶</a></h2>
+<p>Module containing base class for data pipelines</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.data.base_pipeline.DataBaseFlow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.data.base_pipeline.</span></span><span class="sig-name descname"><span class="pre">DataBaseFlow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.base_pipeline.DataBaseFlow" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FlowSpec</span></code></p>
+<p>Base-class for pipelines for processing data</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.data.base_pipeline.DataBaseFlow.nbatches">
+<span class="sig-name descname"><span class="pre">nbatches</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">metaflow.Parameter(name=nbatches,</span> <span class="pre">kwargs={})</span></em><a class="headerlink" href="#rxnutils.data.base_pipeline.DataBaseFlow.nbatches" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.data.base_pipeline.DataBaseFlow.folder">
+<span class="sig-name descname"><span class="pre">folder</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">metaflow.Parameter(name=folder,</span> <span class="pre">kwargs={})</span></em><a class="headerlink" href="#rxnutils.data.base_pipeline.DataBaseFlow.folder" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.data.base_pipeline.DataPreparationBaseFlow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.data.base_pipeline.</span></span><span class="sig-name descname"><span class="pre">DataPreparationBaseFlow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.base_pipeline.DataPreparationBaseFlow" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rxnutils.data.base_pipeline.DataBaseFlow" title="rxnutils.data.base_pipeline.DataBaseFlow"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataBaseFlow</span></code></a></p>
+<p>Base pipeline for preparing datasets and doing clean-up</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.data.base_pipeline.DataPreparationBaseFlow.data_prefix">
+<span class="sig-name descname"><span class="pre">data_prefix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#rxnutils.data.base_pipeline.DataPreparationBaseFlow.data_prefix" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.data.batch_utils">
+<span id="rxnutils-data-batch-utils-module"></span><h2>rxnutils.data.batch_utils module<a class="headerlink" href="#module-rxnutils.data.batch_utils" title="Link to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.batch_utils.nlines">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.batch_utils.</span></span><span class="sig-name descname"><span class="pre">nlines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.batch_utils.nlines" title="Link to this definition">¶</a></dt>
+<dd><p>Count and return the number of lines in a file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.batch_utils.combine_batches">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.batch_utils.</span></span><span class="sig-name descname"><span class="pre">combine_batches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbatches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">combine_func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.batch_utils.combine_batches" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>)</p></li>
+<li><p><strong>nbatches</strong> (<em>int</em>)</p></li>
+<li><p><strong>read_func</strong> (<em>Any</em>)</p></li>
+<li><p><strong>write_func</strong> (<em>Any</em>)</p></li>
+<li><p><strong>combine_func</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.batch_utils.combine_csv_batches">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.batch_utils.</span></span><span class="sig-name descname"><span class="pre">combine_csv_batches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbatches</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.batch_utils.combine_csv_batches" title="Link to this definition">¶</a></dt>
+<dd><p>Combine CSV batches to one master file</p>
+<p>The batch files are removed from disc</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – the filename of the master file</p></li>
+<li><p><strong>nbatches</strong> (<em>int</em>) – the number of batches</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.batch_utils.combine_numpy_array_batches">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.batch_utils.</span></span><span class="sig-name descname"><span class="pre">combine_numpy_array_batches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbatches</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.batch_utils.combine_numpy_array_batches" title="Link to this definition">¶</a></dt>
+<dd><p>Combine numpy array batches to one master file
+The batch files are removed from disc
+:param filename: the filename of the master file
+:param nbatches: the number of batches</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>)</p></li>
+<li><p><strong>nbatches</strong> (<em>int</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.batch_utils.combine_sparse_matrix_batches">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.batch_utils.</span></span><span class="sig-name descname"><span class="pre">combine_sparse_matrix_batches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbatches</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.batch_utils.combine_sparse_matrix_batches" title="Link to this definition">¶</a></dt>
+<dd><p>Combine sparse matrix batches to one master file</p>
+<p>The batch files are removed from disc</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – the filename of the master file</p></li>
+<li><p><strong>nbatches</strong> (<em>int</em>) – the number of batches</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.batch_utils.create_csv_batches">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.batch_utils.</span></span><span class="sig-name descname"><span class="pre">create_csv_batches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nbatches</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.batch_utils.create_csv_batches" title="Link to this definition">¶</a></dt>
+<dd><p>Create batches for reading a splitted CSV-file</p>
+<dl class="simple">
+<dt>The batches will be in  the form of a tuple with three indices:</dt><dd><ul class="simple">
+<li><p>Batch index</p></li>
+<li><p>Start index</p></li>
+<li><p>End index</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – the CSV file to make batches of</p></li>
+<li><p><strong>nbatches</strong> (<em>int</em>) – the number of batches</p></li>
+<li><p><strong>output_filename</strong> (<em>str</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the created batches</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>List</em>[<em>Tuple</em>[int, int, int]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.batch_utils.read_csv_batch">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.batch_utils.</span></span><span class="sig-name descname"><span class="pre">read_csv_batch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.batch_utils.read_csv_batch" title="Link to this definition">¶</a></dt>
+<dd><p>Read parts of a CSV file as specified by a batch</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – the path to the CSV file on disc</p></li>
+<li><p><strong>batch</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>...</em><em>]</em>) – the batch specification as returned by <cite>create_csv_batches</cite></p></li>
+<li><p><strong>kwargs</strong> (<em>Any</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>DataFrame</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.data.mapping">
+<span id="rxnutils-data-mapping-module"></span><h2>rxnutils.data.mapping module<a class="headerlink" href="#module-rxnutils.data.mapping" title="Link to this heading">¶</a></h2>
+<p>Module containing script to atom-map USPTO or ORD reactions</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.data.mapping.main">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.data.mapping.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.mapping.main" title="Link to this definition">¶</a></dt>
+<dd><p>Function for command-line tool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_args</strong> (<em>Sequence</em><em>[</em><em>str</em><em>] </em><em>| </em><em>None</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.data.mapping_pipeline">
+<span id="rxnutils-data-mapping-pipeline-module"></span><h2>rxnutils.data.mapping_pipeline module<a class="headerlink" href="#module-rxnutils.data.mapping_pipeline" title="Link to this heading">¶</a></h2>
+<p>Module containing pipeline for mapping with rxnmapper
+This needs to be run in an environment with rxnmapper installed</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="rxnutils.data.mapping_pipeline.RxnMappingFlow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.data.mapping_pipeline.</span></span><span class="sig-name descname"><span class="pre">RxnMappingFlow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#rxnutils.data.base_pipeline.DataBaseFlow" title="rxnutils.data.base_pipeline.DataBaseFlow"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataBaseFlow</span></code></a></p>
+<p>Pipeline for atom-map USPTO or ORD data with rxnmapper</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.data.mapping_pipeline.RxnMappingFlow.data_prefix">
+<span class="sig-name descname"><span class="pre">data_prefix</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">metaflow.Parameter(name=data-prefix,</span> <span class="pre">kwargs={})</span></em><a class="headerlink" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.data_prefix" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.mapping_pipeline.RxnMappingFlow.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.start" title="Link to this definition">¶</a></dt>
+<dd><p>Setup batches for mapping</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.mapping_pipeline.RxnMappingFlow.do_mapping">
+<span class="sig-name descname"><span class="pre">do_mapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.do_mapping" title="Link to this definition">¶</a></dt>
+<dd><p>Perform atom-mapping of reactions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.mapping_pipeline.RxnMappingFlow.join_mapping">
+<span class="sig-name descname"><span class="pre">join_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.join_mapping" title="Link to this definition">¶</a></dt>
+<dd><p>Join batches from mapping</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rxnutils.data.mapping_pipeline.RxnMappingFlow.end">
+<span class="sig-name descname"><span class="pre">end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.data.mapping_pipeline.RxnMappingFlow.end" title="Link to this definition">¶</a></dt>
+<dd><p>Final step, just print information</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.data">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.data" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.data.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

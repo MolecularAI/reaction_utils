@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rxnutils.chem.rinchi package &#8212; ReactionUtils 1.9.3 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=a66d8bb5" />
+    <script src="_static/documentation_options.js?v=f333a941"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="rxnutils.data package" href="rxnutils.data.html" />
+    <link rel="prev" title="rxnutils.chem.protection package" href="rxnutils.chem.protection.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ReactionUtils</a></h1>
+
+
+
+<p class="blurb">Utilities for working with reactions, reaction templates and template extraction</p>
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="templates.html">Templates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="uspto.html">USPTO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ord.html">Open reaction database</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline.html">Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="routes.html">Routes</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="rxnutils.html">rxnutils package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="rxnutils.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="rxnutils.chem.html">rxnutils.chem package</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="rxnutils.chem.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.chem.features.html">rxnutils.chem.features package</a></li>
+<li class="toctree-l5"><a class="reference internal" href="rxnutils.chem.protection.html">rxnutils.chem.protection package</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">rxnutils.chem.rinchi package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.rinchi.download_rinchi">rxnutils.chem.rinchi.download_rinchi module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.rinchi.download_rinchi.RInChIError"><code class="docutils literal notranslate"><span class="pre">RInChIError</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.rinchi.download_rinchi.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.rinchi.rinchi_api">rxnutils.chem.rinchi.rinchi_api module</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.rinchi.rinchi_api.RInChIStructure"><code class="docutils literal notranslate"><span class="pre">RInChIStructure</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#rxnutils.chem.rinchi.rinchi_api.generate_rinchi"><code class="docutils literal notranslate"><span class="pre">generate_rinchi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l6"><a class="reference internal" href="#module-rxnutils.chem.rinchi">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.augmentation">rxnutils.chem.augmentation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.cgr">rxnutils.chem.cgr module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.reaction">rxnutils.chem.reaction module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.smartslib">rxnutils.chem.smartslib module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.template">rxnutils.chem.template module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem.utils">rxnutils.chem.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="rxnutils.chem.html#module-rxnutils.chem">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.data.html">rxnutils.data package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.pipeline.html">rxnutils.pipeline package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rxnutils.routes.html">rxnutils.routes package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rxnutils.html#module-rxnutils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="rxnutils.html">rxnutils package</a><ul>
+  <li><a href="rxnutils.chem.html">rxnutils.chem package</a><ul>
+      <li>Previous: <a href="rxnutils.chem.protection.html" title="previous chapter">rxnutils.chem.protection package</a></li>
+      <li>Next: <a href="rxnutils.data.html" title="next chapter">rxnutils.data package</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="rxnutils-chem-rinchi-package">
+<h1>rxnutils.chem.rinchi package<a class="headerlink" href="#rxnutils-chem-rinchi-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-rxnutils.chem.rinchi.download_rinchi">
+<span id="rxnutils-chem-rinchi-download-rinchi-module"></span><h2>rxnutils.chem.rinchi.download_rinchi module<a class="headerlink" href="#module-rxnutils.chem.rinchi.download_rinchi" title="Link to this heading">¶</a></h2>
+<p>Module for downloading InChI Trust Reaction InChI.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="rxnutils.chem.rinchi.download_rinchi.RInChIError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rxnutils.chem.rinchi.download_rinchi.</span></span><span class="sig-name descname"><span class="pre">RInChIError</span></span><a class="headerlink" href="#rxnutils.chem.rinchi.download_rinchi.RInChIError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Exception raised by RInChI API</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.rinchi.download_rinchi.main">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.rinchi.download_rinchi.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.rinchi.download_rinchi.main" title="Link to this definition">¶</a></dt>
+<dd><p>Check if Reaction InchI application is present.
+Download it if it’s required to do so.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path of the folder containing the appropriate
+command line executable based on system type.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.rinchi.rinchi_api">
+<span id="rxnutils-chem-rinchi-rinchi-api-module"></span><h2>rxnutils.chem.rinchi.rinchi_api module<a class="headerlink" href="#module-rxnutils.chem.rinchi.rinchi_api" title="Link to this heading">¶</a></h2>
+<p>Module containing an API to the Reaction InChI program</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rxnutils.chem.rinchi.rinchi_api.RInChIStructure">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.rinchi.rinchi_api.</span></span><span class="sig-name descname"><span class="pre">RInChIStructure</span></span><a class="headerlink" href="#rxnutils.chem.rinchi.rinchi_api.RInChIStructure" title="Link to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">RInChI</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="rxnutils.chem.rinchi.rinchi_api.generate_rinchi">
+<span class="sig-prename descclassname"><span class="pre">rxnutils.chem.rinchi.rinchi_api.</span></span><span class="sig-name descname"><span class="pre">generate_rinchi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reaction_smiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#rxnutils.chem.rinchi.rinchi_api.generate_rinchi" title="Link to this definition">¶</a></dt>
+<dd><p>Generate RInChI from Reaction SMILES.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>reaction_smiles</strong> (<em>str</em>) – Reaction SMILES</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#rxnutils.chem.rinchi.download_rinchi.RInChIError" title="rxnutils.chem.rinchi.download_rinchi.RInChIError"><strong>RInChIError</strong></a> – When there is an error with RInChI generation.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Namedtuple with the generated RInChI.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>RInChI</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-rxnutils.chem.rinchi">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-rxnutils.chem.rinchi" title="Link to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &#169;2022-2025, Molecular AI group.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.4.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/rxnutils.chem.rinchi.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
