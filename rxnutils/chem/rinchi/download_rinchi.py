@@ -46,7 +46,7 @@ def main() -> str:
             logging.info(f"Creating: {download_loc}")
             os.makedirs(download_loc)
         logging.info(f"Downloading: {rinchi_url}")
-        req = requests.get(rinchi_url)
+        req = requests.get(rinchi_url, timeout=30)
         logging.debug(f"{req.status_code}")
         logging.debug(f"{req.headers}")
         req.raise_for_status()
